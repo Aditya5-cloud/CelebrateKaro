@@ -5,6 +5,7 @@ import type { Vendor, VendorStatus, Event } from '@/types';
 import type { VendorStats } from '@/lib/vendors';
 import { formatCurrency } from '@/lib/formatters';
 import { VendorModal } from './VendorModal';
+import { VendorEmailModal } from './VendorEmailModal';
 
 interface VendorTrackerProps {
   event: Event;
@@ -68,6 +69,8 @@ export function VendorTracker({ event, onVendorUpdated }: VendorTrackerProps) {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [vendorToEdit, setVendorToEdit] = useState<Vendor | null>(null);
+  const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
+  const [vendorForEmail, setVendorForEmail] = useState<Vendor | null>(null);
   const [isGeneratingTemplate, setIsGeneratingTemplate] = useState(false);
   const [notification, setNotification] = useState<string | null>(null);
 
@@ -531,6 +534,20 @@ export function VendorTracker({ event, onVendorUpdated }: VendorTrackerProps) {
                     <button
                       type="button"
                       onClick={() => {
+                        setVendorForEmail(vendor);
+                        setIsEmailModalOpen(true);
+                      }}
+                      aria-label={`Draft email to ${vendor.name}`}
+                      title="Draft Email with AI"
+                      className="p-1 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-md transition-colors"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                      </svg>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
                         setVendorToEdit(vendor);
                         setIsModalOpen(true);
                       }}
@@ -573,6 +590,17 @@ export function VendorTracker({ event, onVendorUpdated }: VendorTrackerProps) {
         }}
         eventId={event.id}
         initialVendor={vendorToEdit}
+      />
+
+      {/* AI Vendor Email Drafter Modal */}
+      <VendorEmailModal
+        isOpen={isEmailModalOpen}
+        onClose={() => {
+          setIsEmailModalOpen(false);
+          setVendorForEmail(null);
+        }}
+        event={event}
+        vendor={vendorForEmail}
       />
     </section>
   );

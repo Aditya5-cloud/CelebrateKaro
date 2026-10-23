@@ -46,3 +46,19 @@ export const updateVendorSchema = createVendorSchema.partial();
 
 export type CreateVendorSchemaInput = z.input<typeof createVendorSchema>;
 export type UpdateVendorSchemaInput = z.input<typeof updateVendorSchema>;
+
+export const emailTypeEnum = z.enum(['inquiry', 'quote', 'tasting_tour', 'negotiation']);
+export const emailToneEnum = z.enum(['professional', 'warm', 'direct']);
+
+export const draftVendorEmailSchema = z.object({
+  emailType: emailTypeEnum.default('inquiry'),
+  tone: emailToneEnum.default('professional'),
+  specificQuestions: z
+    .string()
+    .trim()
+    .max(500, 'Specific questions must be 500 characters or fewer')
+    .optional()
+    .default(''),
+});
+
+export type DraftVendorEmailInput = z.infer<typeof draftVendorEmailSchema>;

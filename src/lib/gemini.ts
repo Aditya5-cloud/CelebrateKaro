@@ -348,3 +348,195 @@ ${eventContextSummary}`,
     };
   }
 }
+
+export interface GeneratedEmailDraft {
+  subject: string;
+  body: string;
+  isMock: boolean;
+  model: string;
+}
+
+export interface DraftEmailOptions {
+  emailType?: 'inquiry' | 'quote' | 'tasting_tour' | 'negotiation';
+  tone?: 'professional' | 'warm' | 'direct';
+  specificQuestions?: string;
+}
+
+/**
+ * Generates structured fallback vendor email drafts when GEMINI_API_KEY is not configured or offline.
+ */
+export function getMockVendorEmail(
+  event: Event,
+  vendor: { name: string; category: string; contact_name?: string; price_quote?: number },
+  options?: DraftEmailOptions
+): { subject: string; body: string } {
+  const type = options?.emailType || 'inquiry';
+  const salutation = vendor.contact_name ? vendor.contact_name : `${vendor.name} Team`;
+  const questions = options?.specificQuestions?.trim();
+
+  if (type === 'quote') {
+    return {
+      subject: `RFQ / Price Quote Request: ${event.name} (${event.event_date})`,
+      body: `Dear ${salutation},
+
+We are currently budgeting and evaluating proposals for ${vendor.category} services for "${event.name}" scheduled for ${event.event_date}.
+
+Event Overview:
+- Celebration Type: ${event.event_type}
+- Event Date: ${event.event_date}
+- Expected Guest Count: ${event.guest_count} attendees
+
+Could you please provide an itemized quote or proposal outlining:
+1. Base package inclusions and hours of service
+2. Setup, teardown, and staffing charges
+3. Payment terms and deposit requirements
+${questions ? `4. Specific inquiry: ${questions}\n` : ''}
+We appreciate your time and look forward to receiving your proposal.
+
+Warm regards,
+[Your Name]
+[Your Phone Number]`,
+    };
+  }
+
+  if (type === 'tasting_tour') {
+    const isFood = vendor.category === 'catering' || vendor.category === 'bakery';
+    return {
+      subject: `Consultation & ${isFood ? 'Tasting' : 'Walkthrough'} Request: ${event.name}`,
+      body: `Dear ${salutation},
+
+We are very impressed by ${vendor.name} and would love to explore working together for "${event.name}" on ${event.event_date}.
+
+Before making our final booking commitment, we would love to schedule a consultation ${isFood ? 'and menu tasting session' : 'and venue walkthrough'} with you to discuss our vision for our ${event.guest_count} guests.
+
+Could you let us know your availability over the next two weeks?
+
+${questions ? `Additional Notes: ${questions}\n\n` : ''}Thank you so much,
+[Your Name]
+[Your Contact Information]`,
+    };
+  }
+
+  if (type === 'negotiation') {
+    const quoteStr = vendor.price_quote && vendor.price_quote > 0 ? formatCurrency(vendor.price_quote) : 'your initial estimate';
+    return {
+      subject: `Proposal Discussion & Budget Alignment: ${event.name}`,
+      body: `Dear ${salutation},
+
+Thank you very much for providing your proposal and estimate of ${quoteStr} for our upcoming ${event.event_type}. We love your style and would be thrilled to have ${vendor.name} be part of our celebration.
+
+We are managing our budget carefully for our ${event.guest_count} guests. We were hoping to explore whether there might be any flexibility in your package options or if we could adjust certain deliverables to align more closely with our allocated budget?
+
+${questions ? `Specifically: ${questions}\n\n` : ''}We greatly respect your craft and look forward to seeing if we can find a mutually beneficial arrangement.
+
+Sincerely,
+[Your Name]
+[Your Contact Information]`,
+    };
+  }
+
+  // Default: Initial Inquiry
+  return {
+    subject: `Inquiry: Availability for ${event.name} on ${event.event_date}`,
+    body: `Hello ${salutation},
+
+I hope this email finds you well. I am reaching out regarding our upcoming ${event.event_type}, "${event.name}", taking place on ${event.event_date}.
+
+We are expecting approximately ${event.guest_count} guests and admire the work that ${vendor.name} delivers in ${vendor.category}.
+
+Could you please let us know if you currently have availability on this date, and share your standard package brochures and pricing guides?
+
+${questions ? `We also have a few specific questions:\n- ${questions}\n\n` : ''}Thank you very much, and we look forward to hearing from you!
+
+Best regards,
+[Your Name]
+[Your Phone Number]`,
+  };
+}
+
+/**
+ * Generate a customized vendor email draft using Gemini AI with fallback.
+ */
+export async function generateVendorEmail(
+  event: Event,
+  vendor: { name: string; category: string; contact_name?: string; contact_email?: string; price_quote?: number },
+  options?: DraftEmailOptions
+): Promise<GeneratedEmailDraft> {
+  const apiKey = process.env.GEMINI_API_KEY;
+
+  if (!apiKey || apiKey === 'your_gemini_api_key_here') {
+    const mock = getMockVendorEmail(event, vendor, options);
+    return {
+      ...mock,
+      isMock: true,
+      model: 'fallback-email-drafter',
+    };
+  }
+
+  try {
+    const genAI = new GoogleGenerativeAI(apiKey);
+    const model = genAI.getGenerativeModel({
+      model: 'gemini-2.0-flash',
+      generationConfig: {
+        responseMimeType: 'application/json',
+        temperature: 0.3,
+      },
+    });
+
+    const emailType = options?.emailType || 'inquiry';
+    const tone = options?.tone || 'professional';
+    const questions = options?.specificQuestions ? sanitizeText(options.specificQuestions, 300) : '';
+
+    const prompt = `
+You are an expert event planner assistant drafting an email to a vendor.
+Draft a professional, clear, and compelling email based on:
+- Event: "${sanitizeText(event.name, 100)}" (${event.event_type})
+- Event Date: ${event.event_date}
+- Guest Count: ${event.guest_count} attendees
+- Vendor: "${sanitizeText(vendor.name, 100)}" (${vendor.category})
+${vendor.contact_name ? `- Contact Person: "${sanitizeText(vendor.contact_name, 100)}"` : ''}
+${vendor.price_quote && vendor.price_quote > 0 ? `- Current Quote / Budget: ${formatCurrency(vendor.price_quote)}` : ''}
+- Email Goal / Type: ${emailType} (inquiry = availability check; quote = detailed RFQ; tasting_tour = site visit/tasting request; negotiation = polite budget adjustment)
+- Tone: ${tone}
+${questions ? `- Specific Questions or Requirements to include: "${questions}"` : ''}
+
+Instructions:
+Output MUST be a valid JSON object with exact keys:
+{
+  "subject": "Clear, professional email subject line",
+  "body": "Full formatted email body with salutation, context, questions, and polite sign-off"
+}
+Do not include markdown fences outside the JSON object.
+`;
+
+    const response = await model.generateContent(prompt);
+    const rawText = response.response.text();
+
+    const cleanedText = rawText
+      .replace(/^```json\s*/i, '')
+      .replace(/^```\s*/i, '')
+      .replace(/\s*```$/i, '')
+      .trim();
+
+    const parsed = JSON.parse(cleanedText);
+
+    if (!parsed.subject || !parsed.body) {
+      throw new Error('AI returned an invalid email structure.');
+    }
+
+    return {
+      subject: String(parsed.subject).trim(),
+      body: String(parsed.body).trim(),
+      isMock: false,
+      model: 'gemini-2.0-flash',
+    };
+  } catch (error) {
+    console.warn('Gemini vendor email drafting failed. Falling back to structured templates:', error);
+    const mock = getMockVendorEmail(event, vendor, options);
+    return {
+      ...mock,
+      isMock: true,
+      model: 'fallback-email-drafter',
+    };
+  }
+}
