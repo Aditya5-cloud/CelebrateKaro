@@ -9,6 +9,7 @@ import { formatCurrency, formatDate, getRelativeDays } from '@/lib/formatters';
 import { EventFormModal } from '@/components/events/EventFormModal';
 import { DeleteConfirmModal } from '@/components/events/DeleteConfirmModal';
 import { BudgetTracker } from '@/components/budget/BudgetTracker';
+import { TimelineTracker } from '@/components/timeline/TimelineTracker';
 
 export default function EventDetailPage({
   params,
@@ -310,18 +311,7 @@ export default function EventDetailPage({
           )}
 
           {activeTab === 'timeline' && (
-            <div className="rounded-3xl border border-dashed border-zinc-300 bg-white p-12 text-center dark:border-zinc-800 dark:bg-zinc-900/50">
-              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-50 text-2xl text-amber-600 dark:bg-amber-950/60">
-                📅
-              </div>
-              <h3 className="mt-3 text-lg font-bold text-zinc-900 dark:text-zinc-100">
-                Timeline & Milestones (Chunk 3)
-              </h3>
-              <p className="mt-1 text-sm text-zinc-500 max-w-md mx-auto">
-                Target date: <span className="font-semibold text-zinc-900 dark:text-zinc-200">{formatDate(event.event_date)}</span> ({relativeDate.label}).
-                Date-ordered milestones, due-date tracking, and progress visualization will activate in Chunk 3.
-              </p>
-            </div>
+            <TimelineTracker event={event} onTimelineUpdated={fetchEvent} />
           )}
 
           {activeTab === 'vendors' && (
