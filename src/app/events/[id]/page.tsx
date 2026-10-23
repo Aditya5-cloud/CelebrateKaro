@@ -10,6 +10,7 @@ import { EventFormModal } from '@/components/events/EventFormModal';
 import { DeleteConfirmModal } from '@/components/events/DeleteConfirmModal';
 import { BudgetTracker } from '@/components/budget/BudgetTracker';
 import { TimelineTracker } from '@/components/timeline/TimelineTracker';
+import { VendorTracker } from '@/components/vendors/VendorTracker';
 
 export default function EventDetailPage({
   params,
@@ -315,17 +316,7 @@ export default function EventDetailPage({
           )}
 
           {activeTab === 'vendors' && (
-            <div className="rounded-3xl border border-dashed border-zinc-300 bg-white p-12 text-center dark:border-zinc-800 dark:bg-zinc-900/50">
-              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-purple-50 text-2xl text-purple-600 dark:bg-purple-950/60">
-                🤝
-              </div>
-              <h3 className="mt-3 text-lg font-bold text-zinc-900 dark:text-zinc-100">
-                Vendor Checklist (Chunk 4)
-              </h3>
-              <p className="mt-1 text-sm text-zinc-500 max-w-md mx-auto">
-                Vendor directory, status stages (considering, contacted, booked, paid), and quotes tracking will activate in Chunk 4.
-              </p>
-            </div>
+            <VendorTracker event={event} onVendorUpdated={fetchEvent} />
           )}
 
           {activeTab === 'assistant' && (
