@@ -12,6 +12,7 @@ import { BudgetTracker } from '@/components/budget/BudgetTracker';
 import { TimelineTracker } from '@/components/timeline/TimelineTracker';
 import { VendorTracker } from '@/components/vendors/VendorTracker';
 import { ChecklistTracker } from '@/components/checklist/ChecklistTracker';
+import { ChatAssistant } from '@/components/chat/ChatAssistant';
 
 export default function EventDetailPage({
   params,
@@ -326,17 +327,7 @@ export default function EventDetailPage({
           )}
 
           {activeTab === 'assistant' && (
-            <div className="rounded-3xl border border-dashed border-zinc-300 bg-white p-12 text-center dark:border-zinc-800 dark:bg-zinc-900/50">
-              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-2xl text-blue-600 dark:bg-blue-950/60">
-                ✨
-              </div>
-              <h3 className="mt-3 text-lg font-bold text-zinc-900 dark:text-zinc-100">
-                GenAI Planning Assistant (Chunks 5, 6 & 7)
-              </h3>
-              <p className="mt-1 text-sm text-zinc-500 max-w-md mx-auto">
-                AI Checklist generation, conversational planning assistant, and vendor email generator will activate in Chunks 5 through 7.
-              </p>
-            </div>
+            <ChatAssistant event={event} />
           )}
         </div>
       </main>

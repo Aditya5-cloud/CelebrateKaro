@@ -200,3 +200,151 @@ Instructions:
     };
   }
 }
+
+/**
+ * Intelligent grounded fallback responses when GEMINI_API_KEY is not configured or offline.
+ */
+export function getGroundedMockChatResponse(
+  event: Event,
+  userMessage: string,
+  eventContextSummary: string
+): string {
+  const query = userMessage.toLowerCase();
+
+  if (query.includes('budget') || query.includes('cost') || query.includes('money') || query.includes('spend') || query.includes('price')) {
+    return `### 💰 Budget Analysis for **${event.name}**
+
+Here is your current financial status from your event records:
+- **Total Allocated Budget:** ${formatCurrency(event.total_budget)}
+- **Guest Scale:** ${event.guest_count} guests (approx. **${formatCurrency(event.guest_count > 0 ? Math.round(event.total_budget / event.guest_count) : 0)}** per guest)
+
+**Actionable Budget Tips for ${event.event_type}:**
+1. **Prioritize Anchor Items:** Venue and catering typically account for 45–55% of your total spend. Ensure contracts lock in service fees and taxes.
+2. **Buffer for Incidentals:** Set aside a 5–10% contingency cushion for unexpected overtime, service gratuities, or rush deliveries.
+3. **Tradeoff Analysis:** Check your Budget Tracker tab to compare planned amounts vs. actual quotes to spot categories with surplus budget.`;
+  }
+
+  if (query.includes('vendor') || query.includes('hire') || query.includes('booked') || query.includes('cater') || query.includes('photograph') || query.includes('dj') || query.includes('music')) {
+    return `### 🤝 Vendor Strategy for **${event.name}**
+
+Looking at your Vendor Directory records:
+- **Celebration Type:** ${event.event_type.toUpperCase()}
+- **Event Date:** ${event.event_date}
+
+**Strategic Vendor Checklist:**
+1. **Essential Priority:** Secure your primary venue and catering first, as they dictate guest capacity, layout rules, and curfew timing.
+2. **Next Tier:** Photography/videography and music entertainment book up 6–12 months in advance for peak weekend dates.
+3. **Contract Protection:** Always request itemized proposals, setup/breakdown hours, and backup plans in case of inclement weather or vendor illness.`;
+  }
+
+  if (query.includes('next') || query.includes('step') || query.includes('timeline') || query.includes('deadline') || query.includes('milestone') || query.includes('when')) {
+    return `### 📅 Immediate Planning Steps for **${event.name}**
+
+Target Date: **${event.event_date}** (${event.guest_count} guests)
+
+**What to tackle next:**
+1. **Review Pending Milestones:** Check the **Timeline & Milestones** tab to verify upcoming deadlines.
+2. **Confirm Headcount Thresholds:** Send out RSVP reminders to lock in final table counts for catering.
+3. **Checklist Review:** Visit your **✨ AI Checklist** tab to mark off completed items and generate targeted subtasks.`;
+  }
+
+  if (query.includes('idea') || query.includes('theme') || query.includes('decor') || query.includes('fun') || query.includes('recommend') || query.includes('unique')) {
+    if (event.event_type === 'wedding') {
+      return `### ✨ Personalized Ideas for **${event.name}**
+
+Tailored for **${event.guest_count} guests** with a budget of **${formatCurrency(event.total_budget)}**:
+1. **Interactive Guestbook Station:** Replace the traditional book with an audio guestbook phone or a polaroid photo memory board.
+2. **Signature His & Hers Cocktails:** Name custom cocktails after meaningful shared memories or your favorite travel destinations.
+3. **Late-Night Snack Surprise:** Treat dancing guests to gourmet sliders, artisan pretzel bites, or a mini taco bar during the last hour.
+4. **Ambient Lighting Magic:** Fairy light curtains or warm uplighting transform any venue affordably.`;
+    }
+
+    if (event.event_type === 'birthday') {
+      return `### 🎂 Creative Birthday Concepts for **${event.name}**
+
+Tailored for a **${event.guest_count}-guest** party:
+1. **Custom Interactive Trivia:** Host a 15-minute trivia quiz about the guest of honor with fun mini prizes.
+2. **Themed Photo Backdrop:** Create an organic balloon garland with marquee LED numbers for Instagram moments.
+3. **Signature Dessert Bar:** Complement the main cake with mini dessert shooters, a donut wall, or gourmet popcorn station.
+4. **Curated Decades Playlist:** Feature songs from milestones across the celebrant's life.`;
+    }
+
+    return `### 🌟 Community Celebration Ideas for **${event.name}**
+
+Tailored for **${event.guest_count} community participants**:
+1. **Local Makers & Artisans Showcase:** Invite neighborhood crafters and independent vendors to host pop-up stalls.
+2. **Interactive Community Mural:** Set up a large collaborative canvas where attendees paint handprints or community messages.
+3. **Main Stage Local Talent:** Feature youth bands, cultural dance troupes, and local acoustic musicians throughout the afternoon.
+4. **Family Activity Zone:** Lawn games (giant Jenga, cornhole), face painting, and a scavenger hunt.`;
+  }
+
+  return `### 🤖 Antigravity Planning Assistant
+
+I am grounded in your live event profile for **${event.name}** (${event.event_type}, ${event.guest_count} attendees, scheduled for ${event.event_date}).
+
+**How I can assist you today:**
+- 💰 **Budget Guidance:** Ask *"How is my budget looking?"* or *"Where can I cut costs?"*
+- 🤝 **Vendor Recommendations:** Ask *"What vendors should I prioritize booking?"*
+- 📅 **Timeline Deadlines:** Ask *"What are my immediate next steps?"*
+- ✨ **Creative Themes:** Ask *"Suggest personalized ideas for my guests"*
+
+What would you like to explore first?`;
+}
+
+/**
+ * Generate a conversational response from Gemini AI grounded in real event context.
+ */
+export async function generateChatResponse(
+  event: Event,
+  userMessage: string,
+  history: Array<{ role: 'user' | 'assistant'; content: string }>,
+  eventContextSummary: string
+): Promise<{ response: string; isMock: boolean; model: string }> {
+  const apiKey = process.env.GEMINI_API_KEY;
+
+  if (!apiKey || apiKey === 'your_gemini_api_key_here') {
+    return {
+      response: getGroundedMockChatResponse(event, userMessage, eventContextSummary),
+      isMock: true,
+      model: 'grounded-event-assistant',
+    };
+  }
+
+  try {
+    const genAI = new GoogleGenerativeAI(apiKey);
+    const model = genAI.getGenerativeModel({
+      model: 'gemini-2.0-flash',
+      systemInstruction: `You are Antigravity Event Planner, an expert, thoughtful, and highly competent GenAI planning assistant.
+You help users organize weddings, birthdays, and community events with budgets, timelines, vendor checklists, and personalized ideas.
+You are directly grounded in the user's real event data provided below. Use this actual data whenever answering questions about budget, timeline, vendors, or tasks.
+If asked for ideas, provide creative, actionable, and personalized suggestions fitting the budget and guest count. Keep responses clear, helpful, and formatted in clean GitHub markdown.
+
+${eventContextSummary}`,
+    });
+
+    const recentTurns = history.slice(-8).map((msg) => ({
+      role: msg.role === 'assistant' ? 'model' : 'user',
+      parts: [{ text: msg.content }],
+    }));
+
+    const chat = model.startChat({
+      history: recentTurns,
+    });
+
+    const result = await chat.sendMessage(userMessage);
+    const text = result.response.text();
+
+    return {
+      response: text.trim(),
+      isMock: false,
+      model: 'gemini-2.0-flash',
+    };
+  } catch (error) {
+    console.warn('Gemini chat failed or network unreachable. Falling back to grounded assistant:', error);
+    return {
+      response: getGroundedMockChatResponse(event, userMessage, eventContextSummary),
+      isMock: true,
+      model: 'grounded-event-assistant',
+    };
+  }
+}
