@@ -8,14 +8,14 @@
 
 ## 🌟 Executive Summary
 
-**Celebration & Event Planner** is a full-stack, accessible, and robust event planning application engineered with **Next.js 16 (App Router)**, **SQLite (`better-sqlite3`)**, **Tailwind CSS v4**, and **Google Gemini 2.0 (`@google/generative-ai`)**.
+**Celebration & Event Planner** is a full-stack, accessible, and robust event planning application engineered with **Next.js 16 (App Router)**, **SQLite (`better-sqlite3`)**, **Tailwind CSS v4**, and **Google Gemini (`@google/generative-ai`)**.
 
 The application solves the fragmentation of event planning by uniting:
 1. **Dynamic Event Lifecycle Management** (Weddings, Birthdays, Community Festivals, Custom Celebrations).
 2. **Financial Budget Tracker** with integer-cent accuracy, category variance analysis, and event-tailored default distribution templates.
 3. **Timeline & Milestone Roadmap** with chronological sorting, days-until countdowns, and automatic overdue deadline flagging.
 4. **Vendor Checklist & Directory** with full stage pipeline (`considering` $\rightarrow$ `contacted` $\rightarrow$ `booked` $\rightarrow$ `paid`), quote commitment totals, and contact tracking.
-5. **✨ GenAI Personalized Checklist Generator** powered by Gemini 2.0 Flash to synthesize custom planning roadmaps based on guest scale, budget, and custom themes (with deterministic domain fallback).
+5. **✨ GenAI Personalized Checklist Generator** powered by Gemini 3.5 Flash-Lite to synthesize custom planning roadmaps based on guest scale, budget, and custom themes (with deterministic domain fallback).
 6. **🤖 GenAI Planning Assistant Chat** with multi-turn conversation memory, dynamically grounded in real-time event budget, vendor status, and timeline data.
 7. **✉️ GenAI Vendor Email Drafter** generating tailored communication drafts for Availability Checks, line-item RFQs, Tour/Tasting requests, and Budget Negotiations.
 
@@ -27,7 +27,7 @@ The application solves the fragmentation of event planning by uniting:
 |---|---|---|
 | **A. Code Quality** | Modular layered architecture: Zod validation layer $\rightarrow$ SQLite service layer $\rightarrow$ Next.js REST API route handlers $\rightarrow$ React 19 UI components. Strict TypeScript mode, 0 explicit `any`, zero linter errors. Pure currency arithmetic in integer cents. | `npm run lint`: **0 errors, 0 warnings**<br>`npm run type-check`: **0 errors** |
 | **B. Security** | API keys (`GEMINI_API_KEY`) isolated strictly to server-side route handlers—never exposed in client bundles. `.env.local` strictly gitignored. All database operations execute through parameterized SQLite statements eliminating SQL injection. All user input validated with Zod and sanitized against prompt injection. | Zero secrets in client code; Zod schema enforcement across all endpoints. |
-| **C. Efficiency** | Zero-latency local SQLite database requiring no external database infrastructure. Fast, token-optimized Gemini 2.0 Flash calls with low temperature (`0.3`–`0.4`) and strict JSON schema output. Optimistic UI updates for immediate user feedback. | `npm run build`: **Turbopack static & dynamic compilation in <3s**. |
+| **C. Efficiency** | Zero-latency local SQLite database requiring no external database infrastructure. Fast, token-optimized Gemini 3.5 Flash-Lite calls with low temperature (`0.3`–`0.4`) and strict JSON schema output. Optimistic UI updates for immediate user feedback. | `npm run build`: **Turbopack static & dynamic compilation in <3s**. |
 | **D. Testing** | Comprehensive automated testing strategy with Jest, `@testing-library/react`, and `jest-axe`. Unit tests for services, validations, AI fallbacks, and UI component workflows. | `npm test`: **24 test suites, 132 tests passing**<br>>90% coverage on core services; 100% on validations. |
 | **E. Accessibility** | Built from the ground up with semantic HTML (`section`, `header`, `dialog`, `nav`), keyboard focus trapping, `Escape` key listeners, `aria-modal`, `aria-live` announcements for dynamic updates, and custom accessible checkboxes (`role="checkbox"`). | `jest-axe` automated audit on all interactive components: **0 violations**. |
 | **F. Problem Statement Alignment** | Directly serves weddings, birthdays, and community events with tailored templates, budget categories, milestone roadmaps, vendor RFQs, and personalized AI recommendations. | Fulfills 100% of the challenge requirements with no speculative bloat. |
@@ -56,7 +56,7 @@ The application solves the fragmentation of event planning by uniting:
                  ┌─────────────────────────────┴─────────────────────────────┐
                  ▼                                                           ▼
 ┌─────────────────────────────────┐                         ┌─────────────────────────────────┐
-│        SQLite Database          │                         │     Google Gemini 2.0 Flash     │
+│        SQLite Database          │                         │     Google Gemini 3.5 Flash-Lite│
 │       (`better-sqlite3`)        │                         │     (`@google/generative-ai`)   │
 │  - events                       │                         │                                 │
 │  - budget_categories            │                         │  - Structured JSON checklists   │
@@ -71,7 +71,7 @@ The application solves the fragmentation of event planning by uniting:
 - **UI Library:** React 19.3.0
 - **Styling:** Tailwind CSS v4 (`@tailwindcss/postcss`)
 - **Database:** SQLite (`better-sqlite3` v13.0.3)
-- **AI Model:** Google Gemini 2.0 Flash (`@google/generative-ai` v0.24.1)
+- **AI Model:** Google Gemini 3.5 Flash-Lite (`gemini-3.5-flash-lite`, configurable via `GEMINI_MODEL`)
 - **Validation:** Zod v4
 - **Testing:** Jest v30.5.2, `@testing-library/react`, `jest-axe`
 
@@ -95,7 +95,7 @@ npm install
 ### 3. Environment Setup (Optional)
 The application includes a **complete domain fallback engine**, meaning **it runs 100% locally even without an API key**.
 
-To enable live Google Gemini 2.0 generation:
+To enable live Google Gemini 3.5 Flash-Lite generation:
 ```bash
 # Copy sample env file
 cp .env.local.example .env.local
@@ -103,6 +103,7 @@ cp .env.local.example .env.local
 Edit `.env.local` and paste your key:
 ```env
 GEMINI_API_KEY=AIzaSy...
+# Optional: GEMINI_MODEL=gemini-3.5-flash-lite
 ```
 *(Get a free key at [Google AI Studio](https://aistudio.google.com/app/apikey))*
 
@@ -171,7 +172,7 @@ promptwar/
 │   │   ├── db.ts                           # SQLite connection & schema migrations
 │   │   ├── events.ts                       # Event data access layer
 │   │   ├── formatters.ts                   # Date, countdown & currency formatting
-│   │   ├── gemini.ts                       # Gemini 2.0 SDK calls & domain fallback engine
+│   │   ├── gemini.ts                       # Gemini 3.5 Flash-Lite SDK calls & domain fallback engine
 │   │   ├── milestones.ts                   # Timeline sorting & milestone templates
 │   │   ├── vendors.ts                      # Vendor directory & status tracking
 │   │   └── validations/                    # Zod schemas for events, budget, timeline, etc.
@@ -213,7 +214,7 @@ promptwar/
 - Total committed quotes calculation and % booked progress.
 
 ### 5. ✨ GenAI Personalized Checklist Generator
-- Dynamic prompt passing the event's exact profile into Gemini 2.0 Flash.
+- Dynamic prompt passing the event's exact profile into Gemini 3.5 Flash-Lite.
 - Returns actionable structured JSON checklist tasks categorized by department (`venue`, `catering`, `decor`, `music`, `permits`, `logistics`).
 - One-click focus customizers (*"Full Milestone Roadmap"*, *"Budget & Cost-Saving"*, *"Eco-Friendly / Zero-Waste"*, *"Luxury VIP Experience"*).
 - Interactive completion checkboxes with persistent database storage.

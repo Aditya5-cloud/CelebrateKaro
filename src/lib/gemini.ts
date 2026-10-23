@@ -2,6 +2,8 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 import type { Event, EventType } from '@/types';
 import { formatCurrency } from './formatters';
 
+export const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-3.5-flash-lite';
+
 export interface GeneratedTask {
   task: string;
   category: string;
@@ -128,9 +130,8 @@ export async function generatePersonalizedChecklist(
 
   try {
     const genAI = new GoogleGenerativeAI(apiKey);
-    // Use gemini-2.0-flash or gemini-1.5-flash
     const model = genAI.getGenerativeModel({
-      model: 'gemini-2.0-flash',
+      model: GEMINI_MODEL,
       generationConfig: {
         responseMimeType: 'application/json',
         temperature: 0.4,
@@ -189,7 +190,7 @@ Instructions:
     return {
       items,
       isMock: false,
-      model: 'gemini-2.0-flash',
+      model: GEMINI_MODEL,
     };
   } catch (error) {
     console.warn('Gemini checklist generation failed or API unreachable. Falling back to domain planner:', error);
@@ -312,7 +313,7 @@ export async function generateChatResponse(
   try {
     const genAI = new GoogleGenerativeAI(apiKey);
     const model = genAI.getGenerativeModel({
-      model: 'gemini-2.0-flash',
+      model: GEMINI_MODEL,
       systemInstruction: `You are Antigravity Event Planner, an expert, thoughtful, and highly competent GenAI planning assistant.
 You help users organize weddings, birthdays, and community events with budgets, timelines, vendor checklists, and personalized ideas.
 You are directly grounded in the user's real event data provided below. Use this actual data whenever answering questions about budget, timeline, vendors, or tasks.
@@ -336,7 +337,7 @@ ${eventContextSummary}`,
     return {
       response: text.trim(),
       isMock: false,
-      model: 'gemini-2.0-flash',
+      model: GEMINI_MODEL,
     };
   } catch (error) {
     console.warn('Gemini chat failed or network unreachable. Falling back to grounded assistant:', error);
@@ -475,7 +476,7 @@ export async function generateVendorEmail(
   try {
     const genAI = new GoogleGenerativeAI(apiKey);
     const model = genAI.getGenerativeModel({
-      model: 'gemini-2.0-flash',
+      model: GEMINI_MODEL,
       generationConfig: {
         responseMimeType: 'application/json',
         temperature: 0.3,
@@ -527,7 +528,7 @@ Do not include markdown fences outside the JSON object.
       subject: String(parsed.subject).trim(),
       body: String(parsed.body).trim(),
       isMock: false,
-      model: 'gemini-2.0-flash',
+      model: GEMINI_MODEL,
     };
   } catch (error) {
     console.warn('Gemini vendor email drafting failed. Falling back to structured templates:', error);

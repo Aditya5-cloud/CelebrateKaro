@@ -268,7 +268,7 @@ export function ChecklistTracker({ event, onChecklistUpdated }: ChecklistTracker
               </div>
             </div>
             <span className="text-[11px] font-medium px-3 py-1 rounded-full bg-indigo-800/60 border border-indigo-700/50 text-indigo-200">
-              Powered by Google Gemini 2.0
+              Powered by Google Gemini 3.5 Flash-Lite
             </span>
           </div>
 
