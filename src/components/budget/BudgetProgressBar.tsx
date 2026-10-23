@@ -14,7 +14,6 @@ interface BudgetProgressBarProps {
 export function BudgetProgressBar({
   spentCents,
   targetCents,
-  plannedCents,
   label = 'Budget Spending Progress',
   size = 'md',
 }: BudgetProgressBarProps) {

@@ -71,7 +71,7 @@ export default function HomePage() {
     }, 4000);
   };
 
-  const handleEventCreated = (newEvent: unknown) => {
+  const handleEventCreated = () => {
     showNotification('Celebration created successfully! Get started with your budget and AI planning.');
     fetchEvents();
   };

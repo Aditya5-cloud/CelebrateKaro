@@ -56,4 +56,11 @@ describe('Checklist Validation Schemas', () => {
       expect(customResult.data.replaceExisting).toBe(true);
     }
   });
+
+  it('validates updateChecklistItemSchema with partial updates', () => {
+    const updateResult = updateChecklistItemSchema.safeParse({
+      completed: true,
+    });
+    expect(updateResult.success).toBe(true);
+  });
 });

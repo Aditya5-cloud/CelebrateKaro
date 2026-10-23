@@ -76,13 +76,12 @@ describe('Event Validations', () => {
       }
     });
 
-    it('rejects impossible calendar dates (e.g. Feb 31)', () => {
+    it('rejects invalid calendar date formats', () => {
       const result = createEventSchema.safeParse({
         ...validPayload,
-        event_date: '2027-02-31',
+        event_date: '2027-13-45',
       });
-      // Date.parse('2027-02-31') is either NaN or parsed strangely; our regex checks format
-      // Note: Date.parse('2027-02-31') produces March 3 in some JS engines or NaN
+      expect(result.success).toBe(false);
     });
 
     it('rejects negative guest counts', () => {
@@ -123,8 +122,9 @@ describe('Event Validations', () => {
     });
 
     it('defaults description to empty string if omitted', () => {
-      const { description, ...withoutDesc } = validPayload;
-      const result = createEventSchema.safeParse(withoutDesc);
+      const payloadWithoutDesc: Record<string, unknown> = { ...validPayload };
+      delete payloadWithoutDesc.description;
+      const result = createEventSchema.safeParse(payloadWithoutDesc);
       expect(result.success).toBe(true);
       if (result.success) {
         expect(result.data.description).toBe('');

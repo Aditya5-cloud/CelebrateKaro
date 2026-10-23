@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import type { Event, Vendor } from '@/types';
 
 interface VendorEmailModalProps {
@@ -38,6 +38,45 @@ export function VendorEmailModal({
 
   const initialFocusRef = useRef<HTMLButtonElement>(null);
 
+  const handleGenerateDraft = useCallback(
+    async (
+      typeToUse: EmailType = 'inquiry',
+      toneToUse: EmailTone = 'professional',
+      questionsToUse = ''
+    ) => {
+      if (!vendor) return;
+      setIsGenerating(true);
+      setError(null);
+      setIsCopied(false);
+
+      try {
+        const res = await fetch(`/api/events/${event.id}/vendors/${vendor.id}/email`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            emailType: typeToUse,
+            tone: toneToUse,
+            specificQuestions: questionsToUse.trim(),
+          }),
+        });
+
+        const json = await res.json();
+        if (!res.ok || !json.success) {
+          throw new Error(json.error || 'Failed to generate email draft.');
+        }
+
+        setSubject(json.data.subject);
+        setBody(json.data.body);
+      } catch (err: unknown) {
+        console.error(err);
+        setError(err instanceof Error ? err.message : 'Error drafting email.');
+      } finally {
+        setIsGenerating(false);
+      }
+    },
+    [event.id, vendor]
+  );
+
   // Auto-generate initial draft when modal opens
   useEffect(() => {
     if (!isOpen || !vendor) return;
@@ -64,44 +103,9 @@ export function VendorEmailModal({
       clearTimeout(timer);
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [isOpen, vendor, onClose]);
+  }, [isOpen, vendor, onClose, handleGenerateDraft]);
 
   if (!isOpen || !vendor) return null;
-
-  const handleGenerateDraft = async (
-    typeToUse = emailType,
-    toneToUse = tone,
-    questionsToUse = specificQuestions
-  ) => {
-    setIsGenerating(true);
-    setError(null);
-    setIsCopied(false);
-
-    try {
-      const res = await fetch(`/api/events/${event.id}/vendors/${vendor.id}/email`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          emailType: typeToUse,
-          tone: toneToUse,
-          specificQuestions: questionsToUse.trim(),
-        }),
-      });
-
-      const json = await res.json();
-      if (!res.ok || !json.success) {
-        throw new Error(json.error || 'Failed to generate email draft.');
-      }
-
-      setSubject(json.data.subject);
-      setBody(json.data.body);
-    } catch (err: unknown) {
-      console.error(err);
-      setError(err instanceof Error ? err.message : 'Error drafting email.');
-    } finally {
-      setIsGenerating(false);
-    }
-  };
 
   const handleCopyClipboard = async () => {
     const fullText = `Subject: ${subject}\n\n${body}`;

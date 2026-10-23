@@ -64,7 +64,7 @@ export async function POST(request: Request, context: RouteContext) {
       return NextResponse.json({ success: false, error: 'Event not found.' }, { status: 404 });
     }
 
-    let body: any;
+    let body: unknown;
     try {
       body = await request.json();
     } catch {
@@ -72,7 +72,7 @@ export async function POST(request: Request, context: RouteContext) {
     }
 
     // Auto-generate celebration vendor checklist
-    if (body.action === 'template') {
+    if (body && typeof body === 'object' && 'action' in body && body.action === 'template') {
       const vendors = seedVendorTemplate(eventId, event.event_type);
       const stats = getVendorStats(eventId);
       return NextResponse.json(

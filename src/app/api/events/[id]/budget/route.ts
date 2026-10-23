@@ -51,7 +51,7 @@ export async function POST(request: Request, context: RouteContext) {
       return NextResponse.json({ success: false, error: 'Event not found.' }, { status: 404 });
     }
 
-    let body: any;
+    let body: unknown;
     try {
       body = await request.json();
     } catch {
@@ -59,7 +59,7 @@ export async function POST(request: Request, context: RouteContext) {
     }
 
     // Handle template auto-population request
-    if (body.action === 'template') {
+    if (body && typeof body === 'object' && 'action' in body && body.action === 'template') {
       const generated = seedBudgetTemplate(eventId, event.event_type, event.total_budget);
       const summary = getBudgetSummary(eventId);
       return NextResponse.json(

@@ -98,7 +98,7 @@ export function getMockChecklist(event: Event, focus?: string): GeneratedTask[] 
     });
   }
 
-  base.forEach((item, index) => {
+  base.forEach((item) => {
     items.push({
       task: item.task,
       category: item.category,
@@ -206,8 +206,7 @@ Instructions:
  */
 export function getGroundedMockChatResponse(
   event: Event,
-  userMessage: string,
-  eventContextSummary: string
+  userMessage: string
 ): string {
   const query = userMessage.toLowerCase();
 
@@ -304,7 +303,7 @@ export async function generateChatResponse(
 
   if (!apiKey || apiKey === 'your_gemini_api_key_here') {
     return {
-      response: getGroundedMockChatResponse(event, userMessage, eventContextSummary),
+      response: getGroundedMockChatResponse(event, userMessage),
       isMock: true,
       model: 'grounded-event-assistant',
     };
@@ -342,7 +341,7 @@ ${eventContextSummary}`,
   } catch (error) {
     console.warn('Gemini chat failed or network unreachable. Falling back to grounded assistant:', error);
     return {
-      response: getGroundedMockChatResponse(event, userMessage, eventContextSummary),
+      response: getGroundedMockChatResponse(event, userMessage),
       isMock: true,
       model: 'grounded-event-assistant',
     };

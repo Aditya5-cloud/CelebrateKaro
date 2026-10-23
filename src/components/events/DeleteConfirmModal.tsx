@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
-import type { Event } from '@/types';
 
 export interface EventBasicInfo {
   id: number;
