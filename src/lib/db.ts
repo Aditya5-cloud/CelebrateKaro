@@ -15,14 +15,13 @@ import fs from 'fs';
 
 // ─── Path Resolution ─────────────────────────────────────────────────────────
 
-const DATA_DIR = process.env.DATABASE_PATH
-  ? path.dirname(process.env.DATABASE_PATH)
-  : path.join(process.cwd(), 'data');
-
-const DB_PATH = process.env.DATABASE_PATH ?? path.join(DATA_DIR, 'eventplanner.db');
-
-// Ensure the data directory exists
-fs.mkdirSync(DATA_DIR, { recursive: true });
+function getDbPath(): string {
+  const dataDir = process.env.DATABASE_PATH
+    ? path.dirname(process.env.DATABASE_PATH)
+    : path.join(process.cwd(), 'data');
+  fs.mkdirSync(dataDir, { recursive: true });
+  return process.env.DATABASE_PATH ?? path.join(dataDir, 'eventplanner.db');
+}
 
 // ─── Singleton ────────────────────────────────────────────────────────────────
 
@@ -30,7 +29,8 @@ let _db: Database.Database | null = null;
 
 export function getDb(): Database.Database {
   if (!_db) {
-    _db = new Database(DB_PATH);
+    const dbPath = getDbPath();
+    _db = new Database(dbPath);
     // Enable WAL mode for better read concurrency and crash safety
     _db.pragma('journal_mode = WAL');
     // Enforce foreign key constraints

@@ -8,6 +8,7 @@ import { EventTypeBadge } from '@/components/ui/Badge';
 import { formatCurrency, formatDate, getRelativeDays } from '@/lib/formatters';
 import { EventFormModal } from '@/components/events/EventFormModal';
 import { DeleteConfirmModal } from '@/components/events/DeleteConfirmModal';
+import { BudgetTracker } from '@/components/budget/BudgetTracker';
 
 export default function EventDetailPage({
   params,
@@ -305,18 +306,7 @@ export default function EventDetailPage({
           )}
 
           {activeTab === 'budget' && (
-            <div className="rounded-3xl border border-dashed border-zinc-300 bg-white p-12 text-center dark:border-zinc-800 dark:bg-zinc-900/50">
-              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-2xl text-emerald-600 dark:bg-emerald-950/60">
-                💰
-              </div>
-              <h3 className="mt-3 text-lg font-bold text-zinc-900 dark:text-zinc-100">
-                Budget Tracker (Chunk 2)
-              </h3>
-              <p className="mt-1 text-sm text-zinc-500 max-w-md mx-auto">
-                Allocated budget: <span className="font-semibold text-zinc-900 dark:text-zinc-200">{formatCurrency(event.total_budget)}</span>.
-                Detailed category breakdown (venue, catering, music, decor), actual spend tracking, and variance analysis will activate in Chunk 2.
-              </p>
-            </div>
+            <BudgetTracker event={event} onBudgetUpdated={fetchEvent} />
           )}
 
           {activeTab === 'timeline' && (
