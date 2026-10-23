@@ -11,6 +11,7 @@ import { DeleteConfirmModal } from '@/components/events/DeleteConfirmModal';
 import { BudgetTracker } from '@/components/budget/BudgetTracker';
 import { TimelineTracker } from '@/components/timeline/TimelineTracker';
 import { VendorTracker } from '@/components/vendors/VendorTracker';
+import { ChecklistTracker } from '@/components/checklist/ChecklistTracker';
 
 export default function EventDetailPage({
   params,
@@ -27,7 +28,7 @@ export default function EventDetailPage({
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [activeTab, setActiveTab] = useState<'overview' | 'budget' | 'timeline' | 'vendors' | 'assistant'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'checklist' | 'budget' | 'timeline' | 'vendors' | 'assistant'>('overview');
 
   const fetchEvent = useCallback(async () => {
     setIsLoading(true);
@@ -197,11 +198,12 @@ export default function EventDetailPage({
         <div className="mt-8 border-b border-zinc-200 dark:border-zinc-800">
           <nav aria-label="Event sections" className="-mb-px flex space-x-6 overflow-x-auto">
             {[
-              { id: 'overview', label: 'Overview & Ideas' },
+              { id: 'overview', label: 'Overview & Summary' },
+              { id: 'checklist', label: '✨ AI Checklist' },
               { id: 'budget', label: 'Budget Tracker' },
               { id: 'timeline', label: 'Timeline & Milestones' },
-              { id: 'vendors', label: 'Vendor Checklist' },
-              { id: 'assistant', label: '✨ AI Assistant' },
+              { id: 'vendors', label: 'Vendor Directory' },
+              { id: 'assistant', label: 'AI Chat Assistant' },
             ].map((tab) => {
               const active = activeTab === tab.id;
               return (
@@ -305,6 +307,10 @@ export default function EventDetailPage({
                 </div>
               </div>
             </div>
+          )}
+
+          {activeTab === 'checklist' && (
+            <ChecklistTracker event={event} onChecklistUpdated={fetchEvent} />
           )}
 
           {activeTab === 'budget' && (
