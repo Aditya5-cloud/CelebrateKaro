@@ -40,6 +40,16 @@ export function getDb(): Database.Database {
   return _db;
 }
 
+/**
+ * Close the current database connection (useful for tests and graceful shutdown).
+ */
+export function closeDb(): void {
+  if (_db) {
+    _db.close();
+    _db = null;
+  }
+}
+
 // ─── Schema Migrations ────────────────────────────────────────────────────────
 
 /**
@@ -136,20 +146,7 @@ function runMigrations(db: Database.Database): void {
 
 // ─── Utility helpers ──────────────────────────────────────────────────────────
 
-/**
- * Format a JavaScript number (dollars * 100) as cents for storage.
- * Amounts are always stored as integer cents to avoid float precision errors.
- */
-export function toCents(dollars: number): number {
-  return Math.round(dollars * 100);
-}
-
-/**
- * Convert cents back to a display-ready dollar amount.
- */
-export function fromCents(cents: number): number {
-  return cents / 100;
-}
+export { toCents, fromCents } from './currency';
 
 /**
  * Return current UTC timestamp as ISO 8601 string.

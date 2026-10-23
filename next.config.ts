@@ -34,9 +34,6 @@ const nextConfig: NextConfig = {
       },
     ];
   },
-
-  // Explicitly mark server-only packages to prevent accidental client-side inclusion
-  serverExternalPackages: ['better-sqlite3'],
 };
 
 export default nextConfig;
