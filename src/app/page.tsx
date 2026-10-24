@@ -9,7 +9,11 @@ import { EventFormModal } from '@/components/events/EventFormModal';
 import { DeleteConfirmModal } from '@/components/events/DeleteConfirmModal';
 import { AuthModal } from '@/components/auth/AuthModal';
 import { InteractiveShowcase } from '@/components/landing/InteractiveShowcase';
-import { AestheticIllustration } from '@/components/landing/AestheticIllustration';
+import { CelebrationHero } from '@/components/landing/CelebrationHero';
+import { VibePlayground } from '@/components/landing/VibePlayground';
+import { InteractiveBudgetCalculator } from '@/components/landing/InteractiveBudgetCalculator';
+import { InteractiveConciergeDemo } from '@/components/landing/InteractiveConciergeDemo';
+import { ChaosVsCalm } from '@/components/landing/ChaosVsCalm';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/Badge';
 import { Card } from '@/components/ui/card';
@@ -31,10 +35,6 @@ import {
   Plus,
   LogOut,
   CalendarDays,
-  Clock,
-  ClipboardList,
-  Bot,
-  Mail,
 } from 'lucide-react';
 
 export default function HomePage() {
@@ -191,6 +191,29 @@ export default function HomePage() {
     setCurrentUser(null);
     setViewMode('landing');
     showNotification('You have been logged out.');
+  };
+
+  const handleVibeSelected = () => {
+    if (!currentUser) {
+      handleOpenAuth('register');
+    } else {
+      setIsCreateModalOpen(true);
+    }
+  };
+
+  const handleBudgetCalculatorStart = () => {
+    if (!currentUser) {
+      handleOpenAuth('register');
+    } else {
+      setIsCreateModalOpen(true);
+    }
+  };
+
+  const handleScrollToSection = (id: string) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   return (
@@ -371,259 +394,89 @@ export default function HomePage() {
         {/*  VIEW 1: CLEAN, AESTHETIC MARKETING LANDING PAGE           */}
         {/* ═══════════════════════════════════════════════════════════ */}
         {viewMode === 'landing' ? (
-          <div>
-            {/* HERO SECTION with Aesthetic Dual-Column Illustration */}
-            <section className="relative overflow-hidden pt-12 pb-16 sm:pt-20 sm:pb-24 bg-gradient-to-b from-amber-50/50 via-rose-50/25 to-transparent dark:from-zinc-900/40 dark:via-transparent dark:to-transparent">
-              <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-                  {/* Left Column: Typography, Value Proposition, CTAs */}
-                  <div className="lg:col-span-7 space-y-6 text-left">
-                    <div className="inline-flex items-center gap-2 rounded-full border border-amber-200/80 bg-amber-50/70 px-4 py-1.5 text-xs font-semibold text-amber-900 shadow-2xs dark:border-amber-900/60 dark:bg-amber-950/40 dark:text-amber-300">
-                      <Sparkles className="h-3.5 w-3.5 text-amber-600 dark:text-amber-400" />
-                      <span>The Modern Way to Plan Extraordinary Moments</span>
-                    </div>
+          <div className="space-y-16 sm:space-y-24 pb-20">
+            {/* 1. LUXURY CELEBRATION HERO SECTION */}
+            <CelebrationHero
+              onStartFree={() => handleOpenAuth('register')}
+              onSignIn={() => handleOpenAuth('signin')}
+              onExploreVibes={() => handleScrollToSection('vibe-simulator')}
+              isLoggedIn={!!currentUser}
+              onOpenDashboard={() => setViewMode('dashboard')}
+              eventsCount={events.length}
+            />
 
-                    <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-zinc-950 dark:text-zinc-50 leading-[1.12]">
-                      Where unforgettable celebrations{' '}
-                      <span className="bg-gradient-to-r from-amber-600 via-rose-600 to-violet-600 bg-clip-text text-transparent">
-                        come to life.
-                      </span>
-                    </h1>
-
-                    <p className="text-base sm:text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed max-w-xl">
-                      From dream weddings and milestone birthdays to grand galas — seamlessly orchestrate every detail. Track budgets with clarity, customize intelligent checklists, coordinate vendors, and countdown milestones with total peace of mind.
-                    </p>
-
-                    {/* Hero Action Buttons */}
-                    <div className="pt-2 flex flex-wrap items-center gap-3">
-                      {!currentUser ? (
-                        <>
-                          <Button
-                            size="lg"
-                            onClick={() => handleOpenAuth('register')}
-                            className="bg-zinc-900 hover:bg-zinc-800 text-white shadow-md dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200"
-                          >
-                            <span>Get Started Free</span>
-                            <ArrowRight className="h-4 w-4" />
-                          </Button>
-
-                          <Button
-                            variant="outline"
-                            size="lg"
-                            onClick={() => handleOpenAuth('signin')}
-                          >
-                            <span>Sign In to Dashboard</span>
-                          </Button>
-                        </>
-                      ) : (
-                        <Button
-                          size="lg"
-                          onClick={() => setViewMode('dashboard')}
-                        >
-                          <span>Open My Dashboard ({events.length} Events)</span>
-                          <ArrowRight className="h-4 w-4" />
-                        </Button>
-                      )}
-                    </div>
-
-                    {/* Celebratory Metrics Row */}
-                    <div className="pt-6 grid grid-cols-2 sm:grid-cols-4 gap-4 border-t border-zinc-200/70 dark:border-zinc-800/70">
-                      <div>
-                        <p className="text-xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight">All-in-One</p>
-                        <p className="text-xs text-zinc-500 dark:text-zinc-400">Weddings & Galas</p>
-                      </div>
-                      <div>
-                        <p className="text-xl font-bold text-emerald-600 dark:text-emerald-400 tracking-tight">Budget Clarity</p>
-                        <p className="text-xs text-zinc-500 dark:text-zinc-400">Envelopes & Alerts</p>
-                      </div>
-                      <div>
-                        <p className="text-xl font-bold text-amber-600 dark:text-amber-500 tracking-tight">Curated</p>
-                        <p className="text-xs text-zinc-500 dark:text-zinc-400">Checklists & Timelines</p>
-                      </div>
-                      <div>
-                        <p className="text-xl font-bold text-violet-600 dark:text-violet-400 tracking-tight">Zero Stress</p>
-                        <p className="text-xs text-zinc-500 dark:text-zinc-400">AI Concierge & CRM</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Right Column: Aesthetic Celebration Illustration */}
-                  <div className="lg:col-span-5 flex justify-center">
-                    <AestheticIllustration />
-                  </div>
-                </div>
-              </div>
+            {/* 2. INTERACTIVE VIBE SIMULATOR (Playground) */}
+            <section id="vibe-simulator" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+              <VibePlayground onSelectVibe={handleVibeSelected} />
             </section>
 
-            {/* PRODUCT CAPABILITY SHOWCASE */}
-            <section className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-12">
+            {/* 3. INTERACTIVE BUDGET & ENVELOPE CALCULATOR */}
+            <section id="budget-calculator" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+              <InteractiveBudgetCalculator onStartWithBudget={handleBudgetCalculatorStart} />
+            </section>
+
+            {/* 4. PRODUCT CAPABILITY SUITE */}
+            <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
               <div className="text-center mb-10 space-y-2">
                 <Badge variant="outline" className="text-xs font-semibold uppercase tracking-wider text-amber-700 border-amber-200 dark:text-amber-400 dark:border-amber-900/60">
-                  The Planning Suite
+                  The Full Planning Suite
                 </Badge>
-                <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-zinc-900 dark:text-white">
-                  Every detail of your special day, handled with care
+                <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-zinc-900 dark:text-white">
+                  Thoughtfully crafted for life&apos;s most cherished moments
                 </h2>
-                <p className="text-sm text-zinc-500 dark:text-zinc-400 max-w-lg mx-auto">
-                  Explore the suite of thoughtful tools designed to make celebration planning joyful and stress-free.
+                <p className="text-sm text-zinc-500 dark:text-zinc-400 max-w-xl mx-auto">
+                  Explore how CelebratePro turns complex event logistics into joyful, organized milestones.
                 </p>
               </div>
-
               <InteractiveShowcase />
             </section>
 
-            {/* 6 CORE PILLARS BENTO GRID */}
-            <section id="features" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 border-t border-zinc-200/60 dark:border-zinc-800/60">
-              <div className="text-center max-w-2xl mx-auto mb-12 space-y-2">
-                <Badge variant="outline" className="text-xs font-semibold uppercase tracking-wider text-rose-700 border-rose-200 dark:text-rose-400 dark:border-rose-900/60">
-                  Core Capabilities
-                </Badge>
-                <h2 className="text-3xl font-extrabold tracking-tight text-zinc-900 dark:text-white">
-                  Designed for couples, hosts, and celebration planners
-                </h2>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {[
-                  {
-                    icon: <Sparkles className="h-5 w-5 text-amber-500" />,
-                    title: 'Curated Planning Checklists',
-                    desc: 'Actionable milestones tailored to your guest scale, budget, and celebration theme — from 12 months out to day-of coordination.',
-                    tag: 'Personalized',
-                  },
-                  {
-                    icon: <DollarSign className="h-5 w-5 text-emerald-500" />,
-                    title: 'Precision Budget Envelopes',
-                    desc: 'Allocate spending envelopes for venue, catering, floral, and music with real-time balance calculations so you never overspend.',
-                    tag: 'Financial Peace',
-                  },
-                  {
-                    icon: <Clock className="h-5 w-5 text-rose-500" />,
-                    title: 'Milestone Countdowns',
-                    desc: 'Clear, chronological countdowns so tastings, attire fittings, invitations, and deposits happen smoothly on schedule.',
-                    tag: 'Timelines',
-                  },
-                  {
-                    icon: <ClipboardList className="h-5 w-5 text-sky-500" />,
-                    title: 'Vendor Directory & CRM',
-                    desc: 'Organize caterers, florists, photographers, and venues across inquiries, quotes, confirmed contracts, and payments.',
-                    tag: 'Vendor Rolodex',
-                  },
-                  {
-                    icon: <Bot className="h-5 w-5 text-violet-500" />,
-                    title: 'AI Planning Concierge',
-                    desc: 'Get friendly, personalized advice on seating arrangements, etiquette, menu alternatives, and creative theme accents.',
-                    tag: '24/7 Guidance',
-                  },
-                  {
-                    icon: <Mail className="h-5 w-5 text-pink-500" />,
-                    title: 'Vendor Email Assistant',
-                    desc: 'Draft courteous, polished inquiry letters, quote requests, and tasting bookings to vendors with a single click.',
-                    tag: 'Outreach',
-                  },
-                ].map((feature, i) => (
-                  <Card
-                    key={i}
-                    className="p-6 hover:border-zinc-400/80 dark:hover:border-zinc-700 transition-all hover:shadow-sm"
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="p-2 rounded-xl bg-zinc-100 dark:bg-zinc-800">
-                        {feature.icon}
-                      </div>
-                      <Badge variant="outline" className="text-[10px] font-semibold uppercase tracking-wider">
-                        {feature.tag}
-                      </Badge>
-                    </div>
-                    <h3 className="mt-4 text-base font-bold tracking-tight text-zinc-900 dark:text-white">
-                      {feature.title}
-                    </h3>
-                    <p className="mt-2 text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">
-                      {feature.desc}
-                    </p>
-                  </Card>
-                ))}
-              </div>
+            {/* 5. INTERACTIVE CONCIERGE CHAT PREVIEW */}
+            <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+              <InteractiveConciergeDemo />
             </section>
 
-            {/* HOW IT WORKS SECTION */}
-            <section id="how-it-works" className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-16 border-t border-zinc-200/60 dark:border-zinc-800/60">
-              <div className="text-center max-w-2xl mx-auto mb-12 space-y-2">
-                <Badge variant="outline" className="text-xs font-semibold uppercase tracking-wider">
-                  Three-Step Flow
-                </Badge>
-                <h2 className="text-3xl font-extrabold tracking-tight text-zinc-900 dark:text-white">
-                  How celebration planning works
-                </h2>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <Card className="p-6 text-left">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-zinc-900 text-white font-bold text-sm dark:bg-zinc-100 dark:text-zinc-900">
-                    1
-                  </div>
-                  <h3 className="mt-4 font-bold text-base text-zinc-900 dark:text-white">
-                    Create Your Celebration
-                  </h3>
-                  <p className="mt-2 text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">
-                    Input your event type (Wedding, Birthday, Community, or other), target date, guest count, and initial budget.
-                  </p>
-                </Card>
-
-                <Card className="p-6 text-left">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-zinc-900 text-white font-bold text-sm dark:bg-zinc-100 dark:text-zinc-900">
-                    2
-                  </div>
-                  <h3 className="mt-4 font-bold text-base text-zinc-900 dark:text-white">
-                    Personalized Planning Roadmap
-                  </h3>
-                  <p className="mt-2 text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">
-                    Get an intelligent checklist, recommended budget allocation, and milestone countdown roadmap tailored to your event scale.
-                  </p>
-                </Card>
-
-                <Card className="p-6 text-left">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-zinc-900 text-white font-bold text-sm dark:bg-zinc-100 dark:text-zinc-900">
-                    3
-                  </div>
-                  <h3 className="mt-4 font-bold text-base text-zinc-900 dark:text-white">
-                    Coordinate & Celebrate
-                  </h3>
-                  <p className="mt-2 text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">
-                    Track vendor quotes, draft outreach emails, converse with your planning concierge, and watch your dream celebration come together.
-                  </p>
-                </Card>
-              </div>
+            {/* 6. CHAOS VS CALM TRANSFORMATION */}
+            <section className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+              <ChaosVsCalm onGetStarted={() => (!currentUser ? handleOpenAuth('register') : setViewMode('dashboard'))} />
             </section>
 
-            {/* CALL TO ACTION BANNER */}
-            <section className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-16">
-              <div className="rounded-3xl border border-amber-200/60 bg-gradient-to-r from-zinc-950 via-zinc-900 to-zinc-950 p-8 sm:p-12 text-center text-white shadow-xl dark:border-zinc-800">
-                <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight">
-                  Ready to plan your dream celebration?
-                </h2>
-                <p className="mx-auto mt-4 max-w-xl text-sm sm:text-base text-zinc-300">
-                  Experience the calm of organized, elegant event planning with live real-time coordination.
-                </p>
-                <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-                  {!currentUser ? (
-                    <Button
-                      size="lg"
-                      onClick={() => handleOpenAuth('register')}
-                      className="bg-white text-zinc-900 hover:bg-zinc-100"
-                    >
-                      <span>Create Free Account & Go to Dashboard</span>
-                      <ArrowRight className="h-4 w-4" />
-                    </Button>
-                  ) : (
-                    <Button
-                      size="lg"
-                      onClick={() => setViewMode('dashboard')}
-                      className="bg-white text-zinc-900 hover:bg-zinc-100"
-                    >
-                      <span>Open My Dashboard</span>
-                      <ArrowRight className="h-4 w-4" />
-                    </Button>
-                  )}
+            {/* 7. HIGH-ENERGY CELEBRATION CTA BANNER */}
+            <section className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+              <div className="relative rounded-3xl border border-amber-300/60 bg-gradient-to-r from-zinc-950 via-zinc-900 to-zinc-950 p-8 sm:p-14 text-center text-white shadow-2xl dark:border-zinc-800 overflow-hidden">
+                <div className="absolute top-0 right-0 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+                <div className="relative z-10">
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-400/10 border border-amber-400/20 px-3.5 py-1 text-xs font-bold text-amber-300 mb-4">
+                    <Sparkles className="w-3.5 h-3.5" />
+                    Join 2,500+ Extraordinary Celebrations
+                  </span>
+                  <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight">
+                    Ready to bring your celebration to life?
+                  </h2>
+                  <p className="mx-auto mt-4 max-w-xl text-sm sm:text-base text-zinc-300 leading-relaxed">
+                    Leave the spreadsheets behind. Experience the calm of real-time coordination, precision envelopes, and your personal AI concierge.
+                  </p>
+                  <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+                    {!currentUser ? (
+                      <Button
+                        size="lg"
+                        onClick={() => handleOpenAuth('register')}
+                        className="bg-white text-zinc-900 hover:bg-zinc-100 font-bold px-8 py-6 rounded-2xl shadow-xl text-sm gap-2"
+                      >
+                        <span>Start Planning Free</span>
+                        <ArrowRight className="h-4 w-4" />
+                      </Button>
+                    ) : (
+                      <Button
+                        size="lg"
+                        onClick={() => setViewMode('dashboard')}
+                        className="bg-white text-zinc-900 hover:bg-zinc-100 font-bold px-8 py-6 rounded-2xl shadow-xl text-sm gap-2"
+                      >
+                        <span>Open My Celebrations Dashboard</span>
+                        <ArrowRight className="h-4 w-4" />
+                      </Button>
+                    )}
+                  </div>
                 </div>
               </div>
             </section>
