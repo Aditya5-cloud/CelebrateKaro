@@ -141,3 +141,18 @@ export interface ApiError {
 }
 
 export type ApiResponse<T> = ApiSuccess<T> | ApiError;
+
+// ─── User Types (Multi-User) ──────────────────────────────────────────────────
+
+export type UserRole = 'host' | 'coordinator' | 'community' | 'planner';
+
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  role: UserRole;
+  roleLabel: string;
+  avatarColor: string;
+  created_at: string;
+}
+
