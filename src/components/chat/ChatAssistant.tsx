@@ -21,7 +21,6 @@ export function ChatAssistant({ event }: ChatAssistantProps) {
   const [isLoadingHistory, setIsLoadingHistory] = useState(true);
   const [isSending, setIsSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [activeModel, setActiveModel] = useState<string>('gemini-3.5-flash-lite');
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -90,9 +89,6 @@ export function ChatAssistant({ event }: ChatAssistantProps) {
         json.data.userMessage,
         json.data.assistantMessage,
       ]);
-      if (json.data.model) {
-        setActiveModel(json.data.model);
-      }
     } catch (err: unknown) {
       console.error(err);
       setError(err instanceof Error ? err.message : 'Error sending message.');
@@ -136,7 +132,7 @@ export function ChatAssistant({ event }: ChatAssistantProps) {
                 GenAI Planning Assistant
               </h3>
               <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-indigo-500/30 border border-indigo-400/30 text-indigo-200">
-                {activeModel.includes('gemini') ? 'Gemini 3.5 Flash-Lite' : 'Grounded Assistant'}
+                AI Event Concierge
               </span>
             </div>
             <p className="text-xs text-indigo-200">

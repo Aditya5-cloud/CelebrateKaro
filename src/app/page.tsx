@@ -220,13 +220,13 @@ export default function HomePage() {
               </div>
               <div>
                 <span className="text-sm sm:text-base font-bold tracking-tight text-zinc-900 dark:text-zinc-50 flex items-center gap-1.5">
-                  Celebration Planner
-                  <Badge variant="outline" className="text-[10px] font-semibold py-0">
-                    Gemini 3.5
+                  CelebratePro
+                  <Badge variant="outline" className="text-[10px] font-semibold py-0 text-amber-600 border-amber-200 dark:text-amber-400 dark:border-amber-900/50">
+                    ✨ Event Studio
                   </Badge>
                 </span>
                 <span className="text-[11px] text-zinc-400 dark:text-zinc-500 block leading-tight">
-                  Real-Time Event Management System
+                  Celebration & Event Planning Studio
                 </span>
               </div>
             </Link>
@@ -373,26 +373,25 @@ export default function HomePage() {
         {viewMode === 'landing' ? (
           <div>
             {/* HERO SECTION with Aesthetic Dual-Column Illustration */}
-            <section className="relative overflow-hidden pt-12 pb-16 sm:pt-20 sm:pb-24">
+            <section className="relative overflow-hidden pt-12 pb-16 sm:pt-20 sm:pb-24 bg-gradient-to-b from-amber-50/50 via-rose-50/25 to-transparent dark:from-zinc-900/40 dark:via-transparent dark:to-transparent">
               <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
                   {/* Left Column: Typography, Value Proposition, CTAs */}
                   <div className="lg:col-span-7 space-y-6 text-left">
-                    <div className="inline-flex items-center gap-2 rounded-full border border-zinc-200/80 bg-white px-3.5 py-1 text-xs font-semibold text-zinc-700 shadow-2xs dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300">
-                      <Sparkles className="h-3.5 w-3.5 text-violet-500" />
-                      <span>Google Gemini 3.5 Flash-Lite & SQLite Engine</span>
+                    <div className="inline-flex items-center gap-2 rounded-full border border-amber-200/80 bg-amber-50/70 px-4 py-1.5 text-xs font-semibold text-amber-900 shadow-2xs dark:border-amber-900/60 dark:bg-amber-950/40 dark:text-amber-300">
+                      <Sparkles className="h-3.5 w-3.5 text-amber-600 dark:text-amber-400" />
+                      <span>The Modern Way to Plan Extraordinary Moments</span>
                     </div>
 
                     <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-zinc-950 dark:text-zinc-50 leading-[1.12]">
-                      The intelligent operating system for{' '}
-                      <span className="bg-gradient-to-r from-violet-600 via-indigo-600 to-zinc-900 dark:to-zinc-100 bg-clip-text text-transparent">
-                        unforgettable celebrations.
+                      Where unforgettable celebrations{' '}
+                      <span className="bg-gradient-to-r from-amber-600 via-rose-600 to-violet-600 bg-clip-text text-transparent">
+                        come to life.
                       </span>
                     </h1>
 
                     <p className="text-base sm:text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed max-w-xl">
-                      Plan weddings, milestone birthdays, and community festivals with AI-generated checklists,
-                      integer-cent financial tracking, automated milestone roadmaps, and vendor RFQ drafting.
+                      From dream weddings and milestone birthdays to grand galas — seamlessly orchestrate every detail. Track budgets with clarity, customize intelligent checklists, coordinate vendors, and countdown milestones with total peace of mind.
                     </p>
 
                     {/* Hero Action Buttons */}
@@ -427,23 +426,23 @@ export default function HomePage() {
                       )}
                     </div>
 
-                    {/* Micro Social Proof & Metrics Row */}
+                    {/* Celebratory Metrics Row */}
                     <div className="pt-6 grid grid-cols-2 sm:grid-cols-4 gap-4 border-t border-zinc-200/70 dark:border-zinc-800/70">
                       <div>
-                        <p className="text-xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight">Gemini 3.5</p>
-                        <p className="text-xs text-zinc-500 dark:text-zinc-400">Flash-Lite AI</p>
+                        <p className="text-xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight">All-in-One</p>
+                        <p className="text-xs text-zinc-500 dark:text-zinc-400">Weddings & Galas</p>
                       </div>
                       <div>
-                        <p className="text-xl font-bold text-emerald-600 dark:text-emerald-400 tracking-tight">0ms Latency</p>
-                        <p className="text-xs text-zinc-500 dark:text-zinc-400">Local SQLite</p>
+                        <p className="text-xl font-bold text-emerald-600 dark:text-emerald-400 tracking-tight">Budget Clarity</p>
+                        <p className="text-xs text-zinc-500 dark:text-zinc-400">Envelopes & Alerts</p>
                       </div>
                       <div>
-                        <p className="text-xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight">100% Cents</p>
-                        <p className="text-xs text-zinc-500 dark:text-zinc-400">Zero Drift Math</p>
+                        <p className="text-xl font-bold text-amber-600 dark:text-amber-500 tracking-tight">Curated</p>
+                        <p className="text-xs text-zinc-500 dark:text-zinc-400">Checklists & Timelines</p>
                       </div>
                       <div>
-                        <p className="text-xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight">Real-Time</p>
-                        <p className="text-xs text-zinc-500 dark:text-zinc-400">Multi-User Ready</p>
+                        <p className="text-xl font-bold text-violet-600 dark:text-violet-400 tracking-tight">Zero Stress</p>
+                        <p className="text-xs text-zinc-500 dark:text-zinc-400">AI Concierge & CRM</p>
                       </div>
                     </div>
                   </div>
@@ -459,14 +458,14 @@ export default function HomePage() {
             {/* PRODUCT CAPABILITY SHOWCASE */}
             <section className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-12">
               <div className="text-center mb-10 space-y-2">
-                <Badge variant="outline" className="text-xs font-semibold uppercase tracking-wider">
-                  Platform Architecture
+                <Badge variant="outline" className="text-xs font-semibold uppercase tracking-wider text-amber-700 border-amber-200 dark:text-amber-400 dark:border-amber-900/60">
+                  The Planning Suite
                 </Badge>
                 <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-zinc-900 dark:text-white">
-                  Engineered for seamless celebration execution
+                  Every detail of your special day, handled with care
                 </h2>
                 <p className="text-sm text-zinc-500 dark:text-zinc-400 max-w-lg mx-auto">
-                  Explore each modular capability built into Celebration Planner.
+                  Explore the suite of thoughtful tools designed to make celebration planning joyful and stress-free.
                 </p>
               </div>
 
@@ -476,51 +475,51 @@ export default function HomePage() {
             {/* 6 CORE PILLARS BENTO GRID */}
             <section id="features" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 border-t border-zinc-200/60 dark:border-zinc-800/60">
               <div className="text-center max-w-2xl mx-auto mb-12 space-y-2">
-                <Badge variant="outline" className="text-xs font-semibold uppercase tracking-wider">
-                  Core Superpowers
+                <Badge variant="outline" className="text-xs font-semibold uppercase tracking-wider text-rose-700 border-rose-200 dark:text-rose-400 dark:border-rose-900/60">
+                  Core Capabilities
                 </Badge>
                 <h2 className="text-3xl font-extrabold tracking-tight text-zinc-900 dark:text-white">
-                  Built for hosts, planners, and community directors
+                  Designed for couples, hosts, and celebration planners
                 </h2>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {[
                   {
-                    icon: <Sparkles className="h-5 w-5 text-violet-500" />,
-                    title: 'Gemini 3.5 AI Checklists',
-                    desc: 'Synthesize 8–14 actionable roadmap tasks customized to your guest count, budget, and celebration theme with zero-loss domain fallbacks.',
-                    tag: 'AI Synthesis',
+                    icon: <Sparkles className="h-5 w-5 text-amber-500" />,
+                    title: 'Curated Planning Checklists',
+                    desc: 'Actionable milestones tailored to your guest scale, budget, and celebration theme — from 12 months out to day-of coordination.',
+                    tag: 'Personalized',
                   },
                   {
                     icon: <DollarSign className="h-5 w-5 text-emerald-500" />,
-                    title: 'Integer-Cent Financials',
-                    desc: 'Category-level budget variance analysis with pure integer cent math, eliminating IEEE-754 floating point rounding discrepancies.',
-                    tag: 'Precision Math',
+                    title: 'Precision Budget Envelopes',
+                    desc: 'Allocate spending envelopes for venue, catering, floral, and music with real-time balance calculations so you never overspend.',
+                    tag: 'Financial Peace',
                   },
                   {
-                    icon: <Clock className="h-5 w-5 text-amber-500" />,
-                    title: 'Chronological Milestones',
-                    desc: 'Real-time countdowns ("In 45 days", "Tomorrow", "Today!") with automated overdue flags for missed planning deadlines.',
-                    tag: 'Timeline',
+                    icon: <Clock className="h-5 w-5 text-rose-500" />,
+                    title: 'Milestone Countdowns',
+                    desc: 'Clear, chronological countdowns so tastings, attire fittings, invitations, and deposits happen smoothly on schedule.',
+                    tag: 'Timelines',
                   },
                   {
                     icon: <ClipboardList className="h-5 w-5 text-sky-500" />,
-                    title: 'Vendor Booking Pipeline',
-                    desc: 'Manage caterers, photographers, florists, and venues across 5 stages: Considering → Contacted → Booked → Paid → Cancelled.',
-                    tag: 'Vendor CRM',
+                    title: 'Vendor Directory & CRM',
+                    desc: 'Organize caterers, florists, photographers, and venues across inquiries, quotes, confirmed contracts, and payments.',
+                    tag: 'Vendor Rolodex',
                   },
                   {
-                    icon: <Bot className="h-5 w-5 text-purple-500" />,
-                    title: 'Grounded Assistant Chat',
-                    desc: 'Multi-turn conversational AI grounded in your live database numbers. Ask questions about budget optimization and vendor gaps.',
-                    tag: 'Grounded Memory',
+                    icon: <Bot className="h-5 w-5 text-violet-500" />,
+                    title: 'AI Planning Concierge',
+                    desc: 'Get friendly, personalized advice on seating arrangements, etiquette, menu alternatives, and creative theme accents.',
+                    tag: '24/7 Guidance',
                   },
                   {
-                    icon: <Mail className="h-5 w-5 text-rose-500" />,
-                    title: 'Automated RFQ Drafter',
-                    desc: 'Draft polished vendor inquiries, detailed RFQ spec sheets, tasting requests, and courteous budget negotiations with one click.',
-                    tag: 'Email Generator',
+                    icon: <Mail className="h-5 w-5 text-pink-500" />,
+                    title: 'Vendor Email Assistant',
+                    desc: 'Draft courteous, polished inquiry letters, quote requests, and tasting bookings to vendors with a single click.',
+                    tag: 'Outreach',
                   },
                 ].map((feature, i) => (
                   <Card
@@ -575,10 +574,10 @@ export default function HomePage() {
                     2
                   </div>
                   <h3 className="mt-4 font-bold text-base text-zinc-900 dark:text-white">
-                    AI Roadmap Synthesis
+                    Personalized Planning Roadmap
                   </h3>
                   <p className="mt-2 text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">
-                    Gemini 3.5 Flash-Lite generates a tailored checklist, category budget distribution, and timeline milestones.
+                    Get an intelligent checklist, recommended budget allocation, and milestone countdown roadmap tailored to your event scale.
                   </p>
                 </Card>
 
@@ -587,10 +586,10 @@ export default function HomePage() {
                     3
                   </div>
                   <h3 className="mt-4 font-bold text-base text-zinc-900 dark:text-white">
-                    Collaborate & Execute
+                    Coordinate & Celebrate
                   </h3>
                   <p className="mt-2 text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">
-                    Track vendor quotes, draft outreach emails, converse with the grounded assistant, and mark tasks complete.
+                    Track vendor quotes, draft outreach emails, converse with your planning concierge, and watch your dream celebration come together.
                   </p>
                 </Card>
               </div>
@@ -598,12 +597,12 @@ export default function HomePage() {
 
             {/* CALL TO ACTION BANNER */}
             <section className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-16">
-              <div className="rounded-3xl border border-zinc-200/80 bg-zinc-900 p-8 sm:p-12 text-center text-white shadow-xl dark:border-zinc-800 dark:bg-zinc-900/90">
+              <div className="rounded-3xl border border-amber-200/60 bg-gradient-to-r from-zinc-950 via-zinc-900 to-zinc-950 p-8 sm:p-12 text-center text-white shadow-xl dark:border-zinc-800">
                 <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight">
-                  Ready to launch your celebration?
+                  Ready to plan your dream celebration?
                 </h2>
-                <p className="mx-auto mt-4 max-w-xl text-sm sm:text-base text-zinc-400">
-                  Zero setup, 100% offline-capable, and completely free to start.
+                <p className="mx-auto mt-4 max-w-xl text-sm sm:text-base text-zinc-300">
+                  Experience the calm of organized, elegant event planning with live real-time coordination.
                 </p>
                 <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
                   {!currentUser ? (
@@ -651,7 +650,7 @@ export default function HomePage() {
                       Active User: <strong className="text-zinc-800 dark:text-zinc-200">{currentUser.name}</strong> ({currentUser.roleLabel}) • Real-time database synced
                     </span>
                   ) : (
-                    <span>Real-time local SQLite workspace with Gemini 3.5 AI generation</span>
+                    <span>Private celebrations workspace • Live updates & smart planning assistance</span>
                   )}
                 </p>
               </div>
@@ -806,7 +805,7 @@ export default function HomePage() {
                     : `No ${activeFilter} celebrations found`}
                 </h4>
                 <p className="mx-auto mt-2 max-w-md text-sm text-zinc-600 dark:text-zinc-400">
-                  Create your celebration to get personalized Gemini AI checklists, timeline milestones, and precision budget trackers.
+                  Create your celebration to get personalized planning checklists, milestone countdowns, and precision budget tracking.
                 </p>
                 <div className="mt-6">
                   <Button
@@ -837,13 +836,15 @@ export default function HomePage() {
       {/* ───────────────────────────────────────────────────────────── */}
       <footer className="border-t border-zinc-200/80 bg-white py-8 text-center text-xs text-zinc-500 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-400">
         <div className="mx-auto max-w-7xl px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p>PromptWar Challenge 5: Celebration & Event Planner • GenAI-Powered Assistant</p>
-          <div className="flex items-center gap-4 text-[11px]">
-            <span>Next.js 16 (Turbopack)</span>
+          <p>© {new Date().getFullYear()} CelebratePro. Crafted with elegance for weddings, birthdays, galas, and life&apos;s memorable moments.</p>
+          <div className="flex items-center gap-3 sm:gap-4 text-[11px] text-zinc-400 dark:text-zinc-500">
+            <span>💍 Weddings</span>
             <span>•</span>
-            <span>SQLite WAL Mode</span>
+            <span>🎂 Birthdays & Galas</span>
             <span>•</span>
-            <span>Google Gemini 3.5 Flash-Lite</span>
+            <span>🏘️ Community Gatherings</span>
+            <span>•</span>
+            <span>Private Events</span>
           </div>
         </div>
       </footer>

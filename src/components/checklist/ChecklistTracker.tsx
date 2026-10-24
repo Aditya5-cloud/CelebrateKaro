@@ -268,7 +268,7 @@ export function ChecklistTracker({ event, onChecklistUpdated }: ChecklistTracker
               </div>
             </div>
             <span className="text-[11px] font-medium px-3 py-1 rounded-full bg-indigo-800/60 border border-indigo-700/50 text-indigo-200">
-              Powered by Google Gemini 3.5 Flash-Lite
+              Personalized Celebration Roadmap
             </span>
           </div>
 
@@ -535,7 +535,7 @@ export function ChecklistTracker({ event, onChecklistUpdated }: ChecklistTracker
           </h3>
           <p className="text-xs text-slate-500 max-w-sm mx-auto mt-1 mb-5">
             {items.length === 0
-              ? 'Click "Generate Checklist" above to have Gemini AI create a tailored planning roadmap for your event.'
+              ? 'Click "Generate Checklist" above to create a tailored planning roadmap for your event.'
               : 'Try clearing your search query or switching filters.'}
           </p>
           {items.length === 0 && (

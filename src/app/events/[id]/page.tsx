@@ -355,7 +355,7 @@ export default function EventDetailPage({
                   <div className="max-w-2xl">
                     <span className="inline-flex items-center gap-1.5 rounded-full bg-indigo-600/10 px-3 py-1 text-xs font-semibold text-indigo-700 dark:text-indigo-300">
                       <Sparkles className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
-                      GenAI Planning Assistant
+                      AI Planning Concierge
                     </span>
                     <h3 className="mt-3 text-xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
                       Generate personalized recommendations for {event.name}

@@ -98,7 +98,7 @@ export function AuthModal({
                 {tab === 'signin' ? 'Sign in to Your Account' : 'Create Your Planner Account'}
               </h2>
               <p className="text-xs text-zinc-500 dark:text-zinc-400">
-                {tab === 'signin' ? 'Access your real-time celebrations workspace' : 'Plan celebrations with Gemini 3.5 AI'}
+                {tab === 'signin' ? 'Access your celebrations workspace' : 'Plan celebrations with effortless elegance'}
               </p>
             </div>
           </div>
