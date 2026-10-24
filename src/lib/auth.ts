@@ -1,57 +1,21 @@
 import type { User, UserRole } from '@/types';
 
-export const DEMO_USERS: User[] = [
-  {
-    id: 'user-sarah',
-    name: 'Sarah & Lucas Jenkins',
-    email: 'sarah@wedding.com',
-    role: 'host',
-    roleLabel: 'Wedding Hosts',
-    avatarColor: 'bg-rose-500',
-    created_at: '2026-01-15T10:00:00.000Z',
-  },
-  {
-    id: 'user-marcus',
-    name: 'Marcus Chen',
-    email: 'marcus@birthday.org',
-    role: 'planner',
-    roleLabel: 'Birthday Host & Organizer',
-    avatarColor: 'bg-amber-500',
-    created_at: '2026-02-01T14:30:00.000Z',
-  },
-  {
-    id: 'user-elena',
-    name: 'Elena Rostova',
-    email: 'elena@community.org',
-    role: 'community',
-    roleLabel: 'Community Gala Director',
-    avatarColor: 'bg-emerald-600',
-    created_at: '2026-02-10T09:15:00.000Z',
-  },
-];
-
 const STORAGE_KEY_CURRENT_USER = 'celebration_current_user_v1';
 const STORAGE_KEY_ALL_USERS = 'celebration_registered_users_v1';
 const AUTH_CHANNEL_NAME = 'celebration_planner_auth_channel';
 
 /**
- * Return all registered users (merging default demo personas with any user-registered accounts).
+ * Return all registered users from persistence.
  */
 export function getRegisteredUsers(): User[] {
-  if (typeof window === 'undefined') return DEMO_USERS;
+  if (typeof window === 'undefined') return [];
   try {
     const raw = localStorage.getItem(STORAGE_KEY_ALL_USERS);
-    if (!raw) {
-      localStorage.setItem(STORAGE_KEY_ALL_USERS, JSON.stringify(DEMO_USERS));
-      return DEMO_USERS;
-    }
+    if (!raw) return [];
     const parsed = JSON.parse(raw);
-    if (Array.isArray(parsed) && parsed.length > 0) {
-      return parsed;
-    }
-    return DEMO_USERS;
+    return Array.isArray(parsed) ? parsed : [];
   } catch {
-    return DEMO_USERS;
+    return [];
   }
 }
 
@@ -75,10 +39,8 @@ export function getCurrentUser(): User | null {
 function broadcastAuthChange(user: User | null): void {
   if (typeof window === 'undefined') return;
   try {
-    // 1. Dispatch custom DOM event in current window
     window.dispatchEvent(new CustomEvent('celebration_auth_state_changed', { detail: { user } }));
 
-    // 2. BroadcastChannel for cross-tab instant synchronization
     if ('BroadcastChannel' in window) {
       const channel = new BroadcastChannel(AUTH_CHANNEL_NAME);
       channel.postMessage({ type: 'AUTH_STATE_CHANGED', user });
@@ -90,13 +52,21 @@ function broadcastAuthChange(user: User | null): void {
 }
 
 /**
- * Log in as a user by email, or create a guest session.
+ * Log in as an existing user by email.
  */
 export function loginUser(email: string): { success: boolean; user?: User; error?: string } {
+  const trimmedEmail = email.toLowerCase().trim();
+  if (!trimmedEmail) {
+    return { success: false, error: 'Please enter your email address.' };
+  }
+
   const users = getRegisteredUsers();
-  const matched = users.find((u) => u.email.toLowerCase().trim() === email.toLowerCase().trim());
+  const matched = users.find((u) => u.email.toLowerCase().trim() === trimmedEmail);
   if (!matched) {
-    return { success: false, error: 'No account found with this email. Please register first or use a demo persona.' };
+    return {
+      success: false,
+      error: 'No account found with this email. Please register to create your dashboard.',
+    };
   }
 
   localStorage.setItem(STORAGE_KEY_CURRENT_USER, JSON.stringify(matched));
@@ -105,7 +75,7 @@ export function loginUser(email: string): { success: boolean; user?: User; error
 }
 
 /**
- * Register a new user account.
+ * Register a new production user account and log them in immediately.
  */
 export function registerUser(
   name: string,
@@ -125,26 +95,34 @@ export function registerUser(
   const existingUsers = getRegisteredUsers();
   const duplicate = existingUsers.find((u) => u.email.toLowerCase() === trimmedEmail);
   if (duplicate) {
-    return { success: false, error: 'An account with this email already exists. Please log in.' };
+    return { success: false, error: 'An account with this email already exists. Please sign in.' };
   }
 
   const roleLabels: Record<UserRole, string> = {
     host: 'Event Host',
     planner: 'Event Coordinator',
     community: 'Community Director',
-    coordinator: 'Celebration Lead',
+    coordinator: 'Celebration Producer',
   };
 
-  const colors = ['bg-indigo-600', 'bg-violet-600', 'bg-rose-600', 'bg-amber-600', 'bg-teal-600', 'bg-blue-600'];
-  const randomColor = colors[existingUsers.length % colors.length];
+  const colors = [
+    'bg-violet-600',
+    'bg-indigo-600',
+    'bg-rose-600',
+    'bg-amber-600',
+    'bg-emerald-600',
+    'bg-teal-600',
+    'bg-blue-600',
+  ];
+  const avatarColor = colors[existingUsers.length % colors.length];
 
   const newUser: User = {
-    id: `user-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+    id: `usr_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
     name: trimmedName,
     email: trimmedEmail,
     role,
     roleLabel: roleLabels[role] || 'Event Organizer',
-    avatarColor: randomColor,
+    avatarColor,
     created_at: new Date().toISOString(),
   };
 
@@ -154,14 +132,6 @@ export function registerUser(
   broadcastAuthChange(newUser);
 
   return { success: true, user: newUser };
-}
-
-/**
- * Switch to a specific user (multi-user account switcher).
- */
-export function switchActiveUser(user: User): void {
-  localStorage.setItem(STORAGE_KEY_CURRENT_USER, JSON.stringify(user));
-  broadcastAuthChange(user);
 }
 
 /**

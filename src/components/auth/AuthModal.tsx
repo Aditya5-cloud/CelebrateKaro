@@ -2,19 +2,13 @@
 
 import React, { useState, useEffect } from 'react';
 import type { User, UserRole } from '@/types';
-import {
-  getRegisteredUsers,
-  loginUser,
-  registerUser,
-  switchActiveUser,
-  DEMO_USERS,
-} from '@/lib/auth';
+import { loginUser, registerUser } from '@/lib/auth';
 
 interface AuthModalProps {
   isOpen: boolean;
-  initialTab?: 'signin' | 'register' | 'switch';
+  initialTab?: 'signin' | 'register';
   onClose: () => void;
-  onSuccess: (user: User, action: 'login' | 'register' | 'switch') => void;
+  onSuccess: (user: User, action: 'login' | 'register') => void;
 }
 
 export function AuthModal({
@@ -23,19 +17,18 @@ export function AuthModal({
   onClose,
   onSuccess,
 }: AuthModalProps) {
-  const [tab, setTab] = useState<'signin' | 'register' | 'switch'>(initialTab);
+  const [tab, setTab] = useState<'signin' | 'register'>(initialTab);
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('••••••••');
+  const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [role, setRole] = useState<UserRole>('host');
   const [error, setError] = useState<string | null>(null);
-  const [registeredUsers, setRegisteredUsers] = useState<User[]>(DEMO_USERS);
 
   useEffect(() => {
     if (isOpen) {
       setTab(initialTab);
       setError(null);
-      setRegisteredUsers(getRegisteredUsers());
+      setPassword('');
     }
   }, [isOpen, initialTab]);
 
@@ -56,7 +49,7 @@ export function AuthModal({
     setError(null);
     const result = loginUser(email);
     if (!result.success || !result.user) {
-      setError(result.error || 'Failed to sign in.');
+      setError(result.error || 'Failed to sign in. Please verify your email.');
       return;
     }
     onSuccess(result.user, 'login');
@@ -68,16 +61,10 @@ export function AuthModal({
     setError(null);
     const result = registerUser(name, email, role);
     if (!result.success || !result.user) {
-      setError(result.error || 'Failed to register.');
+      setError(result.error || 'Failed to register account.');
       return;
     }
     onSuccess(result.user, 'register');
-    onClose();
-  };
-
-  const handleSelectUser = (user: User) => {
-    switchActiveUser(user);
-    onSuccess(user, 'switch');
     onClose();
   };
 
@@ -104,14 +91,10 @@ export function AuthModal({
             </div>
             <div>
               <h2 id="auth-modal-title" className="text-base font-bold text-zinc-900 dark:text-zinc-50">
-                {tab === 'signin'
-                  ? 'Sign in to Celebration Planner'
-                  : tab === 'register'
-                  ? 'Create Your Account'
-                  : 'Switch Active User'}
+                {tab === 'signin' ? 'Sign in to Your Account' : 'Create Your Planner Account'}
               </h2>
               <p className="text-xs text-zinc-500 dark:text-zinc-400">
-                Multi-user collaboration with real-time sync
+                {tab === 'signin' ? 'Access your real-time celebrations dashboard' : 'Start organizing your events with Gemini 3.5 AI'}
               </p>
             </div>
           </div>
@@ -163,27 +146,11 @@ export function AuthModal({
                 : 'text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'
             }`}
           >
-            Register
-          </button>
-          <button
-            type="button"
-            role="tab"
-            aria-selected={tab === 'switch'}
-            onClick={() => {
-              setTab('switch');
-              setError(null);
-            }}
-            className={`flex-1 rounded-lg py-1.5 text-xs font-semibold transition-all ${
-              tab === 'switch'
-                ? 'bg-white text-zinc-900 shadow-xs dark:bg-zinc-900 dark:text-white'
-                : 'text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'
-            }`}
-          >
-            Switch User
+            Create Account
           </button>
         </div>
 
-        {/* Error message */}
+        {/* Error alert */}
         {error && (
           <div
             role="alert"
@@ -210,10 +177,11 @@ export function AuthModal({
               <input
                 type="email"
                 required
+                autoFocus
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="e.g. sarah@wedding.com"
-                className="w-full rounded-xl border border-zinc-200 bg-white px-3.5 py-2 text-xs text-zinc-900 placeholder:text-zinc-400 focus:border-violet-500 focus:outline-hidden focus:ring-1 focus:ring-violet-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
+                placeholder="name@example.com"
+                className="w-full rounded-xl border border-zinc-200 bg-white px-3.5 py-2.5 text-xs text-zinc-900 placeholder:text-zinc-400 focus:border-violet-500 focus:outline-hidden focus:ring-1 focus:ring-violet-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
               />
             </div>
 
@@ -223,56 +191,34 @@ export function AuthModal({
               </label>
               <input
                 type="password"
+                required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full rounded-xl border border-zinc-200 bg-white px-3.5 py-2 text-xs text-zinc-900 focus:border-violet-500 focus:outline-hidden focus:ring-1 focus:ring-violet-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
+                placeholder="Enter your password"
+                className="w-full rounded-xl border border-zinc-200 bg-white px-3.5 py-2.5 text-xs text-zinc-900 placeholder:text-zinc-400 focus:border-violet-500 focus:outline-hidden focus:ring-1 focus:ring-violet-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
               />
             </div>
 
             <button
               type="submit"
-              className="w-full rounded-xl bg-zinc-900 py-2.5 text-xs font-semibold text-white shadow-xs hover:bg-zinc-800 focus:outline-hidden focus:ring-2 focus:ring-zinc-400 focus:ring-offset-2 transition-all active:scale-[0.98] dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-100"
+              className="w-full rounded-xl bg-violet-600 py-2.5 text-xs font-semibold text-white shadow-sm hover:bg-violet-700 focus:outline-hidden focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 transition-all active:scale-[0.98]"
             >
-              Sign In
+              Sign In to Dashboard
             </button>
 
-            {/* Quick Demo Sign-In Section */}
-            <div className="pt-2">
-              <div className="relative flex items-center justify-center">
-                <div className="w-full border-t border-zinc-100 dark:border-zinc-800" />
-                <span className="absolute bg-white px-2 text-[10px] uppercase font-semibold text-zinc-400 dark:bg-zinc-900">
-                  Or One-Click Demo Personas
-                </span>
-              </div>
-
-              <div className="mt-3 grid grid-cols-1 gap-1.5">
-                {DEMO_USERS.map((user) => (
-                  <button
-                    key={user.id}
-                    type="button"
-                    onClick={() => handleSelectUser(user)}
-                    className="flex items-center justify-between rounded-xl border border-zinc-200/80 bg-zinc-50/70 p-2 text-left hover:border-violet-300 hover:bg-violet-50/50 dark:border-zinc-800 dark:bg-zinc-800/50 dark:hover:border-violet-800 dark:hover:bg-violet-950/30 transition-all"
-                  >
-                    <div className="flex items-center gap-2.5">
-                      <div className={`flex h-7 w-7 items-center justify-center rounded-lg ${user.avatarColor} text-white font-bold text-xs`}>
-                        {user.name[0]}
-                      </div>
-                      <div>
-                        <p className="text-xs font-semibold text-zinc-800 dark:text-zinc-200">
-                          {user.name}
-                        </p>
-                        <p className="text-[10px] text-zinc-400 dark:text-zinc-500">
-                          {user.roleLabel} • {user.email}
-                        </p>
-                      </div>
-                    </div>
-                    <span className="text-[11px] font-semibold text-violet-600 dark:text-violet-400">
-                      Sign in →
-                    </span>
-                  </button>
-                ))}
-              </div>
-            </div>
+            <p className="text-center text-[11px] text-zinc-500 dark:text-zinc-400 pt-1">
+              Don&apos;t have an account yet?{' '}
+              <button
+                type="button"
+                onClick={() => {
+                  setTab('register');
+                  setError(null);
+                }}
+                className="font-semibold text-violet-600 hover:text-violet-700 dark:text-violet-400"
+              >
+                Create one now
+              </button>
+            </p>
           </form>
         )}
 
@@ -281,15 +227,16 @@ export function AuthModal({
           <form onSubmit={handleRegister} className="mt-4 space-y-3.5">
             <div>
               <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">
-                Full Name
+                Your Full Name
               </label>
               <input
                 type="text"
                 required
+                autoFocus
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="e.g. Alex Rivera"
-                className="w-full rounded-xl border border-zinc-200 bg-white px-3.5 py-2 text-xs text-zinc-900 placeholder:text-zinc-400 focus:border-violet-500 focus:outline-hidden focus:ring-1 focus:ring-violet-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
+                placeholder="e.g. Rachel Adams"
+                className="w-full rounded-xl border border-zinc-200 bg-white px-3.5 py-2.5 text-xs text-zinc-900 placeholder:text-zinc-400 focus:border-violet-500 focus:outline-hidden focus:ring-1 focus:ring-violet-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
               />
             </div>
 
@@ -302,70 +249,62 @@ export function AuthModal({
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="e.g. alex@rivera.com"
-                className="w-full rounded-xl border border-zinc-200 bg-white px-3.5 py-2 text-xs text-zinc-900 placeholder:text-zinc-400 focus:border-violet-500 focus:outline-hidden focus:ring-1 focus:ring-violet-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
+                placeholder="name@example.com"
+                className="w-full rounded-xl border border-zinc-200 bg-white px-3.5 py-2.5 text-xs text-zinc-900 placeholder:text-zinc-400 focus:border-violet-500 focus:outline-hidden focus:ring-1 focus:ring-violet-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
               />
             </div>
 
             <div>
               <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">
-                Primary Event Style
+                Password
+              </label>
+              <input
+                type="password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Choose a secure password"
+                className="w-full rounded-xl border border-zinc-200 bg-white px-3.5 py-2.5 text-xs text-zinc-900 placeholder:text-zinc-400 focus:border-violet-500 focus:outline-hidden focus:ring-1 focus:ring-violet-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">
+                Planning Focus
               </label>
               <select
                 value={role}
                 onChange={(e) => setRole(e.target.value as UserRole)}
-                className="w-full rounded-xl border border-zinc-200 bg-white px-3.5 py-2 text-xs text-zinc-900 focus:border-violet-500 focus:outline-hidden focus:ring-1 focus:ring-violet-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
+                className="w-full rounded-xl border border-zinc-200 bg-white px-3.5 py-2.5 text-xs text-zinc-900 focus:border-violet-500 focus:outline-hidden focus:ring-1 focus:ring-violet-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
               >
-                <option value="host">💍 Wedding or Private Event Host</option>
+                <option value="host">💍 Wedding or Private Host</option>
                 <option value="planner">🎂 Birthday & Family Celebrations Lead</option>
-                <option value="community">🏘️ Community Festival Coordinator</option>
+                <option value="community">🏘️ Community Festival Director</option>
                 <option value="coordinator">🌟 Professional Event Producer</option>
               </select>
             </div>
 
             <button
               type="submit"
-              className="w-full rounded-xl bg-violet-600 py-2.5 text-xs font-semibold text-white shadow-xs hover:bg-violet-700 focus:outline-hidden focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 transition-all active:scale-[0.98]"
+              className="w-full rounded-xl bg-violet-600 py-2.5 text-xs font-semibold text-white shadow-sm hover:bg-violet-700 focus:outline-hidden focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 transition-all active:scale-[0.98]"
             >
-              Create Account & Enter
+              Register & Go to Dashboard
             </button>
-          </form>
-        )}
 
-        {/* TAB 3: Switch Active Persona */}
-        {tab === 'switch' && (
-          <div className="mt-4 space-y-2">
-            <p className="text-xs text-zinc-500 dark:text-zinc-400 mb-2">
-              Select any profile to switch your active workspace in real-time:
+            <p className="text-center text-[11px] text-zinc-500 dark:text-zinc-400 pt-1">
+              Already have an account?{' '}
+              <button
+                type="button"
+                onClick={() => {
+                  setTab('signin');
+                  setError(null);
+                }}
+                className="font-semibold text-violet-600 hover:text-violet-700 dark:text-violet-400"
+              >
+                Sign in
+              </button>
             </p>
-            <div className="space-y-1.5 max-h-64 overflow-y-auto pr-1">
-              {registeredUsers.map((user) => (
-                <button
-                  key={user.id}
-                  type="button"
-                  onClick={() => handleSelectUser(user)}
-                  className="w-full flex items-center justify-between rounded-xl border border-zinc-200/80 bg-zinc-50/70 p-2.5 text-left hover:border-violet-400 hover:bg-violet-50/60 dark:border-zinc-800 dark:bg-zinc-800/40 dark:hover:border-violet-700 dark:hover:bg-violet-950/40 transition-all"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className={`flex h-8 w-8 items-center justify-center rounded-lg ${user.avatarColor} text-white font-bold text-xs shadow-xs`}>
-                      {user.name[0]}
-                    </div>
-                    <div>
-                      <p className="text-xs font-semibold text-zinc-900 dark:text-zinc-100">
-                        {user.name}
-                      </p>
-                      <p className="text-[11px] text-zinc-400 dark:text-zinc-500">
-                        {user.roleLabel} • {user.email}
-                      </p>
-                    </div>
-                  </div>
-                  <span className="text-[11px] font-semibold text-zinc-500 hover:text-violet-600">
-                    Switch →
-                  </span>
-                </button>
-              ))}
-            </div>
-          </div>
+          </form>
         )}
       </div>
     </div>
