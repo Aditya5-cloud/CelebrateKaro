@@ -9,12 +9,33 @@ import { EventFormModal } from '@/components/events/EventFormModal';
 import { DeleteConfirmModal } from '@/components/events/DeleteConfirmModal';
 import { AuthModal } from '@/components/auth/AuthModal';
 import { InteractiveShowcase } from '@/components/landing/InteractiveShowcase';
+import { AestheticIllustration } from '@/components/landing/AestheticIllustration';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/Badge';
+import { Card } from '@/components/ui/card';
+import { TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { formatCurrency } from '@/lib/formatters';
 import {
   getCurrentUser,
   logoutUser,
   subscribeToAuthChanges,
 } from '@/lib/auth';
+import {
+  Sparkles,
+  Calendar,
+  DollarSign,
+  Users,
+  CheckCircle2,
+  ArrowRight,
+  RefreshCw,
+  Plus,
+  LogOut,
+  CalendarDays,
+  Clock,
+  ClipboardList,
+  Bot,
+  Mail,
+} from 'lucide-react';
 
 export default function HomePage() {
   // Navigation View State: 'landing' (default for guests) or 'dashboard'
@@ -153,11 +174,6 @@ export default function HomePage() {
     setIsAuthModalOpen(true);
   };
 
-  /**
-   * When a user logs in or registers:
-   * 1. Save user state
-   * 2. Direct them IMMEDIATELY to their dashboard!
-   */
   const handleAuthSuccess = (user: User, action: 'login' | 'register') => {
     setCurrentUser(user);
     setIsAuthModalOpen(false);
@@ -178,38 +194,36 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#fafafa] text-zinc-900 dark:bg-[#09090b] dark:text-zinc-100 flex flex-col font-sans selection:bg-violet-500 selection:text-white">
+    <div className="min-h-screen bg-[#fafafa] text-zinc-900 dark:bg-[#09090b] dark:text-zinc-100 flex flex-col font-sans selection:bg-zinc-900 selection:text-white dark:selection:bg-white dark:selection:text-zinc-900">
       {/* Accessible skip link */}
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:p-4 focus:bg-white focus:text-violet-600 focus:shadow-lg dark:focus:bg-zinc-900"
+        className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:p-4 focus:bg-white focus:text-zinc-900 focus:shadow-lg dark:focus:bg-zinc-900"
       >
         Skip to main content
       </a>
 
       {/* ───────────────────────────────────────────────────────────── */}
-      {/*  HEADER NAVBAR with Real-Time Corner Controls & Production Auth */}
+      {/*  HEADER NAVBAR: Frosted Glass, Brand Logo, Nav Pills & Auth   */}
       {/* ───────────────────────────────────────────────────────────── */}
-      <header className="sticky top-0 z-40 border-b border-zinc-200/70 bg-white/80 backdrop-blur-xl dark:border-zinc-800/80 dark:bg-zinc-950/80 transition-all">
+      <header className="sticky top-0 z-40 border-b border-zinc-200/80 bg-white/80 backdrop-blur-md dark:border-zinc-800/80 dark:bg-zinc-950/80 transition-all">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 py-3.5">
-          {/* Brand Logo & View Toggle */}
+          {/* Brand Logo & View Switcher */}
           <div className="flex items-center gap-6">
             <Link
               href="/"
               onClick={() => setViewMode('landing')}
               className="flex items-center gap-2.5 group focus:outline-hidden"
             >
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-tr from-violet-600 via-indigo-600 to-purple-500 text-white shadow-md shadow-violet-500/20 group-hover:scale-105 transition-transform">
-                <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                </svg>
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-zinc-900 text-white shadow-xs dark:bg-zinc-100 dark:text-zinc-950 group-hover:scale-105 transition-transform">
+                <Sparkles className="h-4 w-4" />
               </div>
               <div>
-                <span className="text-base font-bold tracking-tight text-zinc-900 dark:text-zinc-50 flex items-center gap-1.5">
+                <span className="text-sm sm:text-base font-bold tracking-tight text-zinc-900 dark:text-zinc-50 flex items-center gap-1.5">
                   Celebration Planner
-                  <span className="text-[10px] font-semibold px-1.5 py-0.2 rounded-full bg-violet-100 text-violet-700 dark:bg-violet-950/70 dark:text-violet-300">
+                  <Badge variant="outline" className="text-[10px] font-semibold py-0">
                     Gemini 3.5
-                  </span>
+                  </Badge>
                 </span>
                 <span className="text-[11px] text-zinc-400 dark:text-zinc-500 block leading-tight">
                   Real-Time Event Management System
@@ -217,21 +231,16 @@ export default function HomePage() {
               </div>
             </Link>
 
-            {/* Navigation Switcher Pills */}
-            <nav aria-label="Page View Navigation" className="hidden md:flex items-center gap-1 rounded-xl bg-zinc-100/90 p-1 dark:bg-zinc-900/90 border border-zinc-200/50 dark:border-zinc-800/50">
-              <button
-                type="button"
+            {/* Navigation View Switcher Tabs */}
+            <TabsList className="hidden md:inline-flex">
+              <TabsTrigger
+                active={viewMode === 'landing'}
                 onClick={() => setViewMode('landing')}
-                className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-all ${
-                  viewMode === 'landing'
-                    ? 'bg-white text-zinc-900 shadow-xs dark:bg-zinc-800 dark:text-white'
-                    : 'text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'
-                }`}
               >
-                <span>🌟 Overview</span>
-              </button>
-              <button
-                type="button"
+                <span>Overview</span>
+              </TabsTrigger>
+              <TabsTrigger
+                active={viewMode === 'dashboard'}
                 onClick={() => {
                   if (!currentUser) {
                     handleOpenAuth('signin');
@@ -239,23 +248,18 @@ export default function HomePage() {
                     setViewMode('dashboard');
                   }
                 }}
-                className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-all ${
-                  viewMode === 'dashboard'
-                    ? 'bg-white text-zinc-900 shadow-xs dark:bg-zinc-800 dark:text-white'
-                    : 'text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'
-                }`}
               >
-                <span>📊 Planner Dashboard</span>
+                <span>Dashboard</span>
                 {events.length > 0 && (
-                  <span className="rounded-full bg-violet-100 px-1.5 py-0.2 text-[10px] font-bold text-violet-700 dark:bg-violet-950 dark:text-violet-300">
+                  <span className="ml-1.5 rounded-full bg-zinc-200/80 px-1.5 py-0.2 text-[10px] font-bold text-zinc-800 dark:bg-zinc-700 dark:text-zinc-200">
                     {events.length}
                   </span>
                 )}
-              </button>
-            </nav>
+              </TabsTrigger>
+            </TabsList>
           </div>
 
-          {/* TOP RIGHT CORNER: Real-Time Sync Indicator & Production Auth Controls */}
+          {/* TOP RIGHT CORNER: Live Sync Indicator & Production Auth */}
           <div className="flex items-center gap-3">
             {/* Real-Time Live Status Pill */}
             <div
@@ -269,23 +273,22 @@ export default function HomePage() {
             {/* When USER IS LOGGED OUT: Sign In & Register */}
             {!currentUser ? (
               <div className="flex items-center gap-2">
-                <button
-                  type="button"
+                <Button
+                  variant="ghost"
+                  size="sm"
                   onClick={() => handleOpenAuth('signin')}
-                  className="rounded-xl px-3.5 py-1.5 text-xs font-semibold text-zinc-700 hover:text-zinc-900 hover:bg-zinc-100/80 dark:text-zinc-300 dark:hover:text-white dark:hover:bg-zinc-800/80 transition-all"
                 >
                   Sign In
-                </button>
-                <button
-                  type="button"
+                </Button>
+                <Button
+                  size="sm"
                   onClick={() => handleOpenAuth('register')}
-                  className="inline-flex items-center gap-1.5 rounded-xl bg-violet-600 px-3.5 py-1.5 text-xs font-semibold text-white shadow-sm hover:bg-violet-700 focus:outline-hidden focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 transition-all active:scale-[0.98]"
                 >
-                  <span>Register Free</span>
-                </button>
+                  Register Free
+                </Button>
               </div>
             ) : (
-              /* When USER IS LOGGED IN: Profile Chip, Dashboard Shortcut, Log Out */
+              /* When USER IS LOGGED IN: Profile Chip, Dashboard Action, Log Out */
               <div className="flex items-center gap-2">
                 {/* User Profile Chip */}
                 <div className="flex items-center gap-2 rounded-xl border border-zinc-200/80 bg-zinc-50/70 pl-2 pr-3 py-1 dark:border-zinc-800 dark:bg-zinc-900/70">
@@ -304,40 +307,33 @@ export default function HomePage() {
 
                 {/* Dashboard Action Button */}
                 {viewMode === 'landing' ? (
-                  <button
-                    type="button"
+                  <Button
+                    size="sm"
                     onClick={() => setViewMode('dashboard')}
-                    className="inline-flex items-center gap-1.5 rounded-xl bg-violet-600 px-3.5 py-1.5 text-xs font-semibold text-white shadow-xs hover:bg-violet-700 transition-all active:scale-[0.98]"
                   >
                     <span>Dashboard</span>
-                    <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                    </svg>
-                  </button>
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </Button>
                 ) : (
-                  <button
-                    type="button"
+                  <Button
+                    size="sm"
                     onClick={() => setIsCreateModalOpen(true)}
-                    className="inline-flex items-center gap-1.5 rounded-xl bg-violet-600 px-3.5 py-1.5 text-xs font-semibold text-white shadow-xs hover:bg-violet-700 transition-all active:scale-[0.98]"
                   >
-                    <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                    </svg>
+                    <Plus className="h-3.5 w-3.5" />
                     <span>New Celebration</span>
-                  </button>
+                  </Button>
                 )}
 
                 {/* Sign Out Button */}
-                <button
-                  type="button"
+                <Button
+                  variant="ghost"
+                  size="icon"
                   onClick={handleLogout}
                   title="Sign Out"
-                  className="rounded-lg p-1.5 text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100 dark:hover:text-zinc-200 dark:hover:bg-zinc-800 transition-colors"
+                  aria-label="Sign Out"
                 >
-                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
-                  </svg>
-                </button>
+                  <LogOut className="h-4 w-4 text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100" />
+                </Button>
               </div>
             )}
           </div>
@@ -354,18 +350,16 @@ export default function HomePage() {
             <div
               role="status"
               aria-live="polite"
-              className="flex items-center justify-between rounded-xl bg-emerald-50 px-4 py-2.5 text-xs sm:text-sm font-medium text-emerald-800 border border-emerald-200/80 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-900/60 shadow-xs animate-in slide-in-from-top-2"
+              className="flex items-center justify-between rounded-xl bg-zinc-900 text-white px-4 py-2.5 text-xs sm:text-sm font-medium dark:bg-zinc-100 dark:text-zinc-900 shadow-md animate-in slide-in-from-top-2"
             >
               <div className="flex items-center gap-2">
-                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300">
-                  ✓
-                </span>
+                <CheckCircle2 className="h-4 w-4 text-emerald-400 dark:text-emerald-600 shrink-0" />
                 <span>{notification}</span>
               </div>
               <button
                 type="button"
                 onClick={() => setNotification(null)}
-                className="text-emerald-600 hover:text-emerald-800 dark:hover:text-emerald-200"
+                className="opacity-70 hover:opacity-100 ml-3"
               >
                 ✕
               </button>
@@ -374,126 +368,118 @@ export default function HomePage() {
         )}
 
         {/* ═══════════════════════════════════════════════════════════ */}
-        {/*  VIEW 1: CLEAN, ENGAGING MARKETING LANDING PAGE (DEFAULT)   */}
+        {/*  VIEW 1: CLEAN, AESTHETIC MARKETING LANDING PAGE           */}
         {/* ═══════════════════════════════════════════════════════════ */}
         {viewMode === 'landing' ? (
           <div>
-            {/* HERO SECTION */}
+            {/* HERO SECTION with Aesthetic Dual-Column Illustration */}
             <section className="relative overflow-hidden pt-12 pb-16 sm:pt-20 sm:pb-24">
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 pointer-events-none overflow-hidden" aria-hidden="true">
-                <div className="absolute top-10 left-1/4 w-96 h-96 rounded-full bg-violet-400/15 blur-3xl dark:bg-violet-600/10" />
-                <div className="absolute top-20 right-1/4 w-80 h-80 rounded-full bg-indigo-400/15 blur-3xl dark:bg-indigo-600/10" />
-              </div>
+              <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                  {/* Left Column: Typography, Value Proposition, CTAs */}
+                  <div className="lg:col-span-7 space-y-6 text-left">
+                    <div className="inline-flex items-center gap-2 rounded-full border border-zinc-200/80 bg-white px-3.5 py-1 text-xs font-semibold text-zinc-700 shadow-2xs dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300">
+                      <Sparkles className="h-3.5 w-3.5 text-violet-500" />
+                      <span>Google Gemini 3.5 Flash-Lite & SQLite Engine</span>
+                    </div>
 
-              <div className="relative mx-auto max-w-5xl px-4 sm:px-6 text-center">
-                <div className="inline-flex items-center gap-2 rounded-full border border-violet-200/80 bg-violet-50/80 px-3.5 py-1 text-xs font-semibold text-violet-800 dark:border-violet-900/60 dark:bg-violet-950/50 dark:text-violet-300 shadow-xs">
-                  <span className="flex h-2 w-2 rounded-full bg-violet-600 animate-pulse" />
-                  <span>Google Gemini 3.5 Flash-Lite & SQLite Powered</span>
-                </div>
+                    <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-zinc-950 dark:text-zinc-50 leading-[1.12]">
+                      The intelligent operating system for{' '}
+                      <span className="bg-gradient-to-r from-violet-600 via-indigo-600 to-zinc-900 dark:to-zinc-100 bg-clip-text text-transparent">
+                        unforgettable celebrations.
+                      </span>
+                    </h1>
 
-                <h1 className="mt-6 text-4xl sm:text-6xl font-extrabold tracking-tight text-zinc-900 dark:text-white leading-[1.15]">
-                  The intelligent operating system for{' '}
-                  <span className="bg-gradient-to-r from-violet-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
-                    unforgettable celebrations.
-                  </span>
-                </h1>
-
-                <p className="mx-auto mt-6 max-w-2xl text-base sm:text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed">
-                  Plan weddings, milestone birthdays, and community festivals with AI-generated checklists,
-                  integer-cent financial tracking, automated milestone roadmaps, and vendor RFQ drafting.
-                </p>
-
-                {/* Hero Action Buttons */}
-                <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-                  {!currentUser ? (
-                    <>
-                      <button
-                        type="button"
-                        onClick={() => handleOpenAuth('register')}
-                        className="inline-flex items-center gap-2 rounded-xl bg-violet-600 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-violet-500/25 hover:bg-violet-700 transition-all active:scale-[0.98]"
-                      >
-                        <span>Get Started Free</span>
-                        <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                        </svg>
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={() => handleOpenAuth('signin')}
-                        className="inline-flex items-center gap-2 rounded-xl border border-zinc-200/90 bg-white/90 px-5 py-3 text-sm font-semibold text-zinc-700 hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800 transition-all"
-                      >
-                        <span>Sign In to Dashboard</span>
-                      </button>
-                    </>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={() => setViewMode('dashboard')}
-                      className="inline-flex items-center gap-2 rounded-xl bg-violet-600 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-violet-500/25 hover:bg-violet-700 transition-all active:scale-[0.98]"
-                    >
-                      <span>Open My Dashboard ({events.length} Events)</span>
-                      <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                      </svg>
-                    </button>
-                  )}
-                </div>
-
-                {/* Core Architectural Metrics */}
-                <div className="mt-12 grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-4xl mx-auto">
-                  <div className="rounded-2xl border border-zinc-200/80 bg-white/70 p-4 shadow-xs dark:border-zinc-800 dark:bg-zinc-900/60">
-                    <p className="text-xl sm:text-2xl font-black text-violet-600 dark:text-violet-400">
-                      Gemini 3.5
+                    <p className="text-base sm:text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed max-w-xl">
+                      Plan weddings, milestone birthdays, and community festivals with AI-generated checklists,
+                      integer-cent financial tracking, automated milestone roadmaps, and vendor RFQ drafting.
                     </p>
-                    <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">Flash-Lite AI Engine</p>
+
+                    {/* Hero Action Buttons */}
+                    <div className="pt-2 flex flex-wrap items-center gap-3">
+                      {!currentUser ? (
+                        <>
+                          <Button
+                            size="lg"
+                            onClick={() => handleOpenAuth('register')}
+                            className="bg-zinc-900 hover:bg-zinc-800 text-white shadow-md dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200"
+                          >
+                            <span>Get Started Free</span>
+                            <ArrowRight className="h-4 w-4" />
+                          </Button>
+
+                          <Button
+                            variant="outline"
+                            size="lg"
+                            onClick={() => handleOpenAuth('signin')}
+                          >
+                            <span>Sign In to Dashboard</span>
+                          </Button>
+                        </>
+                      ) : (
+                        <Button
+                          size="lg"
+                          onClick={() => setViewMode('dashboard')}
+                        >
+                          <span>Open My Dashboard ({events.length} Events)</span>
+                          <ArrowRight className="h-4 w-4" />
+                        </Button>
+                      )}
+                    </div>
+
+                    {/* Micro Social Proof & Metrics Row */}
+                    <div className="pt-6 grid grid-cols-2 sm:grid-cols-4 gap-4 border-t border-zinc-200/70 dark:border-zinc-800/70">
+                      <div>
+                        <p className="text-xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight">Gemini 3.5</p>
+                        <p className="text-xs text-zinc-500 dark:text-zinc-400">Flash-Lite AI</p>
+                      </div>
+                      <div>
+                        <p className="text-xl font-bold text-emerald-600 dark:text-emerald-400 tracking-tight">0ms Latency</p>
+                        <p className="text-xs text-zinc-500 dark:text-zinc-400">Local SQLite</p>
+                      </div>
+                      <div>
+                        <p className="text-xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight">100% Cents</p>
+                        <p className="text-xs text-zinc-500 dark:text-zinc-400">Zero Drift Math</p>
+                      </div>
+                      <div>
+                        <p className="text-xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight">Real-Time</p>
+                        <p className="text-xs text-zinc-500 dark:text-zinc-400">Multi-User Ready</p>
+                      </div>
+                    </div>
                   </div>
-                  <div className="rounded-2xl border border-zinc-200/80 bg-white/70 p-4 shadow-xs dark:border-zinc-800 dark:bg-zinc-900/60">
-                    <p className="text-xl sm:text-2xl font-black text-emerald-600 dark:text-emerald-400">
-                      0ms Latency
-                    </p>
-                    <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">Local SQLite WAL Mode</p>
-                  </div>
-                  <div className="rounded-2xl border border-zinc-200/80 bg-white/70 p-4 shadow-xs dark:border-zinc-800 dark:bg-zinc-900/60">
-                    <p className="text-xl sm:text-2xl font-black text-zinc-900 dark:text-white">
-                      100% Cents
-                    </p>
-                    <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">Integer Precision Math</p>
-                  </div>
-                  <div className="rounded-2xl border border-zinc-200/80 bg-white/70 p-4 shadow-xs dark:border-zinc-800 dark:bg-zinc-900/60">
-                    <p className="text-xl sm:text-2xl font-black text-zinc-900 dark:text-white">
-                      Multi-User
-                    </p>
-                    <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">Real-Time Synced</p>
+
+                  {/* Right Column: Aesthetic Celebration Illustration */}
+                  <div className="lg:col-span-5 flex justify-center">
+                    <AestheticIllustration />
                   </div>
                 </div>
               </div>
             </section>
 
-            {/* PRODUCT CAPABILITY MODULE SHOWCASE */}
-            <section className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-10">
-              <div className="text-center mb-8">
-                <span className="text-xs font-bold uppercase tracking-wider text-violet-600 dark:text-violet-400">
-                  Comprehensive Platform Architecture
-                </span>
-                <h2 className="text-2xl sm:text-3xl font-extrabold text-zinc-900 dark:text-white mt-1">
+            {/* PRODUCT CAPABILITY SHOWCASE */}
+            <section className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-12">
+              <div className="text-center mb-10 space-y-2">
+                <Badge variant="outline" className="text-xs font-semibold uppercase tracking-wider">
+                  Platform Architecture
+                </Badge>
+                <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-zinc-900 dark:text-white">
                   Engineered for seamless celebration execution
                 </h2>
-                <p className="text-sm text-zinc-500 dark:text-zinc-400 max-w-lg mx-auto mt-2">
-                  Explore each modular superpower built into Celebration Planner.
+                <p className="text-sm text-zinc-500 dark:text-zinc-400 max-w-lg mx-auto">
+                  Explore each modular capability built into Celebration Planner.
                 </p>
               </div>
 
               <InteractiveShowcase />
             </section>
 
-            {/* 6 CORE PILLARS FEATURE GRID */}
+            {/* 6 CORE PILLARS BENTO GRID */}
             <section id="features" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 border-t border-zinc-200/60 dark:border-zinc-800/60">
-              <div className="text-center max-w-3xl mx-auto mb-12">
-                <span className="text-xs font-bold uppercase tracking-wider text-violet-600 dark:text-violet-400">
-                  Feature Breakdown
-                </span>
-                <h2 className="text-3xl font-extrabold text-zinc-900 dark:text-white mt-1">
+              <div className="text-center max-w-2xl mx-auto mb-12 space-y-2">
+                <Badge variant="outline" className="text-xs font-semibold uppercase tracking-wider">
+                  Core Superpowers
+                </Badge>
+                <h2 className="text-3xl font-extrabold tracking-tight text-zinc-900 dark:text-white">
                   Built for hosts, planners, and community directors
                 </h2>
               </div>
@@ -501,139 +487,143 @@ export default function HomePage() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {[
                   {
-                    icon: '✨',
+                    icon: <Sparkles className="h-5 w-5 text-violet-500" />,
                     title: 'Gemini 3.5 AI Checklists',
                     desc: 'Synthesize 8–14 actionable roadmap tasks customized to your guest count, budget, and celebration theme with zero-loss domain fallbacks.',
                     tag: 'AI Synthesis',
                   },
                   {
-                    icon: '💰',
+                    icon: <DollarSign className="h-5 w-5 text-emerald-500" />,
                     title: 'Integer-Cent Financials',
                     desc: 'Category-level budget variance analysis with pure integer cent math, eliminating IEEE-754 floating point rounding discrepancies.',
                     tag: 'Precision Math',
                   },
                   {
-                    icon: '⏱️',
+                    icon: <Clock className="h-5 w-5 text-amber-500" />,
                     title: 'Chronological Milestones',
                     desc: 'Real-time countdowns ("In 45 days", "Tomorrow", "Today!") with automated overdue flags for missed planning deadlines.',
                     tag: 'Timeline',
                   },
                   {
-                    icon: '📋',
+                    icon: <ClipboardList className="h-5 w-5 text-sky-500" />,
                     title: 'Vendor Booking Pipeline',
                     desc: 'Manage caterers, photographers, florists, and venues across 5 stages: Considering → Contacted → Booked → Paid → Cancelled.',
                     tag: 'Vendor CRM',
                   },
                   {
-                    icon: '🤖',
+                    icon: <Bot className="h-5 w-5 text-purple-500" />,
                     title: 'Grounded Assistant Chat',
                     desc: 'Multi-turn conversational AI grounded in your live database numbers. Ask questions about budget optimization and vendor gaps.',
                     tag: 'Grounded Memory',
                   },
                   {
-                    icon: '✉️',
+                    icon: <Mail className="h-5 w-5 text-rose-500" />,
                     title: 'Automated RFQ Drafter',
                     desc: 'Draft polished vendor inquiries, detailed RFQ spec sheets, tasting requests, and courteous budget negotiations with one click.',
                     tag: 'Email Generator',
                   },
                 ].map((feature, i) => (
-                  <div
+                  <Card
                     key={i}
-                    className="relative rounded-2xl border border-zinc-200/80 bg-white p-6 shadow-xs hover:border-violet-300 hover:shadow-md transition-all dark:border-zinc-800 dark:bg-zinc-900/60 dark:hover:border-violet-700"
+                    className="p-6 hover:border-zinc-400/80 dark:hover:border-zinc-700 transition-all hover:shadow-sm"
                   >
                     <div className="flex items-center justify-between">
-                      <span className="text-2xl">{feature.icon}</span>
-                      <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-violet-50 text-violet-700 dark:bg-violet-950/80 dark:text-violet-300">
+                      <div className="p-2 rounded-xl bg-zinc-100 dark:bg-zinc-800">
+                        {feature.icon}
+                      </div>
+                      <Badge variant="outline" className="text-[10px] font-semibold uppercase tracking-wider">
                         {feature.tag}
-                      </span>
+                      </Badge>
                     </div>
-                    <h3 className="mt-4 text-base font-bold text-zinc-900 dark:text-white">
+                    <h3 className="mt-4 text-base font-bold tracking-tight text-zinc-900 dark:text-white">
                       {feature.title}
                     </h3>
-                    <p className="mt-2 text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                    <p className="mt-2 text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">
                       {feature.desc}
                     </p>
-                  </div>
+                  </Card>
                 ))}
               </div>
             </section>
 
             {/* HOW IT WORKS SECTION */}
             <section id="how-it-works" className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-16 border-t border-zinc-200/60 dark:border-zinc-800/60">
-              <div className="text-center max-w-2xl mx-auto mb-12">
-                <span className="text-xs font-bold uppercase tracking-wider text-violet-600 dark:text-violet-400">
-                  Effortless Workflow
-                </span>
-                <h2 className="text-3xl font-extrabold text-zinc-900 dark:text-white mt-1">
+              <div className="text-center max-w-2xl mx-auto mb-12 space-y-2">
+                <Badge variant="outline" className="text-xs font-semibold uppercase tracking-wider">
+                  Three-Step Flow
+                </Badge>
+                <h2 className="text-3xl font-extrabold tracking-tight text-zinc-900 dark:text-white">
                   How celebration planning works
                 </h2>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
-                <div className="rounded-2xl border border-zinc-200/80 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-600 text-white font-bold text-sm">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <Card className="p-6 text-left">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-zinc-900 text-white font-bold text-sm dark:bg-zinc-100 dark:text-zinc-900">
                     1
                   </div>
                   <h3 className="mt-4 font-bold text-base text-zinc-900 dark:text-white">
                     Create Your Celebration
                   </h3>
-                  <p className="mt-2 text-xs sm:text-sm text-zinc-600 dark:text-zinc-400">
+                  <p className="mt-2 text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">
                     Input your event type (Wedding, Birthday, Community, or other), target date, guest count, and initial budget.
                   </p>
-                </div>
+                </Card>
 
-                <div className="rounded-2xl border border-zinc-200/80 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-600 text-white font-bold text-sm">
+                <Card className="p-6 text-left">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-zinc-900 text-white font-bold text-sm dark:bg-zinc-100 dark:text-zinc-900">
                     2
                   </div>
                   <h3 className="mt-4 font-bold text-base text-zinc-900 dark:text-white">
                     AI Roadmap Synthesis
                   </h3>
-                  <p className="mt-2 text-xs sm:text-sm text-zinc-600 dark:text-zinc-400">
+                  <p className="mt-2 text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">
                     Gemini 3.5 Flash-Lite generates a tailored checklist, category budget distribution, and timeline milestones.
                   </p>
-                </div>
+                </Card>
 
-                <div className="rounded-2xl border border-zinc-200/80 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-600 text-white font-bold text-sm">
+                <Card className="p-6 text-left">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-zinc-900 text-white font-bold text-sm dark:bg-zinc-100 dark:text-zinc-900">
                     3
                   </div>
                   <h3 className="mt-4 font-bold text-base text-zinc-900 dark:text-white">
                     Collaborate & Execute
                   </h3>
-                  <p className="mt-2 text-xs sm:text-sm text-zinc-600 dark:text-zinc-400">
+                  <p className="mt-2 text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">
                     Track vendor quotes, draft outreach emails, converse with the grounded assistant, and mark tasks complete.
                   </p>
-                </div>
+                </Card>
               </div>
             </section>
 
             {/* CALL TO ACTION BANNER */}
             <section className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-16">
-              <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-violet-900 via-indigo-900 to-zinc-900 p-8 sm:p-12 text-center text-white shadow-2xl">
+              <div className="rounded-3xl border border-zinc-200/80 bg-zinc-900 p-8 sm:p-12 text-center text-white shadow-xl dark:border-zinc-800 dark:bg-zinc-900/90">
                 <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight">
                   Ready to launch your celebration?
                 </h2>
-                <p className="mx-auto mt-4 max-w-xl text-sm sm:text-base text-violet-200">
+                <p className="mx-auto mt-4 max-w-xl text-sm sm:text-base text-zinc-400">
                   Zero setup, 100% offline-capable, and completely free to start.
                 </p>
                 <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
                   {!currentUser ? (
-                    <button
-                      type="button"
+                    <Button
+                      size="lg"
                       onClick={() => handleOpenAuth('register')}
-                      className="rounded-xl bg-white px-6 py-3 text-sm font-bold text-zinc-900 shadow-md hover:bg-zinc-100 transition-all active:scale-[0.98]"
+                      className="bg-white text-zinc-900 hover:bg-zinc-100"
                     >
                       <span>Create Free Account & Go to Dashboard</span>
-                    </button>
+                      <ArrowRight className="h-4 w-4" />
+                    </Button>
                   ) : (
-                    <button
-                      type="button"
+                    <Button
+                      size="lg"
                       onClick={() => setViewMode('dashboard')}
-                      className="rounded-xl bg-white px-6 py-3 text-sm font-bold text-zinc-900 shadow-md hover:bg-zinc-100 transition-all active:scale-[0.98]"
+                      className="bg-white text-zinc-900 hover:bg-zinc-100"
                     >
                       <span>Open My Dashboard</span>
-                    </button>
+                      <ArrowRight className="h-4 w-4" />
+                    </Button>
                   )}
                 </div>
               </div>
@@ -645,15 +635,15 @@ export default function HomePage() {
           /* ═══════════════════════════════════════════════════════════ */
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
             {/* Dashboard Sub-Header */}
-            <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-zinc-200/70 pb-4 dark:border-zinc-800">
+            <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-zinc-200/70 pb-5 dark:border-zinc-800">
               <div>
                 <div className="flex items-center gap-2">
-                  <h2 className="text-xl sm:text-2xl font-extrabold text-zinc-900 dark:text-white">
+                  <h2 className="text-xl sm:text-2xl font-extrabold tracking-tight text-zinc-900 dark:text-white">
                     Celebrations Workspace
                   </h2>
-                  <span className="rounded-full bg-violet-100 px-2.5 py-0.5 text-xs font-bold text-violet-700 dark:bg-violet-950 dark:text-violet-300">
+                  <Badge variant="secondary" className="font-bold">
                     {filteredEvents.length} {filteredEvents.length === 1 ? 'event' : 'events'}
-                  </span>
+                  </Badge>
                 </div>
                 <p className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 mt-1">
                   {currentUser ? (
@@ -667,28 +657,23 @@ export default function HomePage() {
               </div>
 
               <div className="flex items-center gap-2">
-                <button
-                  type="button"
+                <Button
+                  variant="outline"
+                  size="sm"
                   onClick={() => fetchEvents()}
                   disabled={isSyncing}
-                  className="inline-flex items-center gap-1.5 rounded-xl border border-zinc-200 bg-white px-3 py-2 text-xs font-semibold text-zinc-700 hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300"
                 >
-                  <svg className={`h-3.5 w-3.5 ${isSyncing ? 'animate-spin' : ''}`} fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
-                  </svg>
+                  <RefreshCw className={`h-3.5 w-3.5 ${isSyncing ? 'animate-spin' : ''}`} />
                   <span>Sync Now</span>
-                </button>
+                </Button>
 
-                <button
-                  type="button"
+                <Button
+                  size="sm"
                   onClick={() => setIsCreateModalOpen(true)}
-                  className="inline-flex items-center gap-2 rounded-xl bg-violet-600 px-4 py-2 text-xs sm:text-sm font-semibold text-white shadow-xs hover:bg-violet-700 transition-all active:scale-95"
                 >
-                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                  </svg>
+                  <Plus className="h-4 w-4" />
                   <span>Plan Celebration</span>
-                </button>
+                </Button>
               </div>
             </div>
 
@@ -698,41 +683,55 @@ export default function HomePage() {
                 Event Planning Statistics
               </h3>
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                <div className="rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-xs dark:border-zinc-800 dark:bg-zinc-900">
-                  <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">Total Celebrations</span>
-                  <p className="mt-1 text-2xl sm:text-3xl font-extrabold text-zinc-900 dark:text-zinc-100">
+                <Card className="p-5">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">Total Celebrations</span>
+                    <Calendar className="h-4 w-4 text-zinc-400" />
+                  </div>
+                  <p className="mt-2 text-2xl sm:text-3xl font-extrabold text-zinc-900 dark:text-zinc-100 tabular-nums">
                     {stats.totalEvents}
                   </p>
                   <span className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
                     {stats.upcomingCount} upcoming
                   </span>
-                </div>
+                </Card>
 
-                <div className="rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-xs dark:border-zinc-800 dark:bg-zinc-900">
-                  <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">Total Budget Managed</span>
-                  <p className="mt-1 text-2xl sm:text-3xl font-extrabold text-zinc-900 dark:text-zinc-100">
+                <Card className="p-5">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">Total Budget Managed</span>
+                    <DollarSign className="h-4 w-4 text-emerald-600" />
+                  </div>
+                  <p className="mt-2 text-2xl sm:text-3xl font-extrabold text-zinc-900 dark:text-zinc-100 tabular-nums">
                     {formatCurrency(stats.totalBudget)}
                   </p>
-                  <span className="mt-1 text-xs text-emerald-600 dark:text-emerald-400">Tracked in real-time</span>
-                </div>
+                  <span className="mt-1 text-xs text-emerald-600 dark:text-emerald-400 font-medium">
+                    Tracked in real-time
+                  </span>
+                </Card>
 
-                <div className="rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-xs dark:border-zinc-800 dark:bg-zinc-900">
-                  <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">Total Expected Guests</span>
-                  <p className="mt-1 text-2xl sm:text-3xl font-extrabold text-zinc-900 dark:text-zinc-100">
+                <Card className="p-5">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">Total Expected Guests</span>
+                    <Users className="h-4 w-4 text-zinc-400" />
+                  </div>
+                  <p className="mt-2 text-2xl sm:text-3xl font-extrabold text-zinc-900 dark:text-zinc-100 tabular-nums">
                     {stats.totalGuests.toLocaleString()}
                   </p>
                   <span className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">Across all events</span>
-                </div>
+                </Card>
 
-                <div className="rounded-2xl border border-violet-100 bg-violet-50/70 p-5 shadow-xs dark:border-violet-900/50 dark:bg-violet-950/30">
-                  <span className="text-xs font-semibold text-violet-700 dark:text-violet-300">GenAI Assistant</span>
-                  <p className="mt-1 text-sm font-medium text-zinc-800 dark:text-zinc-200">
-                    Ready to synthesize custom vendor checklists, timelines, and ideas.
+                <Card className="p-5 border-violet-200/70 bg-violet-50/50 dark:border-violet-900/40 dark:bg-violet-950/20">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-semibold text-violet-700 dark:text-violet-300">GenAI Assistant</span>
+                    <Sparkles className="h-4 w-4 text-violet-600" />
+                  </div>
+                  <p className="mt-1 text-xs sm:text-sm font-medium text-zinc-800 dark:text-zinc-200">
+                    Ready to synthesize custom vendor checklists and timelines.
                   </p>
-                  <span className="mt-1 inline-block text-xs font-semibold text-violet-600 dark:text-violet-400">
+                  <span className="mt-2 inline-block text-xs font-semibold text-violet-600 dark:text-violet-400">
                     {filteredEvents.length > 0 ? 'Select an event below' : 'Create an event to start'}
                   </span>
-                </div>
+                </Card>
               </div>
             </section>
 
@@ -745,7 +744,7 @@ export default function HomePage() {
               <div
                 role="toolbar"
                 aria-label="Filter events by category"
-                className="flex flex-wrap items-center gap-1.5 rounded-xl border border-zinc-200 bg-white p-1 dark:border-zinc-800 dark:bg-zinc-900"
+                className="flex flex-wrap items-center gap-1 rounded-xl border border-zinc-200 bg-white p-1 dark:border-zinc-800 dark:bg-zinc-900 shadow-2xs"
               >
                 {[
                   { id: 'all', label: 'All Celebrations' },
@@ -761,9 +760,9 @@ export default function HomePage() {
                       type="button"
                       onClick={() => setActiveFilter(tab.id as EventType | 'all')}
                       aria-pressed={active}
-                      className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-all ${
+                      className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-all ${
                         active
-                          ? 'bg-violet-600 text-white shadow-xs'
+                          ? 'bg-zinc-900 text-white shadow-2xs dark:bg-zinc-100 dark:text-zinc-900'
                           : 'text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:text-zinc-200 dark:hover:bg-zinc-800'
                       }`}
                     >
@@ -787,17 +786,19 @@ export default function HomePage() {
                 className="rounded-2xl border border-red-200 bg-red-50 p-8 text-center text-red-800 dark:border-red-900 dark:bg-red-950/30 dark:text-red-300"
               >
                 <p className="font-semibold">{error}</p>
-                <button
+                <Button
+                  variant="destructive"
+                  size="sm"
                   onClick={() => fetchEvents()}
-                  className="mt-4 rounded-lg bg-red-600 px-4 py-2 text-xs font-semibold text-white hover:bg-red-700"
+                  className="mt-4"
                 >
                   Retry
-                </button>
+                </Button>
               </div>
             ) : filteredEvents.length === 0 ? (
               <div className="rounded-3xl border-2 border-dashed border-zinc-200 p-12 text-center dark:border-zinc-800 bg-white dark:bg-zinc-900/50">
-                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-violet-50 text-2xl dark:bg-violet-950/60 text-violet-600">
-                  🎉
+                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100">
+                  <CalendarDays className="h-7 w-7 text-zinc-400" />
                 </div>
                 <h4 className="mt-4 text-lg font-bold text-zinc-900 dark:text-zinc-100">
                   {activeFilter === 'all'
@@ -808,16 +809,12 @@ export default function HomePage() {
                   Create your celebration to get personalized Gemini AI checklists, timeline milestones, and precision budget trackers.
                 </p>
                 <div className="mt-6">
-                  <button
-                    type="button"
+                  <Button
                     onClick={() => setIsCreateModalOpen(true)}
-                    className="inline-flex items-center gap-2 rounded-xl bg-violet-600 px-5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-violet-700 transition-colors"
                   >
-                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                    </svg>
+                    <Plus className="h-4 w-4" />
                     <span>Plan Your First Celebration</span>
-                  </button>
+                  </Button>
                 </div>
               </div>
             ) : (
