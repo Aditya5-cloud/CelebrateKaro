@@ -8,12 +8,11 @@ import { EventCard } from '@/components/events/EventCard';
 import { EventFormModal } from '@/components/events/EventFormModal';
 import { DeleteConfirmModal } from '@/components/events/DeleteConfirmModal';
 import { AuthModal } from '@/components/auth/AuthModal';
-import { InteractiveShowcase } from '@/components/landing/InteractiveShowcase';
-import { CelebrationHero } from '@/components/landing/CelebrationHero';
-import { VibePlayground } from '@/components/landing/VibePlayground';
-import { InteractiveBudgetCalculator } from '@/components/landing/InteractiveBudgetCalculator';
-import { InteractiveConciergeDemo } from '@/components/landing/InteractiveConciergeDemo';
-import { ChaosVsCalm } from '@/components/landing/ChaosVsCalm';
+import { VibrantHero } from '@/components/landing/VibrantHero';
+import { EventCategoriesGrid } from '@/components/landing/EventCategoriesGrid';
+import { ThreeCorePillars } from '@/components/landing/ThreeCorePillars';
+import { CleanInteractiveStudio } from '@/components/landing/CleanInteractiveStudio';
+import { ProfessionalCTA } from '@/components/landing/ProfessionalCTA';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/Badge';
 import { Card } from '@/components/ui/card';
@@ -193,29 +192,6 @@ export default function HomePage() {
     showNotification('You have been logged out.');
   };
 
-  const handleVibeSelected = () => {
-    if (!currentUser) {
-      handleOpenAuth('register');
-    } else {
-      setIsCreateModalOpen(true);
-    }
-  };
-
-  const handleBudgetCalculatorStart = () => {
-    if (!currentUser) {
-      handleOpenAuth('register');
-    } else {
-      setIsCreateModalOpen(true);
-    }
-  };
-
-  const handleScrollToSection = (id: string) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
   return (
     <div className="min-h-screen bg-[#fafafa] text-zinc-900 dark:bg-[#09090b] dark:text-zinc-100 flex flex-col font-sans selection:bg-zinc-900 selection:text-white dark:selection:bg-white dark:selection:text-zinc-900">
       {/* Accessible skip link */}
@@ -238,18 +214,18 @@ export default function HomePage() {
               onClick={() => setViewMode('landing')}
               className="flex items-center gap-2.5 group focus:outline-hidden"
             >
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-zinc-900 text-white shadow-xs dark:bg-zinc-100 dark:text-zinc-950 group-hover:scale-105 transition-transform">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-violet-600 via-fuchsia-600 to-rose-600 text-white shadow-sm group-hover:scale-105 transition-transform">
                 <Sparkles className="h-4 w-4" />
               </div>
               <div>
-                <span className="text-sm sm:text-base font-bold tracking-tight text-zinc-900 dark:text-zinc-50 flex items-center gap-1.5">
+                <span className="text-sm sm:text-base font-extrabold tracking-tight text-slate-900 dark:text-white flex items-center gap-1.5">
                   CelebratePro
-                  <Badge variant="outline" className="text-[10px] font-semibold py-0 text-amber-600 border-amber-200 dark:text-amber-400 dark:border-amber-900/50">
-                    ✨ Event Studio
-                  </Badge>
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-violet-100 text-violet-700 dark:bg-violet-950/60 dark:text-violet-300">
+                    Studio
+                  </span>
                 </span>
-                <span className="text-[11px] text-zinc-400 dark:text-zinc-500 block leading-tight">
-                  Celebration & Event Planning Studio
+                <span className="text-[11px] text-slate-400 dark:text-slate-500 block leading-tight font-medium">
+                  Celebration & Event Planning
                 </span>
               </div>
             </Link>
@@ -300,14 +276,17 @@ export default function HomePage() {
                   variant="ghost"
                   size="sm"
                   onClick={() => handleOpenAuth('signin')}
+                  className="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white"
                 >
                   Sign In
                 </Button>
                 <Button
+                  variant="vibrant"
                   size="sm"
                   onClick={() => handleOpenAuth('register')}
+                  className="rounded-xl px-4 font-bold"
                 >
-                  Register Free
+                  Get Started Free
                 </Button>
               </div>
             ) : (
@@ -394,92 +373,50 @@ export default function HomePage() {
         {/*  VIEW 1: CLEAN, AESTHETIC MARKETING LANDING PAGE           */}
         {/* ═══════════════════════════════════════════════════════════ */}
         {viewMode === 'landing' ? (
-          <div className="space-y-16 sm:space-y-24 pb-20">
-            {/* 1. LUXURY CELEBRATION HERO SECTION */}
-            <CelebrationHero
+          <div className="space-y-12 sm:space-y-20 pb-20">
+            {/* 1. VIBRANT HERO SECTION */}
+            <VibrantHero
               onStartFree={() => handleOpenAuth('register')}
-              onSignIn={() => handleOpenAuth('signin')}
-              onExploreVibes={() => handleScrollToSection('vibe-simulator')}
+              onExploreDemo={() => setViewMode('dashboard')}
               isLoggedIn={!!currentUser}
               onOpenDashboard={() => setViewMode('dashboard')}
               eventsCount={events.length}
             />
 
-            {/* 2. INTERACTIVE VIBE SIMULATOR (Playground) */}
-            <section id="vibe-simulator" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-              <VibePlayground onSelectVibe={handleVibeSelected} />
-            </section>
+            {/* 2. EVENT CATEGORIES SHOWCASE */}
+            <EventCategoriesGrid
+              onSelectCategory={() => {
+                if (!currentUser) {
+                  handleOpenAuth('register');
+                } else {
+                  setIsCreateModalOpen(true);
+                }
+              }}
+            />
 
-            {/* 3. INTERACTIVE BUDGET & ENVELOPE CALCULATOR */}
-            <section id="budget-calculator" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-              <InteractiveBudgetCalculator onStartWithBudget={handleBudgetCalculatorStart} />
-            </section>
+            {/* 3. THREE CORE SUPERPOWERS */}
+            <ThreeCorePillars
+              onExplorePillar={() => setViewMode('dashboard')}
+            />
 
-            {/* 4. PRODUCT CAPABILITY SUITE */}
-            <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-              <div className="text-center mb-10 space-y-2">
-                <Badge variant="outline" className="text-xs font-semibold uppercase tracking-wider text-amber-700 border-amber-200 dark:text-amber-400 dark:border-amber-900/60">
-                  The Full Planning Suite
-                </Badge>
-                <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-zinc-900 dark:text-white">
-                  Thoughtfully crafted for life&apos;s most cherished moments
-                </h2>
-                <p className="text-sm text-zinc-500 dark:text-zinc-400 max-w-xl mx-auto">
-                  Explore how CelebratePro turns complex event logistics into joyful, organized milestones.
-                </p>
-              </div>
-              <InteractiveShowcase />
-            </section>
+            {/* 4. CLEAN INTERACTIVE PLANNER STUDIO (Budget Simulator + AI Concierge) */}
+            <CleanInteractiveStudio
+              onStartPlanning={() => {
+                if (!currentUser) {
+                  handleOpenAuth('register');
+                } else {
+                  setIsCreateModalOpen(true);
+                }
+              }}
+            />
 
-            {/* 5. INTERACTIVE CONCIERGE CHAT PREVIEW */}
-            <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-              <InteractiveConciergeDemo />
-            </section>
-
-            {/* 6. CHAOS VS CALM TRANSFORMATION */}
-            <section className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-              <ChaosVsCalm onGetStarted={() => (!currentUser ? handleOpenAuth('register') : setViewMode('dashboard'))} />
-            </section>
-
-            {/* 7. HIGH-ENERGY CELEBRATION CTA BANNER */}
-            <section className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-              <div className="relative rounded-3xl border border-amber-300/60 bg-gradient-to-r from-zinc-950 via-zinc-900 to-zinc-950 p-8 sm:p-14 text-center text-white shadow-2xl dark:border-zinc-800 overflow-hidden">
-                <div className="absolute top-0 right-0 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
-                <div className="relative z-10">
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-400/10 border border-amber-400/20 px-3.5 py-1 text-xs font-bold text-amber-300 mb-4">
-                    <Sparkles className="w-3.5 h-3.5" />
-                    Join 2,500+ Extraordinary Celebrations
-                  </span>
-                  <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight">
-                    Ready to bring your celebration to life?
-                  </h2>
-                  <p className="mx-auto mt-4 max-w-xl text-sm sm:text-base text-zinc-300 leading-relaxed">
-                    Leave the spreadsheets behind. Experience the calm of real-time coordination, precision envelopes, and your personal AI concierge.
-                  </p>
-                  <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-                    {!currentUser ? (
-                      <Button
-                        size="lg"
-                        onClick={() => handleOpenAuth('register')}
-                        className="bg-white text-zinc-900 hover:bg-zinc-100 font-bold px-8 py-6 rounded-2xl shadow-xl text-sm gap-2"
-                      >
-                        <span>Start Planning Free</span>
-                        <ArrowRight className="h-4 w-4" />
-                      </Button>
-                    ) : (
-                      <Button
-                        size="lg"
-                        onClick={() => setViewMode('dashboard')}
-                        className="bg-white text-zinc-900 hover:bg-zinc-100 font-bold px-8 py-6 rounded-2xl shadow-xl text-sm gap-2"
-                      >
-                        <span>Open My Celebrations Dashboard</span>
-                        <ArrowRight className="h-4 w-4" />
-                      </Button>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </section>
+            {/* 5. PROFESSIONAL CALL-TO-ACTION */}
+            <ProfessionalCTA
+              onStartFree={() => handleOpenAuth('register')}
+              onExploreDemo={() => setViewMode('dashboard')}
+              isLoggedIn={!!currentUser}
+              onOpenDashboard={() => setViewMode('dashboard')}
+            />
           </div>
         ) : (
           /* ═══════════════════════════════════════════════════════════ */
