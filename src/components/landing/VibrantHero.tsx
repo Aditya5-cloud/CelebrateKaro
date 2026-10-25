@@ -1,20 +1,18 @@
 'use client';
 
 import React from 'react';
-import { Sparkles, ArrowRight, Play, Heart, Users, Calendar, DollarSign, CheckCircle2 } from 'lucide-react';
+import { Sparkles, ArrowRight, Heart, Users, Calendar, DollarSign } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface VibrantHeroProps {
-  onStartFree: () => void;
-  onExploreDemo: () => void;
+  onStartPlanning: () => void;
   isLoggedIn: boolean;
   onOpenDashboard: () => void;
   eventsCount: number;
 }
 
 export function VibrantHero({
-  onStartFree,
-  onExploreDemo,
+  onStartPlanning,
   isLoggedIn,
   onOpenDashboard,
   eventsCount,
@@ -55,56 +53,26 @@ export function VibrantHero({
             {/* High-Converting Professional CTA Bar */}
             <div className="pt-2 flex flex-wrap items-center gap-3">
               {!isLoggedIn ? (
-                <>
-                  <Button
-                    variant="vibrant"
-                    size="lg"
-                    onClick={onStartFree}
-                    className="h-12 px-7 text-sm font-bold gap-2 rounded-2xl cursor-pointer"
-                  >
-                    <span>Start Planning — Free</span>
-                    <ArrowRight className="h-4 w-4" />
-                  </Button>
-
-                  <Button
-                    variant="outline"
-                    size="lg"
-                    onClick={onExploreDemo}
-                    className="h-12 px-6 text-sm font-semibold gap-2 rounded-2xl border-slate-200 hover:bg-slate-100 hover:text-slate-900 dark:border-slate-800 dark:hover:bg-slate-800 cursor-pointer"
-                  >
-                    <Play className="h-3.5 w-3.5 text-violet-600 fill-violet-600" />
-                    <span>Explore Live Demo</span>
-                  </Button>
-                </>
+                <Button
+                  variant="vibrant"
+                  size="lg"
+                  onClick={onStartPlanning}
+                  className="h-12 px-8 text-sm font-bold gap-2 rounded-2xl cursor-pointer"
+                >
+                  <span>Start Planning</span>
+                  <ArrowRight className="h-4 w-4" />
+                </Button>
               ) : (
                 <Button
                   variant="vibrant"
                   size="lg"
                   onClick={onOpenDashboard}
-                  className="h-12 px-7 text-sm font-bold gap-2 rounded-2xl"
+                  className="h-12 px-7 text-sm font-bold gap-2 rounded-2xl cursor-pointer"
                 >
                   <span>Open My Celebrations Hub ({eventsCount})</span>
                   <ArrowRight className="h-4 w-4" />
                 </Button>
               )}
-            </div>
-
-            {/* Trust & Guarantee Line */}
-            <div className="pt-2 flex flex-wrap items-center gap-4 text-xs font-medium text-slate-500 dark:text-slate-400">
-              <span className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-                Free to start
-              </span>
-              <span className="text-slate-300 dark:text-slate-700">•</span>
-              <span className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-                Zero credit card required
-              </span>
-              <span className="text-slate-300 dark:text-slate-700">•</span>
-              <span className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-                Real-time multi-user sync
-              </span>
             </div>
           </div>
 

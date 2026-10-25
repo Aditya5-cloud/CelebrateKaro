@@ -83,7 +83,7 @@ export function ThreeCorePillars({ onExplorePillar }: { onExplorePillar?: () => 
               Precision Envelopes
             </h3>
             <p className="mt-2 text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-              Say goodbye to spreadsheet math errors. Track venue, catering, floral, and entertainment envelopes in integer cents with live variance alerts.
+              Say goodbye to spreadsheet math errors. Track venue, catering, floral, and entertainment envelopes in integer cents with automated variance tracking.
             </p>
 
             {/* Visual Micro-Preview */}

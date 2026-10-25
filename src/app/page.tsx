@@ -16,7 +16,6 @@ import { ProfessionalCTA } from '@/components/landing/ProfessionalCTA';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/Badge';
 import { Card } from '@/components/ui/card';
-import { TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { formatCurrency } from '@/lib/formatters';
 import {
   getCurrentUser,
@@ -55,8 +54,7 @@ export default function HomePage() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [notification, setNotification] = useState<string | null>(null);
 
-  // Real-time pulse state
-  const [lastSyncedTime, setLastSyncedTime] = useState<string>('Just now');
+  // Sync state
   const [isSyncing, setIsSyncing] = useState(false);
 
   const showNotification = useCallback((msg: string) => {
@@ -97,8 +95,6 @@ export default function HomePage() {
         throw new Error(json.error || 'Failed to load celebrations.');
       }
       setEvents(json.data);
-      const now = new Date();
-      setLastSyncedTime(now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
     } catch (err: unknown) {
       console.error(err);
       if (!silent) {
@@ -207,7 +203,7 @@ export default function HomePage() {
       {/* ───────────────────────────────────────────────────────────── */}
       <header className="sticky top-0 z-40 border-b border-zinc-200/80 bg-white/80 backdrop-blur-md dark:border-zinc-800/80 dark:bg-zinc-950/80 transition-all">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 py-3.5">
-          {/* Brand Logo & View Switcher */}
+          {/* Brand Logo */}
           <div className="flex items-center gap-6">
             <Link
               href="/"
@@ -229,46 +225,10 @@ export default function HomePage() {
                 </span>
               </div>
             </Link>
-
-            {/* Navigation View Switcher Tabs */}
-            <TabsList className="hidden md:inline-flex">
-              <TabsTrigger
-                active={viewMode === 'landing'}
-                onClick={() => setViewMode('landing')}
-              >
-                <span>Overview</span>
-              </TabsTrigger>
-              <TabsTrigger
-                active={viewMode === 'dashboard'}
-                onClick={() => {
-                  if (!currentUser) {
-                    handleOpenAuth('signin');
-                  } else {
-                    setViewMode('dashboard');
-                  }
-                }}
-              >
-                <span>Dashboard</span>
-                {events.length > 0 && (
-                  <span className="ml-1.5 rounded-full bg-zinc-200/80 px-1.5 py-0.2 text-[10px] font-bold text-zinc-800 dark:bg-zinc-700 dark:text-zinc-200">
-                    {events.length}
-                  </span>
-                )}
-              </TabsTrigger>
-            </TabsList>
           </div>
 
-          {/* TOP RIGHT CORNER: Live Sync Indicator & Production Auth */}
+          {/* TOP RIGHT CORNER: Production Auth Controls */}
           <div className="flex items-center gap-3">
-            {/* Real-Time Live Status Pill */}
-            <div
-              title={`Live real-time sync active (Last sync: ${lastSyncedTime})`}
-              className="hidden sm:flex items-center gap-1.5 rounded-full border border-zinc-200/80 bg-zinc-50/80 px-2.5 py-1 text-[11px] font-medium text-zinc-600 dark:border-zinc-800 dark:bg-zinc-900/60 dark:text-zinc-400"
-            >
-              <span className={`h-2 w-2 rounded-full bg-emerald-500 ${isSyncing ? 'animate-ping' : 'animate-pulse'}`} />
-              <span>Real-Time Live</span>
-            </div>
-
             {/* When USER IS LOGGED OUT: Sign In & Register */}
             {!currentUser ? (
               <div className="flex items-center gap-2">
@@ -276,7 +236,7 @@ export default function HomePage() {
                   variant="ghost"
                   size="sm"
                   onClick={() => handleOpenAuth('signin')}
-                  className="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white"
+                  className="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white cursor-pointer"
                 >
                   Sign In
                 </Button>
@@ -284,9 +244,9 @@ export default function HomePage() {
                   variant="vibrant"
                   size="sm"
                   onClick={() => handleOpenAuth('register')}
-                  className="rounded-xl px-4 font-bold"
+                  className="rounded-xl px-4 font-bold cursor-pointer"
                 >
-                  Get Started Free
+                  Get Started
                 </Button>
               </div>
             ) : (
@@ -312,18 +272,30 @@ export default function HomePage() {
                   <Button
                     size="sm"
                     onClick={() => setViewMode('dashboard')}
+                    className="cursor-pointer"
                   >
                     <span>Dashboard</span>
                     <ArrowRight className="h-3.5 w-3.5" />
                   </Button>
                 ) : (
-                  <Button
-                    size="sm"
-                    onClick={() => setIsCreateModalOpen(true)}
-                  >
-                    <Plus className="h-3.5 w-3.5" />
-                    <span>New Celebration</span>
-                  </Button>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setViewMode('landing')}
+                      className="hidden sm:inline-flex text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 cursor-pointer"
+                    >
+                      <span>Home</span>
+                    </Button>
+                    <Button
+                      size="sm"
+                      onClick={() => setIsCreateModalOpen(true)}
+                      className="cursor-pointer"
+                    >
+                      <Plus className="h-3.5 w-3.5" />
+                      <span>New Celebration</span>
+                    </Button>
+                  </div>
                 )}
 
                 {/* Sign Out Button */}
@@ -376,8 +348,7 @@ export default function HomePage() {
           <div className="space-y-12 sm:space-y-20 pb-20">
             {/* 1. VIBRANT HERO SECTION */}
             <VibrantHero
-              onStartFree={() => handleOpenAuth('register')}
-              onExploreDemo={() => setViewMode('dashboard')}
+              onStartPlanning={() => handleOpenAuth('register')}
               isLoggedIn={!!currentUser}
               onOpenDashboard={() => setViewMode('dashboard')}
               eventsCount={events.length}
@@ -412,8 +383,7 @@ export default function HomePage() {
 
             {/* 5. PROFESSIONAL CALL-TO-ACTION */}
             <ProfessionalCTA
-              onStartFree={() => handleOpenAuth('register')}
-              onExploreDemo={() => setViewMode('dashboard')}
+              onStartPlanning={() => handleOpenAuth('register')}
               isLoggedIn={!!currentUser}
               onOpenDashboard={() => setViewMode('dashboard')}
             />
@@ -437,10 +407,10 @@ export default function HomePage() {
                 <p className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 mt-1">
                   {currentUser ? (
                     <span>
-                      Active User: <strong className="text-zinc-800 dark:text-zinc-200">{currentUser.name}</strong> ({currentUser.roleLabel}) • Real-time database synced
+                      Active User: <strong className="text-zinc-800 dark:text-zinc-200">{currentUser.name}</strong> ({currentUser.roleLabel}) • Database synced
                     </span>
                   ) : (
-                    <span>Private celebrations workspace • Live updates & smart planning assistance</span>
+                    <span>Private celebrations workspace • Dedicated planning assistance</span>
                   )}
                 </p>
               </div>
@@ -494,7 +464,7 @@ export default function HomePage() {
                     {formatCurrency(stats.totalBudget)}
                   </p>
                   <span className="mt-1 text-xs text-emerald-600 dark:text-emerald-400 font-medium">
-                    Tracked in real-time
+                    Across active celebrations
                   </span>
                 </Card>
 

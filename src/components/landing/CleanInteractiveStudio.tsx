@@ -104,7 +104,7 @@ export function CleanInteractiveStudio({ onStartPlanning }: CleanInteractiveStud
         tips: [
           'Review your category budget envelopes first so you stay within target.',
           'Confirm guest headcount 3 weeks prior with your venue catering team.',
-          'Save this directly into your live dashboard once you create your celebration!',
+          'Save this directly into your dashboard once you create your celebration!',
         ],
       },
     ]);
@@ -138,31 +138,31 @@ export function CleanInteractiveStudio({ onStartPlanning }: CleanInteractiveStud
             <button
               type="button"
               onClick={() => setActiveTab('budget')}
-              className={`flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-bold transition-all ${
+              className={`flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-bold transition-all cursor-pointer ${
                 activeTab === 'budget'
                   ? 'bg-white text-slate-950 shadow-sm dark:bg-slate-900 dark:text-white'
                   : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'
               }`}
             >
               <DollarSign className="w-3.5 h-3.5 text-emerald-600" />
-              <span>Live Budget Simulator</span>
+              <span>Budget Calculator</span>
             </button>
             <button
               type="button"
               onClick={() => setActiveTab('concierge')}
-              className={`flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-bold transition-all ${
+              className={`flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-bold transition-all cursor-pointer ${
                 activeTab === 'concierge'
                   ? 'bg-white text-slate-950 shadow-sm dark:bg-slate-900 dark:text-white'
                   : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'
               }`}
             >
               <Bot className="w-3.5 h-3.5 text-violet-600" />
-              <span>AI Concierge Demo</span>
+              <span>AI Event Concierge</span>
             </button>
           </div>
         </div>
 
-        {/* Tab 1: Live Budget Simulator */}
+        {/* Tab 1: Budget Calculator */}
         {activeTab === 'budget' ? (
           <div className="mt-8 space-y-8 animate-in fade-in duration-200">
             {/* Quick Archetype Selector */}
@@ -278,7 +278,7 @@ export function CleanInteractiveStudio({ onStartPlanning }: CleanInteractiveStud
             </div>
           </div>
         ) : (
-          /* Tab 2: AI Concierge Live Demo */
+          /* Tab 2: AI Event Concierge */
           <div className="mt-8 space-y-6 animate-in fade-in duration-200">
             {/* Quick Chips */}
             <div className="flex flex-wrap items-center gap-2">
