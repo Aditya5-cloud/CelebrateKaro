@@ -27,7 +27,6 @@ import {
   Calendar,
   DollarSign,
   Users,
-  CheckCircle2,
   ArrowRight,
   RefreshCw,
   Plus,
@@ -57,33 +56,47 @@ export default function HomePage() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [eventToDelete, setEventToDelete] = useState<EventWithStats | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [notification, setNotification] = useState<string | null>(null);
 
   // Sync state
   const [isSyncing, setIsSyncing] = useState(false);
 
-  const showNotification = useCallback((msg: string) => {
-    setNotification(msg);
-    setTimeout(() => {
-      setNotification((curr) => (curr === msg ? null : curr));
-    }, 4500);
-  }, []);
-
-  // Check URL query parameters on initial mount (e.g. ?view=dashboard)
+  // Synchronize view mode with URL query params (e.g. ?view=dashboard) and back navigation
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const params = new URLSearchParams(window.location.search);
-      if (params.get('view') === 'dashboard') {
-        setViewMode('dashboard');
+    const checkView = () => {
+      if (typeof window !== 'undefined') {
+        const params = new URLSearchParams(window.location.search);
+        const view = params.get('view');
+        if (view === 'dashboard') {
+          setViewMode('dashboard');
+        } else if (view === 'landing') {
+          setViewMode('landing');
+        }
       }
-    }
+    };
+
+    checkView();
+    window.addEventListener('popstate', checkView);
+    return () => window.removeEventListener('popstate', checkView);
   }, []);
 
   // Subscribe to real-time auth changes across tabs
   useEffect(() => {
-    setCurrentUser(getCurrentUser());
-    const unsubscribe = subscribeToAuthChanges((user) => {
-      setCurrentUser(user);
+    const user = getCurrentUser();
+    setCurrentUser(user);
+    if (user && typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('view') !== 'landing') {
+        setViewMode('dashboard');
+      }
+    }
+    const unsubscribe = subscribeToAuthChanges((newUser) => {
+      setCurrentUser(newUser);
+      if (newUser && typeof window !== 'undefined') {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('view') !== 'landing') {
+          setViewMode('dashboard');
+        }
+      }
     });
     return () => unsubscribe();
   }, []);
@@ -146,7 +159,6 @@ export default function HomePage() {
   }, [events]);
 
   const handleEventCreated = () => {
-    showNotification('Celebration created successfully! Synthesizing checklist and budget roadmap.');
     fetchEvents();
   };
 
@@ -159,7 +171,6 @@ export default function HomePage() {
         throw new Error(json.error || 'Failed to delete celebration.');
       }
       setEventToDelete(null);
-      showNotification(`"${event.name}" was successfully removed.`);
       fetchEvents();
     } catch (err: unknown) {
       console.error(err);
@@ -174,23 +185,16 @@ export default function HomePage() {
     setIsAuthModalOpen(true);
   };
 
-  const handleAuthSuccess = (user: User, action: 'login' | 'register') => {
+  const handleAuthSuccess = (user: User) => {
     setCurrentUser(user);
     setIsAuthModalOpen(false);
     setViewMode('dashboard');
-
-    if (action === 'register') {
-      showNotification(`Welcome to Celebration Planner, ${user.name}! Your workspace is ready.`);
-    } else {
-      showNotification(`Welcome back, ${user.name}! Navigated to your dashboard.`);
-    }
   };
 
   const handleLogout = () => {
     logoutUser();
     setCurrentUser(null);
     setViewMode('landing');
-    showNotification('You have been logged out.');
   };
 
   return (
@@ -326,29 +330,6 @@ export default function HomePage() {
       {/*  MAIN CONTENT CONTAINER                                       */}
       {/* ───────────────────────────────────────────────────────────── */}
       <main id="main-content" className="flex-1">
-        {/* Global Toast Notification */}
-        {notification && (
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-3">
-            <div
-              role="status"
-              aria-live="polite"
-              className="flex items-center justify-between rounded-xl bg-zinc-900 text-white px-4 py-2.5 text-xs sm:text-sm font-medium dark:bg-zinc-100 dark:text-zinc-900 shadow-md animate-in slide-in-from-top-2"
-            >
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-emerald-400 dark:text-emerald-600 shrink-0" />
-                <span>{notification}</span>
-              </div>
-              <button
-                type="button"
-                onClick={() => setNotification(null)}
-                className="opacity-70 hover:opacity-100 ml-3"
-              >
-                ✕
-              </button>
-            </div>
-          </div>
-        )}
-
         {/* ═══════════════════════════════════════════════════════════ */}
         {/*  VIEW 1: CLEAN, AESTHETIC MARKETING LANDING PAGE           */}
         {/* ═══════════════════════════════════════════════════════════ */}

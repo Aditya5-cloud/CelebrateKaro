@@ -79,7 +79,7 @@ export default function EventDetailPage({
       if (!res.ok || !json.success) {
         throw new Error(json.error || 'Failed to delete event.');
       }
-      router.push('/');
+      router.push('/?view=dashboard');
     } catch (err: unknown) {
       console.error(err);
       alert('Failed to delete event. Please try again.');
@@ -103,7 +103,7 @@ export default function EventDetailPage({
         <div className="max-w-md text-center rounded-3xl bg-white p-8 shadow-sm border border-[#073330]/10">
           <p className="text-rose-600 font-bold">{error || 'Event not found.'}</p>
           <Link
-            href="/"
+            href="/?view=dashboard"
             className="mt-4 inline-flex items-center gap-2 rounded-xl bg-[#073330] px-4 py-2 text-sm font-bold text-white hover:bg-[#09423e] transition-colors"
           >
             <ArrowLeft className="h-4 w-4" />
@@ -118,7 +118,7 @@ export default function EventDetailPage({
 
   const tabs = [
     { id: 'overview', label: 'Overview & Summary', icon: LayoutDashboard, color: 'text-amber-500', badge: undefined },
-    { id: 'checklist', label: '✨ AI Checklist', icon: Sparkles, color: 'text-emerald-500', badge: undefined },
+    { id: 'checklist', label: 'AI Checklist', icon: Sparkles, color: 'text-emerald-500', badge: undefined },
     { id: 'budget', label: 'Budget Tracker', icon: DollarSign, color: 'text-emerald-600', badge: formatCurrency(event.total_budget) },
     { id: 'timeline', label: 'Timeline & Milestones', icon: Calendar, color: 'text-blue-500', badge: `${event.milestones_count}` },
     { id: 'vendors', label: 'Vendor Directory', icon: Users, color: 'text-purple-500', badge: `${event.vendors_count}` },
@@ -135,7 +135,7 @@ export default function EventDetailPage({
       badge: relativeDate.label,
     },
     checklist: {
-      title: '✨ AI Checklist & Roadmap',
+      title: 'AI Checklist & Roadmap',
       subtitle: 'Tailored celebration milestone checklist and task progress.',
       icon: Sparkles,
       iconColor: 'text-emerald-700',
@@ -184,7 +184,7 @@ export default function EventDetailPage({
       <header className="border-b border-white/10 bg-[#073330] text-white sticky top-0 z-20 shadow-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 py-3.5">
           <Link
-            href="/"
+            href="/?view=dashboard"
             className="inline-flex items-center gap-2 text-sm font-bold text-slate-200 hover:text-white transition-colors group cursor-pointer"
           >
             <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-0.5" />
@@ -284,7 +284,7 @@ export default function EventDetailPage({
           {/* Sidebar Bottom Back Link */}
           <div className="pt-6 mt-6 border-t border-slate-200/80">
             <Link
-              href="/"
+              href="/?view=dashboard"
               className="text-xs font-bold text-slate-600 hover:text-[#073330] flex items-center gap-1.5 cursor-pointer"
             >
               <ArrowLeft className="w-3.5 h-3.5 text-[#073330]" />
