@@ -8,11 +8,13 @@ import { EventCard } from '@/components/events/EventCard';
 import { EventFormModal } from '@/components/events/EventFormModal';
 import { DeleteConfirmModal } from '@/components/events/DeleteConfirmModal';
 import { AuthModal } from '@/components/auth/AuthModal';
-import { VibrantHero } from '@/components/landing/VibrantHero';
-import { EventCategoriesGrid } from '@/components/landing/EventCategoriesGrid';
-import { ThreeCorePillars } from '@/components/landing/ThreeCorePillars';
+import { InspoHero } from '@/components/landing/InspoHero';
+import { HowItWorksInspo } from '@/components/landing/HowItWorksInspo';
+import { CelebrationsCarousel } from '@/components/landing/CelebrationsCarousel';
 import { CleanInteractiveStudio } from '@/components/landing/CleanInteractiveStudio';
-import { ProfessionalCTA } from '@/components/landing/ProfessionalCTA';
+import { LovedByHosts } from '@/components/landing/LovedByHosts';
+import { InspoFinalCTA } from '@/components/landing/InspoFinalCTA';
+import { InspoFooter } from '@/components/landing/InspoFooter';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/Badge';
 import { Card } from '@/components/ui/card';
@@ -199,9 +201,9 @@ export default function HomePage() {
       </a>
 
       {/* ───────────────────────────────────────────────────────────── */}
-      {/*  HEADER NAVBAR: Frosted Glass, Brand Logo, Nav Pills & Auth   */}
+      {/*  HEADER NAVBAR: Inspo Deep Evergreen & Mint Accents          */}
       {/* ───────────────────────────────────────────────────────────── */}
-      <header className="sticky top-0 z-40 border-b border-zinc-200/80 bg-white/80 backdrop-blur-md dark:border-zinc-800/80 dark:bg-zinc-950/80 transition-all">
+      <header className="sticky top-0 z-40 border-b border-white/10 bg-[#073330] text-white transition-all shadow-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 py-3.5">
           {/* Brand Logo */}
           <div className="flex items-center gap-6">
@@ -210,17 +212,17 @@ export default function HomePage() {
               onClick={() => setViewMode('landing')}
               className="flex items-center gap-2.5 group focus:outline-hidden"
             >
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-violet-600 via-fuchsia-600 to-rose-600 text-white shadow-sm group-hover:scale-105 transition-transform">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#00e599] text-[#073330] shadow-sm group-hover:scale-105 transition-transform font-black">
                 <Sparkles className="h-4 w-4" />
               </div>
               <div>
-                <span className="text-sm sm:text-base font-extrabold tracking-tight text-slate-900 dark:text-white flex items-center gap-1.5">
+                <span className="text-sm sm:text-base font-extrabold tracking-tight text-white flex items-center gap-1.5">
                   CelebratePro
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-violet-100 text-violet-700 dark:bg-violet-950/60 dark:text-violet-300">
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#00e599]/20 text-[#00e599]">
                     Studio
                   </span>
                 </span>
-                <span className="text-[11px] text-slate-400 dark:text-slate-500 block leading-tight font-medium">
+                <span className="text-[11px] text-slate-300 block leading-tight font-medium">
                   Celebration & Event Planning
                 </span>
               </div>
@@ -231,37 +233,37 @@ export default function HomePage() {
           <div className="flex items-center gap-3">
             {/* When USER IS LOGGED OUT: Sign In & Register */}
             {!currentUser ? (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-3">
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => handleOpenAuth('signin')}
-                  className="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white cursor-pointer"
+                  className="text-slate-200 hover:text-white hover:bg-white/10 cursor-pointer font-semibold"
                 >
                   Sign In
                 </Button>
                 <Button
-                  variant="vibrant"
+                  variant="mint"
                   size="sm"
                   onClick={() => handleOpenAuth('register')}
-                  className="rounded-xl px-4 font-bold cursor-pointer"
+                  className="rounded-full px-5 py-2 font-black cursor-pointer text-[#073330] bg-[#00e599] hover:bg-[#1cf3a6] shadow-md uppercase text-xs tracking-wider"
                 >
-                  Get Started
+                  Get Started →
                 </Button>
               </div>
             ) : (
               /* When USER IS LOGGED IN: Profile Chip, Dashboard Action, Log Out */
               <div className="flex items-center gap-2">
                 {/* User Profile Chip */}
-                <div className="flex items-center gap-2 rounded-xl border border-zinc-200/80 bg-zinc-50/70 pl-2 pr-3 py-1 dark:border-zinc-800 dark:bg-zinc-900/70">
+                <div className="flex items-center gap-2 rounded-xl border border-white/15 bg-white/10 pl-2 pr-3 py-1 text-white">
                   <div className={`flex h-6 w-6 items-center justify-center rounded-lg ${currentUser.avatarColor} text-white font-bold text-[11px]`}>
                     {currentUser.name[0]}
                   </div>
                   <div className="text-left hidden sm:block">
-                    <p className="text-xs font-semibold leading-tight text-zinc-900 dark:text-zinc-100 truncate max-w-[130px]">
+                    <p className="text-xs font-semibold leading-tight text-white truncate max-w-[130px]">
                       {currentUser.name}
                     </p>
-                    <p className="text-[10px] text-zinc-400 dark:text-zinc-500 leading-tight">
+                    <p className="text-[10px] text-slate-300 leading-tight">
                       {currentUser.roleLabel}
                     </p>
                   </div>
@@ -271,8 +273,9 @@ export default function HomePage() {
                 {viewMode === 'landing' ? (
                   <Button
                     size="sm"
+                    variant="mint"
                     onClick={() => setViewMode('dashboard')}
-                    className="cursor-pointer"
+                    className="cursor-pointer rounded-full text-[#073330] font-bold"
                   >
                     <span>Dashboard</span>
                     <ArrowRight className="h-3.5 w-3.5" />
@@ -283,14 +286,15 @@ export default function HomePage() {
                       variant="ghost"
                       size="sm"
                       onClick={() => setViewMode('landing')}
-                      className="hidden sm:inline-flex text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 cursor-pointer"
+                      className="hidden sm:inline-flex text-slate-200 hover:text-white hover:bg-white/10 cursor-pointer"
                     >
                       <span>Home</span>
                     </Button>
                     <Button
                       size="sm"
+                      variant="mint"
                       onClick={() => setIsCreateModalOpen(true)}
-                      className="cursor-pointer"
+                      className="cursor-pointer rounded-full text-[#073330] font-bold"
                     >
                       <Plus className="h-3.5 w-3.5" />
                       <span>New Celebration</span>
@@ -345,32 +349,26 @@ export default function HomePage() {
         {/*  VIEW 1: CLEAN, AESTHETIC MARKETING LANDING PAGE           */}
         {/* ═══════════════════════════════════════════════════════════ */}
         {viewMode === 'landing' ? (
-          <div className="space-y-12 sm:space-y-20 pb-20">
-            {/* 1. VIBRANT HERO SECTION */}
-            <VibrantHero
+          <div className="pb-0 bg-[#faf8f4]">
+            {/* 1. INSPO HERO SECTION (Deep Evergreen, Mint CTA, Tilted Photo Collage, Press Strip) */}
+            <InspoHero
               onStartPlanning={() => handleOpenAuth('register')}
               isLoggedIn={!!currentUser}
               onOpenDashboard={() => setViewMode('dashboard')}
               eventsCount={events.length}
             />
 
-            {/* 2. EVENT CATEGORIES SHOWCASE */}
-            <EventCategoriesGrid
-              onSelectCategory={() => {
-                if (!currentUser) {
-                  handleOpenAuth('register');
-                } else {
-                  setIsCreateModalOpen(true);
-                }
-              }}
+            {/* 2. HOW CELEBRATEPRO WORKS (Scenic Terrace, 3 Illustrated Cards, Overlapping Lime Banner) */}
+            <HowItWorksInspo
+              onStartPlanning={() => handleOpenAuth('register')}
             />
 
-            {/* 3. THREE CORE SUPERPOWERS */}
-            <ThreeCorePillars
-              onExplorePillar={() => setViewMode('dashboard')}
+            {/* 3. REAL CELEBRATIONS CAROUSEL (Real Photos, Peach Badges, Circular Navigation) */}
+            <CelebrationsCarousel
+              onSelectEvent={() => handleOpenAuth('register')}
             />
 
-            {/* 4. CLEAN INTERACTIVE PLANNER STUDIO (Budget Simulator + AI Concierge) */}
+            {/* 4. INTERACTIVE EVENT STUDIO (Budget Calculator & AI Event Concierge in Inspo Palette) */}
             <CleanInteractiveStudio
               onStartPlanning={() => {
                 if (!currentUser) {
@@ -381,12 +379,18 @@ export default function HomePage() {
               }}
             />
 
-            {/* 5. PROFESSIONAL CALL-TO-ACTION */}
-            <ProfessionalCTA
+            {/* 5. LOVED BY OVER 5,000+ HOSTS (Warm Cream Testimonial Cards & Whimsical Details) */}
+            <LovedByHosts />
+
+            {/* 6. INSPO FINAL CTA BANNER (Sky-Blue Container with Whimsical Illustrated Host & Cat) */}
+            <InspoFinalCTA
               onStartPlanning={() => handleOpenAuth('register')}
               isLoggedIn={!!currentUser}
               onOpenDashboard={() => setViewMode('dashboard')}
             />
+
+            {/* 7. EDITORIAL FOOTER (Deep Evergreen Multi-Column) */}
+            <InspoFooter />
           </div>
         ) : (
           /* ═══════════════════════════════════════════════════════════ */

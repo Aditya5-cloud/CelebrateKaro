@@ -119,44 +119,44 @@ export function CleanInteractiveStudio({ onStartPlanning }: CleanInteractiveStud
   ];
 
   return (
-    <section className="py-16 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-      <div className="rounded-3xl border border-slate-200/90 bg-white p-6 sm:p-10 shadow-xl dark:border-slate-800 dark:bg-slate-900/90">
+    <section className="py-16 sm:py-24 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="rounded-3xl border border-[#073330]/15 bg-[#fffdfa] p-6 sm:p-10 shadow-xl">
         {/* Header & Mode Switcher */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 border-b border-slate-100 dark:border-slate-800 pb-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 border-b border-slate-200/80 pb-6">
           <div>
-            <div className="inline-flex items-center gap-2 rounded-full border border-violet-200 bg-violet-50 px-3 py-1 text-xs font-bold text-violet-800 dark:border-violet-900/60 dark:bg-violet-950/40 dark:text-violet-300">
-              <Sparkles className="w-3.5 h-3.5 text-violet-600 dark:text-violet-400" />
+            <div className="inline-flex items-center gap-2 rounded-full border border-[#bbf7d0] bg-[#dcfce7] px-3.5 py-1 text-xs font-bold text-[#073330]">
+              <Sparkles className="w-3.5 h-3.5 text-[#073330]" />
               <span>Interactive Event Studio</span>
             </div>
-            <h2 className="mt-2 text-2xl sm:text-3xl font-black tracking-tight text-slate-900 dark:text-white">
+            <h2 className="mt-2 text-2xl sm:text-4xl font-black tracking-tight text-[#073330]">
               Experience the planner in action
             </h2>
           </div>
 
           {/* Clean 2-Tab Switcher */}
-          <div className="inline-flex rounded-2xl bg-slate-100 p-1.5 dark:bg-slate-800 border border-slate-200/60 dark:border-slate-700">
+          <div className="inline-flex rounded-full bg-slate-100 p-1.5 border border-slate-200/80">
             <button
               type="button"
               onClick={() => setActiveTab('budget')}
-              className={`flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-bold transition-all cursor-pointer ${
+              className={`flex items-center gap-2 rounded-full px-5 py-2 text-xs font-bold transition-all cursor-pointer ${
                 activeTab === 'budget'
-                  ? 'bg-white text-slate-950 shadow-sm dark:bg-slate-900 dark:text-white'
-                  : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'
+                  ? 'bg-[#073330] text-white shadow-md'
+                  : 'text-slate-600 hover:text-[#073330]'
               }`}
             >
-              <DollarSign className="w-3.5 h-3.5 text-emerald-600" />
+              <DollarSign className="w-3.5 h-3.5 text-[#00e599]" />
               <span>Budget Calculator</span>
             </button>
             <button
               type="button"
               onClick={() => setActiveTab('concierge')}
-              className={`flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-bold transition-all cursor-pointer ${
+              className={`flex items-center gap-2 rounded-full px-5 py-2 text-xs font-bold transition-all cursor-pointer ${
                 activeTab === 'concierge'
-                  ? 'bg-white text-slate-950 shadow-sm dark:bg-slate-900 dark:text-white'
-                  : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'
+                  ? 'bg-[#073330] text-white shadow-md'
+                  : 'text-slate-600 hover:text-[#073330]'
               }`}
             >
-              <Bot className="w-3.5 h-3.5 text-violet-600" />
+              <Bot className="w-3.5 h-3.5 text-[#ff9e7d]" />
               <span>AI Event Concierge</span>
             </button>
           </div>
@@ -262,15 +262,15 @@ export function CleanInteractiveStudio({ onStartPlanning }: CleanInteractiveStud
             </div>
 
             {/* CTA action */}
-            <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-slate-100 dark:border-slate-800">
-              <p className="text-xs text-slate-500">
-                ✨ Ready to customize this celebration? Your plan will be imported into your live dashboard.
+            <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-slate-200">
+              <p className="text-xs text-slate-600 font-medium">
+                ✨ Ready to customize this celebration? Your plan will be imported into your workspace.
               </p>
               <Button
-                variant="vibrant"
+                variant="mint"
                 size="lg"
                 onClick={() => onStartPlanning?.(selectedType, guests, budget)}
-                className="w-full sm:w-auto h-11 px-6 font-bold gap-2 rounded-2xl cursor-pointer"
+                className="w-full sm:w-auto h-12 px-7 font-black tracking-wide gap-2 rounded-full cursor-pointer text-[#073330] shadow-md"
               >
                 <span>Start Planning With This Blueprint</span>
                 <ArrowRight className="w-4 h-4" />
@@ -282,7 +282,7 @@ export function CleanInteractiveStudio({ onStartPlanning }: CleanInteractiveStud
           <div className="mt-8 space-y-6 animate-in fade-in duration-200">
             {/* Quick Chips */}
             <div className="flex flex-wrap items-center gap-2">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-400 mr-2">
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-500 mr-2">
                 Click a Prompt:
               </span>
               {CONCIERGE_PRESETS.map((item, i) => (
@@ -290,10 +290,10 @@ export function CleanInteractiveStudio({ onStartPlanning }: CleanInteractiveStud
                   key={i}
                   type="button"
                   onClick={() => handleSelectConcierge(item)}
-                  className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                  className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
                     activeConcierge.chip === item.chip
-                      ? 'bg-violet-600 text-white shadow-xs'
-                      : 'bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300'
+                      ? 'bg-[#073330] text-white shadow-xs'
+                      : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
                   }`}
                 >
                   {item.chip}
@@ -302,31 +302,31 @@ export function CleanInteractiveStudio({ onStartPlanning }: CleanInteractiveStud
             </div>
 
             {/* Conversation Log */}
-            <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800 space-y-4 max-h-[340px] overflow-y-auto">
+            <div className="p-5 rounded-2xl bg-[#faf8f4] border border-slate-200/80 space-y-4 max-h-[340px] overflow-y-auto">
               {chatHistory.map((msg, idx) => (
                 <div
                   key={idx}
                   className={`flex items-start gap-3 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
                   {msg.role === 'assistant' && (
-                    <div className="w-7 h-7 rounded-xl bg-violet-600 text-white flex items-center justify-center shrink-0 mt-0.5">
-                      <Sparkles className="w-3.5 h-3.5" />
+                    <div className="w-8 h-8 rounded-xl bg-[#073330] text-[#00e599] flex items-center justify-center shrink-0 mt-0.5">
+                      <Sparkles className="w-4 h-4" />
                     </div>
                   )}
 
                   <div
                     className={`max-w-[85%] rounded-2xl p-4 text-xs sm:text-sm leading-relaxed ${
                       msg.role === 'user'
-                        ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 font-medium rounded-tr-xs'
-                        : 'bg-white text-slate-900 dark:bg-slate-900 dark:text-slate-100 border border-slate-200/80 dark:border-slate-800 rounded-tl-xs shadow-2xs'
+                        ? 'bg-[#073330] text-white font-medium rounded-tr-xs'
+                        : 'bg-white text-slate-900 border border-slate-200/80 rounded-tl-xs shadow-2xs'
                     }`}
                   >
                     <p className="font-semibold">{msg.text}</p>
                     {msg.tips && (
-                      <ul className="mt-2.5 space-y-1.5 border-t border-slate-100 dark:border-slate-800 pt-2 text-xs">
+                      <ul className="mt-2.5 space-y-1.5 border-t border-slate-100 pt-2 text-xs">
                         {msg.tips.map((tip, tIdx) => (
-                          <li key={tIdx} className="flex items-start gap-2 text-slate-700 dark:text-slate-300">
-                            <CheckCircle2 className="w-3.5 h-3.5 text-violet-500 shrink-0 mt-0.5" />
+                          <li key={tIdx} className="flex items-start gap-2 text-slate-700">
+                            <CheckCircle2 className="w-3.5 h-3.5 text-[#00e599] shrink-0 mt-0.5" />
                             <span>{tip}</span>
                           </li>
                         ))}
@@ -344,12 +344,12 @@ export function CleanInteractiveStudio({ onStartPlanning }: CleanInteractiveStud
                 value={customMsg}
                 onChange={(e) => setCustomMsg(e.target.value)}
                 placeholder="Ask any celebration question (e.g. 'How much cake for 120 guests?')..."
-                className="flex-1 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-xs sm:text-sm text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-violet-500 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                className="flex-1 rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-xs sm:text-sm text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-[#073330]"
               />
               <button
                 type="submit"
                 disabled={!customMsg.trim()}
-                className="rounded-xl bg-violet-600 px-4 py-2.5 text-white disabled:opacity-40 hover:bg-violet-700 transition-colors shrink-0"
+                className="rounded-xl bg-[#073330] px-5 py-2.5 text-[#00e599] disabled:opacity-40 hover:bg-[#0c4b47] transition-colors shrink-0 font-bold cursor-pointer"
               >
                 <Send className="w-4 h-4" />
               </button>
