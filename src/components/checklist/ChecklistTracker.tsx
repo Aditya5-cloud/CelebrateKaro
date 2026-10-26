@@ -351,14 +351,14 @@ export function ChecklistTracker({ event, onChecklistUpdated }: ChecklistTracker
       {/* Progress & Summary Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Total Tasks */}
-        <div className="bg-[#fffdfa] p-5 rounded-2xl border border-[#073330]/15 shadow-xs">
+        <div className="bg-white p-5 rounded-2xl border border-[#073330]/10 shadow-xs">
           <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Tasks</p>
           <p className="text-3xl font-black text-[#073330] mt-2">{stats ? stats.total : 0}</p>
           <p className="text-xs text-slate-400 mt-1">Checklist items</p>
         </div>
 
         {/* Completed */}
-        <div className="bg-[#fffdfa] p-5 rounded-2xl border border-[#073330]/15 shadow-xs">
+        <div className="bg-white p-5 rounded-2xl border border-[#073330]/10 shadow-xs">
           <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Completed</p>
           <p className="text-3xl font-black text-emerald-700 mt-2">{stats ? stats.completed : 0}</p>
           <div className="mt-2 w-full bg-[#073330]/10 rounded-full h-1.5 overflow-hidden">
@@ -373,7 +373,7 @@ export function ChecklistTracker({ event, onChecklistUpdated }: ChecklistTracker
         </div>
 
         {/* AI-Generated */}
-        <div className="bg-[#fffdfa] p-5 rounded-2xl border border-[#073330]/15 shadow-xs">
+        <div className="bg-white p-5 rounded-2xl border border-[#073330]/10 shadow-xs">
           <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">AI Suggestions</p>
           <p className="text-3xl font-black text-[#073330] mt-2">
             {stats ? stats.aiGeneratedCount : 0}
@@ -382,7 +382,7 @@ export function ChecklistTracker({ event, onChecklistUpdated }: ChecklistTracker
         </div>
 
         {/* Active Pending */}
-        <div className="bg-[#fffdfa] p-5 rounded-2xl border border-[#073330]/15 shadow-xs">
+        <div className="bg-white p-5 rounded-2xl border border-[#073330]/10 shadow-xs">
           <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Active Pending</p>
           <p className="text-3xl font-black text-[#073330] mt-2">{stats ? stats.pending : 0}</p>
           <p className="text-xs text-slate-500 mt-1">Awaiting completion</p>
@@ -390,7 +390,7 @@ export function ChecklistTracker({ event, onChecklistUpdated }: ChecklistTracker
       </div>
 
       {/* Manual Task Add Bar */}
-      <form onSubmit={handleManualAdd} className="bg-[#fffdfa] p-4 rounded-2xl border border-[#073330]/15 shadow-xs">
+      <form onSubmit={handleManualAdd} className="bg-white p-4 rounded-2xl border border-[#073330]/10 shadow-xs">
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
           <input
             type="text"

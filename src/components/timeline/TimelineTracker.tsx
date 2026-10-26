@@ -202,13 +202,13 @@ export function TimelineTracker({ event, onTimelineUpdated }: TimelineTrackerPro
 
       {/* KPI Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="rounded-2xl border border-[#073330]/15 bg-[#fffdfa] p-5 shadow-xs">
+        <div className="rounded-2xl border border-[#073330]/10 bg-white p-5 shadow-xs">
           <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">Total Milestones</span>
           <p className="mt-1 text-2xl font-black text-[#073330]">{totalCount}</p>
           <span className="text-xs text-slate-400">Scheduled checkpoints</span>
         </div>
 
-        <div className="rounded-2xl border border-[#073330]/15 bg-[#fffdfa] p-5 shadow-xs">
+        <div className="rounded-2xl border border-[#073330]/10 bg-white p-5 shadow-xs">
           <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">Completed</span>
           <p className="mt-1 text-2xl font-black text-emerald-700">
             {completedCount}
@@ -216,13 +216,13 @@ export function TimelineTracker({ event, onTimelineUpdated }: TimelineTrackerPro
           <span className="text-xs text-slate-500">{percentCompleted}% complete</span>
         </div>
 
-        <div className="rounded-2xl border border-[#073330]/15 bg-[#fffdfa] p-5 shadow-xs">
+        <div className="rounded-2xl border border-[#073330]/10 bg-white p-5 shadow-xs">
           <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">Pending Actions</span>
           <p className="mt-1 text-2xl font-black text-[#073330]">{pendingCount}</p>
           <span className="text-xs text-slate-500">Awaiting completion</span>
         </div>
 
-        <div className="rounded-2xl border border-[#073330]/15 bg-[#fffdfa] p-5 shadow-xs">
+        <div className="rounded-2xl border border-[#073330]/10 bg-white p-5 shadow-xs">
           <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">Overdue</span>
           <p
             className={`mt-1 text-2xl font-black ${
@@ -238,7 +238,7 @@ export function TimelineTracker({ event, onTimelineUpdated }: TimelineTrackerPro
       </div>
 
       {/* Progress Bar Card */}
-      <div className="rounded-2xl border border-[#073330]/15 bg-[#fffdfa] p-6 shadow-xs">
+      <div className="rounded-2xl border border-[#073330]/10 bg-white p-6 shadow-xs">
         <div className="flex items-center justify-between text-xs mb-2">
           <span className="font-bold text-[#073330]">Milestone Completion Progress</span>
           <span className="font-bold text-[#073330]">{percentCompleted}%</span>
@@ -264,7 +264,7 @@ export function TimelineTracker({ event, onTimelineUpdated }: TimelineTrackerPro
         <div
           role="toolbar"
           aria-label="Filter milestones by status"
-          className="flex flex-wrap items-center gap-1.5 rounded-xl border border-[#073330]/15 bg-[#fffdfa] p-1.5"
+          className="flex flex-wrap items-center gap-1.5 rounded-xl border border-[#073330]/10 bg-white p-1.5 shadow-2xs"
         >
           {[
             { id: 'all', label: `All (${totalCount})` },

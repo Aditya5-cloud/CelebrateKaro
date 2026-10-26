@@ -18,7 +18,7 @@ export function EventCard({ event, onDeleteRequest }: EventCardProps) {
   return (
     <article
       aria-labelledby={`event-title-${event.id}`}
-      className="group relative flex flex-col justify-between rounded-3xl border border-[#073330]/15 bg-[#fffdfa] p-6 shadow-sm transition-all duration-300 hover:border-[#00e599] hover:shadow-xl"
+      className="group relative flex flex-col justify-between rounded-3xl border border-[#073330]/10 bg-white p-6 shadow-xs transition-all duration-300 hover:border-[#00e599] hover:shadow-lg"
     >
       <div>
         {/* Top Badges & Actions */}
@@ -26,12 +26,12 @@ export function EventCard({ event, onDeleteRequest }: EventCardProps) {
           <div className="flex flex-wrap items-center gap-1.5">
             <EventTypeBadge type={event.event_type} />
             <span
-              className={`text-[11px] font-semibold px-2.5 py-0.5 rounded-full border ${
+              className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full border ${
                 relativeDate.isPast
                   ? 'bg-slate-100 text-slate-600 border-slate-200'
                   : relativeDate.days <= 14
-                  ? 'bg-[#ff9e7d]/20 text-[#073330] border-[#ff9e7d]/40 font-bold'
-                  : 'bg-[#dcfce7] text-[#073330] border-[#bbf7d0] font-bold'
+                  ? 'bg-[#ff9e7d]/25 text-[#073330] border-[#ff9e7d]/50'
+                  : 'bg-[#dcfce7] text-[#073330] border-[#bbf7d0]'
               }`}
             >
               {relativeDate.label}
@@ -46,7 +46,7 @@ export function EventCard({ event, onDeleteRequest }: EventCardProps) {
               onDeleteRequest(event);
             }}
             aria-label={`Delete event ${event.name}`}
-            className="rounded-xl p-1.5 text-slate-400 hover:bg-rose-50 hover:text-rose-600 focus:outline-hidden focus:ring-2 focus:ring-rose-500 transition-colors cursor-pointer"
+            className="rounded-xl p-2 text-slate-400 hover:bg-rose-50 hover:text-rose-600 focus:outline-hidden focus:ring-2 focus:ring-rose-500 transition-colors cursor-pointer"
           >
             <Trash2 className="h-4 w-4" aria-hidden="true" />
           </button>
@@ -55,7 +55,7 @@ export function EventCard({ event, onDeleteRequest }: EventCardProps) {
         {/* Title */}
         <h3
           id={`event-title-${event.id}`}
-          className="mt-4 text-base sm:text-lg font-black tracking-tight text-[#073330] group-hover:text-[#09423e] transition-colors"
+          className="mt-4 text-base sm:text-lg font-black tracking-tight text-[#073330] group-hover:text-[#0b4e49] transition-colors"
         >
           <Link href={`/events/${event.id}`} prefetch={false} className="focus:outline-hidden focus:underline">
             {event.name}
@@ -70,10 +70,10 @@ export function EventCard({ event, onDeleteRequest }: EventCardProps) {
         )}
 
         {/* Details Grid */}
-        <div className="mt-4 grid grid-cols-2 gap-2.5 rounded-2xl border border-[#073330]/10 bg-[#faf8f4] p-3.5 text-xs">
+        <div className="mt-4 grid grid-cols-2 gap-2.5 rounded-2xl border border-[#073330]/10 bg-[#f2f5f3] p-3.5 text-xs">
           <div className="space-y-0.5">
-            <span className="flex items-center gap-1 text-[11px] font-medium text-slate-400">
-              <Calendar className="h-3 w-3 text-[#073330]" /> Date
+            <span className="flex items-center gap-1.5 text-[11px] font-semibold text-slate-600">
+              <Calendar className="h-3.5 w-3.5 text-[#073330] shrink-0" aria-hidden="true" /> Date
             </span>
             <span className="block font-bold text-[#073330] truncate">
               {formatDate(event.event_date)}
@@ -81,8 +81,8 @@ export function EventCard({ event, onDeleteRequest }: EventCardProps) {
           </div>
 
           <div className="space-y-0.5">
-            <span className="flex items-center gap-1 text-[11px] font-medium text-slate-400">
-              <DollarSign className="h-3 w-3 text-emerald-600" /> Budget
+            <span className="flex items-center gap-1.5 text-[11px] font-semibold text-slate-600">
+              <DollarSign className="h-3.5 w-3.5 text-emerald-700 shrink-0" aria-hidden="true" /> Budget
             </span>
             <span className="block font-bold text-[#073330] truncate">
               {formatCurrency(event.total_budget)}
@@ -90,8 +90,8 @@ export function EventCard({ event, onDeleteRequest }: EventCardProps) {
           </div>
 
           <div className="space-y-0.5">
-            <span className="flex items-center gap-1 text-[11px] font-medium text-slate-400">
-              <Users className="h-3 w-3 text-blue-600" /> Guests
+            <span className="flex items-center gap-1.5 text-[11px] font-semibold text-slate-600">
+              <Users className="h-3.5 w-3.5 text-blue-700 shrink-0" aria-hidden="true" /> Guests
             </span>
             <span className="block font-bold text-[#073330] truncate">
               {event.guest_count.toLocaleString()} expected
@@ -99,8 +99,8 @@ export function EventCard({ event, onDeleteRequest }: EventCardProps) {
           </div>
 
           <div className="space-y-0.5">
-            <span className="flex items-center gap-1 text-[11px] font-medium text-slate-400">
-              <CheckSquare className="h-3 w-3 text-[#00e599]" /> Planning Items
+            <span className="flex items-center gap-1.5 text-[11px] font-semibold text-slate-600">
+              <CheckSquare className="h-3.5 w-3.5 text-teal-700 shrink-0" aria-hidden="true" /> Planning Items
             </span>
             <span className="block font-bold text-[#073330] truncate">
               {event.checklist_count > 0
@@ -112,11 +112,11 @@ export function EventCard({ event, onDeleteRequest }: EventCardProps) {
       </div>
 
       {/* Footer Link */}
-      <div className="mt-5 border-t border-slate-100 pt-3">
+      <div className="mt-5 border-t border-[#073330]/10 pt-3">
         <Link
           href={`/events/${event.id}`}
           prefetch={false}
-          className="inline-flex w-full items-center justify-between rounded-xl px-3 py-2 text-xs sm:text-sm font-bold text-[#073330] hover:bg-[#dcfce7]/50 transition-colors group/link cursor-pointer"
+          className="inline-flex w-full items-center justify-between rounded-xl px-3 py-2 text-xs sm:text-sm font-bold text-[#073330] hover:bg-[#dcfce7] transition-colors group/link cursor-pointer"
         >
           <span>Open Planner Assistant</span>
           <ArrowRight className="h-4 w-4 text-[#073330] group-hover/link:translate-x-1 transition-transform" aria-hidden="true" />

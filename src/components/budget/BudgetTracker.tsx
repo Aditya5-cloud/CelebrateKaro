@@ -179,7 +179,7 @@ export function BudgetTracker({ event, onBudgetUpdated }: BudgetTrackerProps) {
 
       {/* KPI Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="rounded-2xl border border-[#073330]/15 bg-[#fffdfa] p-5 shadow-xs">
+        <div className="rounded-2xl border border-[#073330]/10 bg-white p-5 shadow-xs">
           <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Target Budget</span>
           <p className="mt-1 text-2xl font-black text-[#073330]">
             {formatCurrency(targetBudget)}
@@ -187,7 +187,7 @@ export function BudgetTracker({ event, onBudgetUpdated }: BudgetTrackerProps) {
           <span className="text-xs text-slate-400">Total event limit</span>
         </div>
 
-        <div className="rounded-2xl border border-[#073330]/15 bg-[#fffdfa] p-5 shadow-xs">
+        <div className="rounded-2xl border border-[#073330]/10 bg-white p-5 shadow-xs">
           <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Planned</span>
           <p className="mt-1 text-2xl font-black text-[#073330]">
             {formatCurrency(totalPlanned)}
@@ -197,7 +197,7 @@ export function BudgetTracker({ event, onBudgetUpdated }: BudgetTrackerProps) {
           </span>
         </div>
 
-        <div className="rounded-2xl border border-[#073330]/15 bg-[#fffdfa] p-5 shadow-xs">
+        <div className="rounded-2xl border border-[#073330]/10 bg-white p-5 shadow-xs">
           <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Actual Spent</span>
           <p className="mt-1 text-2xl font-black text-[#073330]">
             {formatCurrency(totalSpent)}
@@ -207,7 +207,7 @@ export function BudgetTracker({ event, onBudgetUpdated }: BudgetTrackerProps) {
           </span>
         </div>
 
-        <div className="rounded-2xl border border-[#073330]/15 bg-[#fffdfa] p-5 shadow-xs">
+        <div className="rounded-2xl border border-[#073330]/10 bg-white p-5 shadow-xs">
           <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Remaining to Spend</span>
           <p className={`mt-1 text-2xl font-black ${remaining >= 0 ? 'text-emerald-700' : 'text-red-600'}`}>
             {formatCurrency(remaining)}
@@ -219,7 +219,7 @@ export function BudgetTracker({ event, onBudgetUpdated }: BudgetTrackerProps) {
       </div>
 
       {/* Progress Bar Card */}
-      <div className="rounded-2xl border border-[#073330]/15 bg-[#fffdfa] p-6 shadow-xs">
+      <div className="rounded-2xl border border-[#073330]/10 bg-white p-6 shadow-xs">
         <BudgetProgressBar
           spentCents={totalSpent}
           targetCents={targetBudget}
@@ -266,7 +266,7 @@ export function BudgetTracker({ event, onBudgetUpdated }: BudgetTrackerProps) {
 
       {/* Categories Table / Empty state */}
       {categories.length === 0 ? (
-        <div className="rounded-3xl border-2 border-dashed border-[#073330]/20 bg-[#fffdfa] p-10 text-center">
+        <div className="rounded-3xl border-2 border-dashed border-[#073330]/20 bg-white p-10 text-center shadow-xs">
           <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-[#00e599]/20 text-2xl text-[#073330]">
             💰
           </div>
@@ -291,17 +291,17 @@ export function BudgetTracker({ event, onBudgetUpdated }: BudgetTrackerProps) {
                 setCategoryToEdit(null);
                 setIsCategoryModalOpen(true);
               }}
-              className="rounded-xl border border-[#073330]/20 bg-white px-4 py-2 text-xs font-bold text-[#073330] hover:bg-[#faf8f4] cursor-pointer"
+              className="rounded-xl border border-[#073330]/20 bg-white px-4 py-2 text-xs font-bold text-[#073330] hover:bg-[#f2f5f3] cursor-pointer"
             >
               + Add Custom Category
             </button>
           </div>
         </div>
       ) : (
-        <div className="overflow-hidden rounded-2xl border border-[#073330]/15 bg-[#fffdfa] shadow-xs">
+        <div className="overflow-hidden rounded-2xl border border-[#073330]/10 bg-white shadow-xs">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm border-collapse" aria-label="Budget categories table">
-              <thead className="border-b border-[#073330]/10 bg-[#faf8f4] text-xs font-bold text-[#073330]">
+              <thead className="border-b border-[#073330]/10 bg-[#f2f5f3] text-xs font-bold text-[#073330]">
                 <tr>
                   <th scope="col" className="py-3.5 pl-6 pr-3">Category & Notes</th>
                   <th scope="col" className="px-3 py-3.5 text-right">Planned</th>

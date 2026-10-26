@@ -86,7 +86,7 @@ export function AuthModal({
       />
 
       {/* Modal Dialog Card */}
-      <div className="relative w-full max-w-md overflow-hidden rounded-3xl border border-[#073330]/15 bg-[#fffdfa] p-6 sm:p-7 shadow-2xl animate-in zoom-in-95 duration-150">
+      <div className="relative w-full max-w-md overflow-hidden rounded-3xl border border-[#073330]/15 bg-white p-6 sm:p-7 shadow-2xl animate-in zoom-in-95 duration-150">
         {/* Header */}
         <div className="flex items-center justify-between pb-4 border-b border-[#073330]/10">
           <div className="flex items-center gap-2.5">

@@ -126,7 +126,7 @@ export default function EventDetailPage({
   ] as const;
 
   return (
-    <div className="min-h-screen bg-[#faf8f4] text-[#073330] flex flex-col justify-between">
+    <div className="min-h-screen bg-[#f2f5f3] text-[#073330] flex flex-col justify-between">
       {/* Top Header bar */}
       <header className="border-b border-white/10 bg-[#073330] text-white sticky top-0 z-20 shadow-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 py-3.5">
@@ -167,7 +167,7 @@ export default function EventDetailPage({
         {/* Event Title Banner */}
         <section
           aria-labelledby="event-hero-title"
-          className="rounded-3xl border border-[#073330]/15 bg-[#fffdfa] p-6 sm:p-8 shadow-xs relative overflow-hidden"
+          className="rounded-3xl border border-[#073330]/10 bg-white p-6 sm:p-8 shadow-xs relative overflow-hidden"
         >
           <div className="flex flex-wrap items-center gap-2">
             <EventTypeBadge type={event.event_type} />
@@ -195,8 +195,8 @@ export default function EventDetailPage({
 
           {/* Quick Metrics */}
           <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-4 border-t border-slate-100 pt-6">
-            <div className="p-3.5 rounded-2xl bg-[#faf8f4] border border-[#073330]/10">
-              <span className="text-xs font-medium text-slate-400 flex items-center gap-1.5">
+            <div className="p-3.5 rounded-2xl bg-[#f2f5f3] border border-[#073330]/10">
+              <span className="text-xs font-semibold text-slate-600 flex items-center gap-1.5">
                 <Calendar className="w-3.5 h-3.5 text-[#073330]" />
                 Date of Celebration
               </span>
@@ -204,27 +204,27 @@ export default function EventDetailPage({
                 {formatDate(event.event_date)}
               </p>
             </div>
-            <div className="p-3.5 rounded-2xl bg-[#faf8f4] border border-[#073330]/10">
-              <span className="text-xs font-medium text-slate-400 flex items-center gap-1.5">
-                <DollarSign className="w-3.5 h-3.5 text-emerald-600" />
+            <div className="p-3.5 rounded-2xl bg-[#f2f5f3] border border-[#073330]/10">
+              <span className="text-xs font-semibold text-slate-600 flex items-center gap-1.5">
+                <DollarSign className="w-3.5 h-3.5 text-emerald-700" />
                 Target Budget
               </span>
               <p className="mt-1 text-sm sm:text-base font-bold text-[#073330]">
                 {formatCurrency(event.total_budget)}
               </p>
             </div>
-            <div className="p-3.5 rounded-2xl bg-[#faf8f4] border border-[#073330]/10">
-              <span className="text-xs font-medium text-slate-400 flex items-center gap-1.5">
-                <Users className="w-3.5 h-3.5 text-blue-600" />
+            <div className="p-3.5 rounded-2xl bg-[#f2f5f3] border border-[#073330]/10">
+              <span className="text-xs font-semibold text-slate-600 flex items-center gap-1.5">
+                <Users className="w-3.5 h-3.5 text-blue-700" />
                 Expected Guests
               </span>
               <p className="mt-1 text-sm sm:text-base font-bold text-[#073330]">
                 {event.guest_count.toLocaleString()} attendees
               </p>
             </div>
-            <div className="p-3.5 rounded-2xl bg-[#faf8f4] border border-[#073330]/10">
-              <span className="text-xs font-medium text-slate-400 flex items-center gap-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5 text-[#00e599]" />
+            <div className="p-3.5 rounded-2xl bg-[#f2f5f3] border border-[#073330]/10">
+              <span className="text-xs font-semibold text-slate-600 flex items-center gap-1.5">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700" />
                 Planning Status
               </span>
               <p className="mt-1 text-sm sm:text-base font-bold text-[#073330]">
@@ -247,8 +247,8 @@ export default function EventDetailPage({
                   onClick={() => setActiveTab(tab.id as typeof activeTab)}
                   className={`inline-flex items-center gap-2 whitespace-nowrap border-b-2 py-3 px-3.5 text-sm font-bold transition-all cursor-pointer ${
                     active
-                      ? 'border-[#00e599] text-[#073330] bg-[#dcfce7]/30 rounded-t-xl'
-                      : 'border-transparent text-slate-500 hover:border-slate-300 hover:text-[#073330]'
+                      ? 'border-[#00e599] text-[#073330] bg-white rounded-t-xl shadow-2xs'
+                      : 'border-transparent text-slate-600 hover:border-slate-300 hover:text-[#073330]'
                   }`}
                 >
                   <Icon className={`w-4 h-4 ${active ? 'text-[#073330]' : 'text-slate-400'}`} />
@@ -264,7 +264,7 @@ export default function EventDetailPage({
           {activeTab === 'overview' && (
             <div className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <Card className="rounded-3xl border border-[#073330]/10 bg-[#fffdfa] shadow-xs hover:shadow-md transition-shadow">
+                <Card className="rounded-3xl border border-[#073330]/10 bg-white shadow-xs hover:shadow-md transition-shadow">
                   <CardHeader className="pb-3">
                     <CardTitle className="text-base font-black flex items-center gap-2 text-[#073330]">
                       <div className="w-8 h-8 rounded-xl bg-[#dcfce7] flex items-center justify-center text-[#073330]">
@@ -288,12 +288,12 @@ export default function EventDetailPage({
                       className="mt-4 inline-flex items-center gap-1 text-xs font-bold text-[#073330] hover:text-[#09423e] cursor-pointer"
                     >
                       <span>Manage Budget Categories</span>
-                      <ArrowRight className="w-3.5 h-3.5 text-[#00e599]" />
+                      <ArrowRight className="w-3.5 h-3.5 text-[#073330]" />
                     </button>
                   </CardContent>
                 </Card>
 
-                <Card className="rounded-3xl border border-[#073330]/10 bg-[#fffdfa] shadow-xs hover:shadow-md transition-shadow">
+                <Card className="rounded-3xl border border-[#073330]/10 bg-white shadow-xs hover:shadow-md transition-shadow">
                   <CardHeader className="pb-3">
                     <CardTitle className="text-base font-black flex items-center gap-2 text-[#073330]">
                       <div className="w-8 h-8 rounded-xl bg-[#ff9e7d]/20 flex items-center justify-center text-[#073330]">
@@ -315,12 +315,12 @@ export default function EventDetailPage({
                       className="mt-4 inline-flex items-center gap-1 text-xs font-bold text-[#073330] hover:text-[#09423e] cursor-pointer"
                     >
                       <span>View Timeline Milestones</span>
-                      <ArrowRight className="w-3.5 h-3.5 text-[#00e599]" />
+                      <ArrowRight className="w-3.5 h-3.5 text-[#073330]" />
                     </button>
                   </CardContent>
                 </Card>
 
-                <Card className="rounded-3xl border border-[#073330]/10 bg-[#fffdfa] shadow-xs hover:shadow-md transition-shadow">
+                <Card className="rounded-3xl border border-[#073330]/10 bg-white shadow-xs hover:shadow-md transition-shadow">
                   <CardHeader className="pb-3">
                     <CardTitle className="text-base font-black flex items-center gap-2 text-[#073330]">
                       <div className="w-8 h-8 rounded-xl bg-blue-50 flex items-center justify-center text-blue-700">
@@ -342,7 +342,7 @@ export default function EventDetailPage({
                       className="mt-4 inline-flex items-center gap-1 text-xs font-bold text-[#073330] hover:text-[#09423e] cursor-pointer"
                     >
                       <span>Open Vendor Checklist</span>
-                      <ArrowRight className="w-3.5 h-3.5 text-[#00e599]" />
+                      <ArrowRight className="w-3.5 h-3.5 text-[#073330]" />
                     </button>
                   </CardContent>
                 </Card>

@@ -53,7 +53,7 @@ export function DeleteConfirmModal({
         aria-modal="true"
         aria-labelledby="delete-dialog-title"
         aria-describedby="delete-dialog-desc"
-        className="w-full max-w-md rounded-3xl bg-[#fffdfa] p-6 sm:p-7 shadow-2xl border border-[#073330]/15 animate-in zoom-in-95 duration-150"
+        className="w-full max-w-md rounded-3xl bg-white p-6 sm:p-7 shadow-2xl border border-[#073330]/15 animate-in zoom-in-95 duration-150"
       >
         <div className="flex items-center gap-3.5 text-rose-600">
           <div className="rounded-2xl bg-rose-100/80 p-3 ring-4 ring-rose-50">

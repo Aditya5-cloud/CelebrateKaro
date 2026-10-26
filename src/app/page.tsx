@@ -33,6 +33,11 @@ import {
   Plus,
   LogOut,
   CalendarDays,
+  Heart,
+  Cake,
+  Wine,
+  PartyPopper,
+  Home,
 } from 'lucide-react';
 
 export default function HomePage() {
@@ -381,21 +386,21 @@ export default function HomePage() {
           /* ═══════════════════════════════════════════════════════════ */
           /*  VIEW 2: FULL WORKING PLANNER DASHBOARD WITH SIDEBAR         */
           /* ═══════════════════════════════════════════════════════════ */
-          <div className="min-h-[calc(100vh-64px)] bg-[#faf8f4] text-[#073330] flex flex-col md:flex-row">
+          <div className="min-h-[calc(100vh-64px)] bg-[#f2f5f3] text-[#073330] flex flex-col md:flex-row">
             {/* ─── LEFT SIDEBAR ─── */}
-            <aside aria-label="Dashboard Sidebar" className="w-full md:w-64 lg:w-72 bg-[#fffdfa] border-r border-[#073330]/10 p-5 sm:p-6 flex flex-col justify-between shrink-0 shadow-xs">
+            <aside aria-label="Dashboard Sidebar" className="w-full md:w-64 lg:w-72 bg-white border-r border-[#073330]/10 p-5 sm:p-6 flex flex-col justify-between shrink-0 shadow-xs">
               <div className="space-y-6">
                 {/* User / Workspace Profile Card */}
-                <div className="p-4 rounded-2xl bg-[#073330] text-white shadow-sm space-y-3">
+                <div className="p-4 rounded-2xl bg-[#0a3d39] text-white shadow-sm space-y-3 border border-[#00e599]/30">
                   <div className="flex items-center gap-3">
-                    <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${currentUser?.avatarColor || 'bg-[#00e599] text-[#073330]'} font-black text-sm shadow-xs`}>
+                    <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${currentUser?.avatarColor || 'bg-[#00e599] text-[#073330]'} text-white font-black text-sm shadow-xs`}>
                       {currentUser ? currentUser.name[0] : 'P'}
                     </div>
                     <div className="overflow-hidden">
                       <p className="text-sm font-bold truncate leading-tight text-white">
                         {currentUser ? currentUser.name : 'Celebration Host'}
                       </p>
-                      <p className="text-xs text-[#00e599] font-medium leading-tight mt-0.5">
+                      <p className="text-xs text-[#00e599] font-semibold leading-tight mt-0.5">
                         {currentUser ? currentUser.roleLabel : 'Planner'}
                       </p>
                     </div>
@@ -421,20 +426,21 @@ export default function HomePage() {
 
                 {/* Navigation / Filter Categories in Sidebar */}
                 <div className="space-y-1">
-                  <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 px-3 block mb-2">
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 px-3 block mb-2">
                     Celebration Categories
                   </span>
                   {[
-                    { id: 'all', label: 'All Celebrations' },
-                    { id: 'wedding', label: '💍 Weddings' },
-                    { id: 'birthday', label: '🎂 Birthdays' },
-                    { id: 'community', label: '🥂 Galas & Banquets' },
-                    { id: 'other', label: '🎉 Other Socials' },
+                    { id: 'all', label: 'All Celebrations', icon: Sparkles, iconColor: 'text-amber-500' },
+                    { id: 'wedding', label: 'Weddings', icon: Heart, iconColor: 'text-rose-500' },
+                    { id: 'birthday', label: 'Birthdays', icon: Cake, iconColor: 'text-amber-600' },
+                    { id: 'community', label: 'Galas & Banquets', icon: Wine, iconColor: 'text-purple-600' },
+                    { id: 'other', label: 'Other Socials', icon: PartyPopper, iconColor: 'text-emerald-600' },
                   ].map((tab) => {
                     const active = activeFilter === tab.id;
                     const count = tab.id === 'all'
                       ? events.length
                       : events.filter(e => e.event_type === tab.id).length;
+                    const Icon = tab.icon;
                     return (
                       <button
                         key={tab.id}
@@ -444,12 +450,15 @@ export default function HomePage() {
                         className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                           active
                             ? 'bg-[#073330] text-white shadow-xs'
-                            : 'text-slate-600 hover:bg-[#faf8f4] hover:text-[#073330]'
+                            : 'text-slate-700 hover:bg-[#f2f5f3] hover:text-[#073330]'
                         }`}
                       >
-                        <span className="truncate">{tab.label}</span>
+                        <div className="flex items-center gap-2.5 truncate">
+                          <Icon className={`h-4 w-4 shrink-0 ${active ? 'text-[#00e599]' : tab.iconColor}`} />
+                          <span className="truncate">{tab.label}</span>
+                        </div>
                         <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold shrink-0 ${
-                          active ? 'bg-[#00e599] text-[#073330]' : 'bg-slate-100 text-slate-600'
+                          active ? 'bg-[#00e599] text-[#073330]' : 'bg-slate-200/80 text-slate-700'
                         }`}>
                           {count}
                         </span>
@@ -459,24 +468,24 @@ export default function HomePage() {
                 </div>
 
                 {/* Portfolio Summary Card in Sidebar */}
-                <div className="p-4 rounded-2xl bg-[#faf8f4] border border-[#073330]/10 space-y-2.5 text-xs">
-                  <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 block">
+                <div className="p-4 rounded-2xl bg-[#f2f5f3] border border-[#073330]/10 space-y-2.5 text-xs">
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 block">
                     Portfolio Summary
                   </span>
                   <div className="flex justify-between items-center text-slate-700">
-                    <span>Total Events:</span>
+                    <span className="font-medium">Total Events:</span>
                     <span className="font-extrabold text-[#073330]">{stats.totalEvents}</span>
                   </div>
                   <div className="flex justify-between items-center text-slate-700">
-                    <span>Upcoming:</span>
-                    <span className="font-extrabold text-emerald-600">{stats.upcomingCount}</span>
+                    <span className="font-medium">Upcoming:</span>
+                    <span className="font-extrabold text-emerald-700">{stats.upcomingCount}</span>
                   </div>
                   <div className="flex justify-between items-center text-slate-700">
-                    <span>Total Budget:</span>
+                    <span className="font-medium">Total Budget:</span>
                     <span className="font-extrabold text-[#073330]">{formatCurrency(stats.totalBudget)}</span>
                   </div>
                   <div className="flex justify-between items-center text-slate-700">
-                    <span>Total Guests:</span>
+                    <span className="font-medium">Total Guests:</span>
                     <span className="font-extrabold text-[#073330]">{stats.totalGuests.toLocaleString()}</span>
                   </div>
                 </div>
@@ -489,7 +498,7 @@ export default function HomePage() {
                   onClick={() => setViewMode('landing')}
                   className="text-xs font-bold text-slate-600 hover:text-[#073330] flex items-center gap-1.5 cursor-pointer"
                 >
-                  <ArrowRight className="w-3.5 h-3.5 rotate-180" />
+                  <Home className="w-3.5 h-3.5 text-[#073330]" />
                   <span>Home</span>
                 </button>
                 {currentUser && (
@@ -559,10 +568,12 @@ export default function HomePage() {
                   Event Planning Statistics
                 </h3>
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                  <div className="p-5 rounded-3xl border border-[#073330]/10 bg-[#fffdfa] shadow-xs">
+                  <div className="p-5 rounded-3xl border border-[#073330]/10 bg-white shadow-xs hover:shadow-md transition-shadow">
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Celebrations</span>
-                      <Calendar className="h-4 w-4 text-[#073330]" />
+                      <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-[#073330]/10 text-[#073330]">
+                        <Calendar className="h-4 w-4" />
+                      </div>
                     </div>
                     <p className="mt-2 text-2xl sm:text-3xl font-black text-[#073330] tabular-nums">
                       {stats.totalEvents}
@@ -572,23 +583,27 @@ export default function HomePage() {
                     </span>
                   </div>
 
-                  <div className="p-5 rounded-3xl border border-[#073330]/10 bg-[#fffdfa] shadow-xs">
+                  <div className="p-5 rounded-3xl border border-[#073330]/10 bg-white shadow-xs hover:shadow-md transition-shadow">
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Budget Managed</span>
-                      <DollarSign className="h-4 w-4 text-emerald-600" />
+                      <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-800">
+                        <DollarSign className="h-4 w-4" />
+                      </div>
                     </div>
                     <p className="mt-2 text-2xl sm:text-3xl font-black text-[#073330] tabular-nums">
                       {formatCurrency(stats.totalBudget)}
                     </p>
-                    <span className="mt-1 text-xs text-emerald-600 font-bold block">
+                    <span className="mt-1 text-xs text-emerald-700 font-bold block">
                       Across active celebrations
                     </span>
                   </div>
 
-                  <div className="p-5 rounded-3xl border border-[#073330]/10 bg-[#fffdfa] shadow-xs">
+                  <div className="p-5 rounded-3xl border border-[#073330]/10 bg-white shadow-xs hover:shadow-md transition-shadow">
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Expected Guests</span>
-                      <Users className="h-4 w-4 text-blue-600" />
+                      <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-blue-100 text-blue-800">
+                        <Users className="h-4 w-4" />
+                      </div>
                     </div>
                     <p className="mt-2 text-2xl sm:text-3xl font-black text-[#073330] tabular-nums">
                       {stats.totalGuests.toLocaleString()}
@@ -596,12 +611,14 @@ export default function HomePage() {
                     <span className="mt-1 text-xs text-slate-500 font-medium block">Across all events</span>
                   </div>
 
-                  <div className="p-5 rounded-3xl border border-[#00e599]/30 bg-[#dcfce7]/40 shadow-xs">
+                  <div className="p-5 rounded-3xl border border-[#00e599]/40 bg-[#dcfce7]/70 shadow-xs hover:shadow-md transition-shadow">
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-bold text-[#073330] uppercase tracking-wider">AI Planner Assistant</span>
-                      <Sparkles className="h-4 w-4 text-[#073330]" />
+                      <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-[#00e599] text-[#073330] shadow-xs">
+                        <Sparkles className="h-4 w-4" />
+                      </div>
                     </div>
-                    <p className="mt-1 text-xs sm:text-sm font-semibold text-[#073330] leading-snug">
+                    <p className="mt-1.5 text-xs sm:text-sm font-semibold text-[#073330] leading-snug">
                       Ready to synthesize custom vendor checklists and timelines.
                     </p>
                     <span className="mt-2 inline-block text-xs font-black text-[#073330]">
@@ -649,7 +666,7 @@ export default function HomePage() {
                   </Button>
                 </div>
               ) : filteredEvents.length === 0 ? (
-                <div className="rounded-3xl border-2 border-dashed border-[#073330]/20 p-12 text-center bg-[#fffdfa]">
+                <div className="rounded-3xl border-2 border-dashed border-[#073330]/20 p-12 text-center bg-white shadow-xs">
                   <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[#dcfce7] text-[#073330]">
                     <CalendarDays className="h-7 w-7 text-[#073330]" />
                   </div>

@@ -159,19 +159,23 @@ export function EventFormModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby="modal-title"
-        className="w-full max-w-lg rounded-3xl bg-[#fffdfa] p-6 sm:p-7 shadow-2xl border border-[#073330]/15 animate-in zoom-in-95 duration-150"
+        className="w-full max-w-lg rounded-3xl bg-white p-6 sm:p-7 shadow-2xl border border-[#073330]/15 animate-in zoom-in-95 duration-150"
       >
         <div className="flex items-center justify-between pb-4 border-b border-[#073330]/10">
-          <div>
-            <h2 id="modal-title" className="text-lg sm:text-xl font-bold tracking-tight text-[#073330] flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-[#00e599]" />
-              {isEdit ? 'Edit Celebration Details' : 'Plan a New Celebration'}
-            </h2>
-            <p className="text-xs text-slate-500 mt-1">
-              {isEdit
-                ? 'Update your event details and budget targets.'
-                : 'Enter your event basics to get customized AI planning, budgets, and timelines.'}
-            </p>
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#00e599] text-[#073330] shadow-xs shrink-0">
+              <Sparkles className="w-5 h-5" />
+            </div>
+            <div>
+              <h2 id="modal-title" className="text-lg sm:text-xl font-bold tracking-tight text-[#073330]">
+                {isEdit ? 'Edit Celebration Details' : 'Plan a New Celebration'}
+              </h2>
+              <p className="text-xs text-slate-500 mt-0.5">
+                {isEdit
+                  ? 'Update your event details and budget targets.'
+                  : 'Enter your event basics to get customized AI planning, budgets, and timelines.'}
+              </p>
+            </div>
           </div>
           <button
             type="button"

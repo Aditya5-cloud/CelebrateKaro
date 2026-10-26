@@ -118,7 +118,7 @@ export function ChatAssistant({ event }: ChatAssistantProps) {
   return (
     <section
       aria-label="AI Planning Assistant Chat"
-      className="bg-[#fffdfa] rounded-3xl border border-[#073330]/15 shadow-sm overflow-hidden flex flex-col h-[700px]"
+      className="bg-white rounded-3xl border border-[#073330]/10 shadow-sm overflow-hidden flex flex-col h-[700px]"
     >
       {/* Header */}
       <div className="px-6 py-4 bg-[#073330] text-white flex items-center justify-between shrink-0">
@@ -270,7 +270,7 @@ export function ChatAssistant({ event }: ChatAssistantProps) {
           e.preventDefault();
           handleSendMessage();
         }}
-        className="p-4 bg-[#fffdfa] border-t border-[#073330]/10 shrink-0"
+        className="p-4 bg-white border-t border-[#073330]/10 shrink-0"
       >
         <div className="flex items-center space-x-2">
           <input

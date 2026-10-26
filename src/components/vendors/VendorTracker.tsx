@@ -231,14 +231,14 @@ export function VendorTracker({ event, onVendorUpdated }: VendorTrackerProps) {
       {/* Summary KPI Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Total Vendors */}
-        <div className="bg-[#fffdfa] p-5 rounded-2xl border border-[#073330]/15 shadow-xs">
+        <div className="bg-white p-5 rounded-2xl border border-[#073330]/10 shadow-xs">
           <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Vendors</p>
           <p className="text-3xl font-black text-[#073330] mt-2">{stats ? stats.total : 0}</p>
           <p className="text-xs text-slate-400 mt-1">Directory entries</p>
         </div>
 
         {/* Confirmed / Booked */}
-        <div className="bg-[#fffdfa] p-5 rounded-2xl border border-[#073330]/15 shadow-xs">
+        <div className="bg-white p-5 rounded-2xl border border-[#073330]/10 shadow-xs">
           <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Confirmed & Paid</p>
           <p className="text-3xl font-black text-emerald-700 mt-2">
             {stats ? stats.booked + stats.paid : 0}
@@ -249,7 +249,7 @@ export function VendorTracker({ event, onVendorUpdated }: VendorTrackerProps) {
         </div>
 
         {/* Total Quoted Commitments */}
-        <div className="bg-[#fffdfa] p-5 rounded-2xl border border-[#073330]/15 shadow-xs">
+        <div className="bg-white p-5 rounded-2xl border border-[#073330]/10 shadow-xs">
           <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Quoted</p>
           <p className="text-3xl font-black text-[#073330] mt-2">
             {stats ? formatCurrency(stats.totalQuotes) : '$0'}
@@ -258,7 +258,7 @@ export function VendorTracker({ event, onVendorUpdated }: VendorTrackerProps) {
         </div>
 
         {/* In Negotiation */}
-        <div className="bg-[#fffdfa] p-5 rounded-2xl border border-[#073330]/15 shadow-xs">
+        <div className="bg-white p-5 rounded-2xl border border-[#073330]/10 shadow-xs">
           <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">In Negotiation</p>
           <p className="text-3xl font-black text-[#073330] mt-2">
             {stats ? stats.considering + stats.contacted : 0}
@@ -268,7 +268,7 @@ export function VendorTracker({ event, onVendorUpdated }: VendorTrackerProps) {
       </div>
 
       {/* Action Bar & Controls */}
-      <div className="bg-[#fffdfa] p-5 rounded-2xl border border-[#073330]/15 shadow-xs space-y-4">
+      <div className="bg-white p-5 rounded-2xl border border-[#073330]/10 shadow-xs space-y-4">
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
           {/* Search Bar */}
           <div className="relative flex-1 max-w-md">
