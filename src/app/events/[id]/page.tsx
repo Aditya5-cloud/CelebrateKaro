@@ -125,6 +125,59 @@ export default function EventDetailPage({
     { id: 'assistant', label: 'AI Chat Assistant', icon: Bot, color: 'text-teal-500', badge: undefined },
   ] as const;
 
+  const tabConfig = {
+    overview: {
+      title: 'Event Overview',
+      subtitle: `Key metrics, budget summary, and progress for ${event.name}.`,
+      icon: LayoutDashboard,
+      iconColor: 'text-amber-700',
+      iconBg: 'bg-amber-100',
+      badge: relativeDate.label,
+    },
+    checklist: {
+      title: '✨ AI Checklist & Roadmap',
+      subtitle: 'Tailored celebration milestone checklist and task progress.',
+      icon: Sparkles,
+      iconColor: 'text-emerald-700',
+      iconBg: 'bg-emerald-100',
+      badge: undefined,
+    },
+    budget: {
+      title: 'Budget Tracker',
+      subtitle: `Allocation envelopes and expense tracking for your ${formatCurrency(event.total_budget)} target.`,
+      icon: DollarSign,
+      iconColor: 'text-emerald-700',
+      iconBg: 'bg-emerald-100',
+      badge: formatCurrency(event.total_budget),
+    },
+    timeline: {
+      title: 'Timeline & Milestones',
+      subtitle: `${event.milestones_count} celebration milestones scheduled for ${formatDate(event.event_date)}.`,
+      icon: Calendar,
+      iconColor: 'text-blue-700',
+      iconBg: 'bg-blue-100',
+      badge: `${event.milestones_completed}/${event.milestones_count} Done`,
+    },
+    vendors: {
+      title: 'Vendor Directory',
+      subtitle: `Inquiries, quotes, contracts, and contact info (${event.vendors_count} booked).`,
+      icon: Users,
+      iconColor: 'text-purple-700',
+      iconBg: 'bg-purple-100',
+      badge: `${event.vendors_count} Vendors`,
+    },
+    assistant: {
+      title: 'AI Planning Concierge',
+      subtitle: `Personalized AI advice tailored to your ${event.event_type} celebration.`,
+      icon: Bot,
+      iconColor: 'text-[#073330]',
+      iconBg: 'bg-[#00e599]',
+      badge: 'Live',
+    },
+  }[activeTab];
+
+  const CurrentTabIcon = tabConfig.icon;
+
   return (
     <div className="min-h-screen bg-[#f2f5f3] text-[#073330] flex flex-col justify-between">
       {/* Top Header bar */}
@@ -139,30 +192,10 @@ export default function EventDetailPage({
           </Link>
 
           <div className="flex items-center gap-2.5">
-            <span className="hidden md:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-xs font-semibold text-slate-200">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-xs font-semibold text-slate-200">
               <span className="w-2 h-2 rounded-full bg-[#00e599]" />
-              {event.name}
+              <span className="truncate max-w-[200px] sm:max-w-xs">{event.name}</span>
             </span>
-
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setIsEditModalOpen(true)}
-              className="gap-1.5 text-xs font-bold border-white/20 text-white bg-white/10 hover:bg-white/20 rounded-xl cursor-pointer"
-            >
-              <Edit3 className="h-3.5 w-3.5" />
-              <span>Edit Details</span>
-            </Button>
-
-            <Button
-              variant="destructive"
-              size="sm"
-              onClick={() => setIsDeleteModalOpen(true)}
-              className="gap-1.5 text-xs font-bold bg-rose-500/20 text-rose-300 hover:bg-rose-500/30 border border-rose-400/30 rounded-xl shadow-none cursor-pointer"
-            >
-              <Trash2 className="h-3.5 w-3.5" />
-              <span>Delete</span>
-            </Button>
           </div>
         </div>
       </header>
@@ -200,7 +233,7 @@ export default function EventDetailPage({
                 </p>
               </div>
               <div className="pt-2.5 border-t border-white/10 flex items-center justify-between text-[11px] text-slate-300 font-medium">
-                <span>Target Budget</span>
+                <span>Budget</span>
                 <span className="text-[#00e599] font-bold">
                   {formatCurrency(event.total_budget)}
                 </span>
@@ -246,29 +279,6 @@ export default function EventDetailPage({
                 })}
               </nav>
             </div>
-
-            {/* Event Snapshot in Sidebar */}
-            <div className="p-4 rounded-2xl bg-[#f2f5f3] border border-[#073330]/10 space-y-2.5 text-xs">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 block">
-                Event Snapshot
-              </span>
-              <div className="flex justify-between items-center text-slate-700">
-                <span className="font-medium">Total Budget:</span>
-                <span className="font-extrabold text-[#073330]">{formatCurrency(event.total_budget)}</span>
-              </div>
-              <div className="flex justify-between items-center text-slate-700">
-                <span className="font-medium">Expected Guests:</span>
-                <span className="font-extrabold text-[#073330]">{event.guest_count.toLocaleString()}</span>
-              </div>
-              <div className="flex justify-between items-center text-slate-700">
-                <span className="font-medium">Milestones:</span>
-                <span className="font-extrabold text-[#073330]">{event.milestones_completed}/{event.milestones_count}</span>
-              </div>
-              <div className="flex justify-between items-center text-slate-700">
-                <span className="font-medium">Vendors:</span>
-                <span className="font-extrabold text-[#073330]">{event.vendors_count} booked</span>
-              </div>
-            </div>
           </div>
 
           {/* Sidebar Bottom Back Link */}
@@ -285,13 +295,61 @@ export default function EventDetailPage({
 
         {/* ─── MAIN CONTENT PANE ─── */}
         <main className="flex-1 p-6 sm:p-8 lg:p-10 space-y-6 overflow-y-auto max-w-7xl">
-          {/* Event Title Banner */}
-          <section
-            aria-labelledby="event-hero-title"
-            className="rounded-3xl border border-[#073330]/10 bg-white p-6 sm:p-8 shadow-xs relative overflow-hidden"
-          >
-            <div className="flex flex-wrap items-center justify-between gap-4">
+          {/* Sleek Right-Pane Top Bar: Displays Active Section with Quick Actions */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#073330]/10 pb-4">
+            <div className="flex items-center gap-3">
+              <div className={`w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 ${tabConfig.iconBg}`}>
+                <CurrentTabIcon className={`w-5 h-5 ${tabConfig.iconColor}`} />
+              </div>
               <div>
+                <div className="flex items-center gap-2">
+                  <h1 className="text-xl sm:text-2xl font-black tracking-tight text-[#073330]">
+                    {tabConfig.title}
+                  </h1>
+                  {tabConfig.badge && (
+                    <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#dcfce7] text-[#073330] border border-[#bbf7d0]">
+                      {tabConfig.badge}
+                    </span>
+                  )}
+                </div>
+                <p className="text-xs text-slate-500 font-medium mt-0.5">
+                  {tabConfig.subtitle}
+                </p>
+              </div>
+            </div>
+
+            {/* Quick Action Buttons */}
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setIsEditModalOpen(true)}
+                className="gap-1.5 text-xs font-bold border-[#073330]/20 text-[#073330] hover:bg-slate-100 rounded-xl cursor-pointer"
+              >
+                <Edit3 className="h-3.5 w-3.5" />
+                <span>Edit Details</span>
+              </Button>
+
+              <Button
+                variant="destructive"
+                size="sm"
+                onClick={() => setIsDeleteModalOpen(true)}
+                className="gap-1.5 text-xs font-bold bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200 rounded-xl shadow-none cursor-pointer"
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+                <span>Delete</span>
+              </Button>
+            </div>
+          </div>
+
+          {/* Active Section Content (Shows right away without scrolling past huge banners) */}
+          {activeTab === 'overview' && (
+            <div className="space-y-6">
+              {/* Event Overview Hero Card */}
+              <section
+                aria-labelledby="event-hero-title"
+                className="rounded-3xl border border-[#073330]/10 bg-white p-6 sm:p-8 shadow-xs relative overflow-hidden"
+              >
                 <div className="flex flex-wrap items-center gap-2">
                   <EventTypeBadge type={event.event_type} />
                   <span
@@ -306,221 +364,193 @@ export default function EventDetailPage({
                   </span>
                 </div>
 
-                <h1 id="event-hero-title" className="mt-3.5 text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight text-[#073330]">
+                <h2 id="event-hero-title" className="mt-3 text-2xl sm:text-3xl font-black tracking-tight text-[#073330]">
                   {event.name}
-                </h1>
+                </h2>
 
                 {event.description && (
                   <p className="mt-2 text-sm sm:text-base text-slate-600 max-w-3xl leading-relaxed font-medium">
                     {event.description}
                   </p>
                 )}
-              </div>
 
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setIsEditModalOpen(true)}
-                  className="gap-1.5 text-xs font-bold border-[#073330]/20 text-[#073330] hover:bg-[#f2f5f3] rounded-xl cursor-pointer"
-                >
-                  <Edit3 className="h-3.5 w-3.5" />
-                  <span>Edit Details</span>
-                </Button>
-
-                <Button
-                  variant="destructive"
-                  size="sm"
-                  onClick={() => setIsDeleteModalOpen(true)}
-                  className="gap-1.5 text-xs font-bold bg-rose-500/10 text-rose-700 hover:bg-rose-500/20 border border-rose-300 rounded-xl shadow-none cursor-pointer"
-                >
-                  <Trash2 className="h-3.5 w-3.5" />
-                  <span>Delete</span>
-                </Button>
-              </div>
-            </div>
-
-            {/* Quick Metrics Bar */}
-            <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-3.5 border-t border-slate-100 pt-6">
-              <div className="p-3.5 rounded-2xl bg-[#f2f5f3] border border-[#073330]/10">
-                <span className="text-xs font-semibold text-slate-600 flex items-center gap-1.5">
-                  <Calendar className="w-3.5 h-3.5 text-[#073330]" />
-                  Celebration Date
-                </span>
-                <p className="mt-1 text-sm sm:text-base font-bold text-[#073330]">
-                  {formatDate(event.event_date)}
-                </p>
-              </div>
-              <div className="p-3.5 rounded-2xl bg-[#f2f5f3] border border-[#073330]/10">
-                <span className="text-xs font-semibold text-slate-600 flex items-center gap-1.5">
-                  <DollarSign className="w-3.5 h-3.5 text-emerald-700" />
-                  Target Budget
-                </span>
-                <p className="mt-1 text-sm sm:text-base font-bold text-[#073330]">
-                  {formatCurrency(event.total_budget)}
-                </p>
-              </div>
-              <div className="p-3.5 rounded-2xl bg-[#f2f5f3] border border-[#073330]/10">
-                <span className="text-xs font-semibold text-slate-600 flex items-center gap-1.5">
-                  <Users className="w-3.5 h-3.5 text-blue-700" />
-                  Expected Guests
-                </span>
-                <p className="mt-1 text-sm sm:text-base font-bold text-[#073330]">
-                  {event.guest_count.toLocaleString()} attendees
-                </p>
-              </div>
-              <div className="p-3.5 rounded-2xl bg-[#f2f5f3] border border-[#073330]/10">
-                <span className="text-xs font-semibold text-slate-600 flex items-center gap-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700" />
-                  Planning Status
-                </span>
-                <p className="mt-1 text-sm sm:text-base font-bold text-[#073330]">
-                  {relativeDate.isPast ? 'Completed' : 'Active Planning'}
-                </p>
-              </div>
-            </div>
-          </section>
-
-          {/* Tab Content Panes */}
-          <div className="mt-6">
-            {activeTab === 'overview' && (
-              <div className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {/* Budget Status Card */}
-                  <Card className="rounded-3xl border border-[#073330]/10 bg-white shadow-xs hover:shadow-md transition-shadow">
-                    <CardHeader className="pb-3">
-                      <CardTitle className="text-base font-black flex items-center gap-2.5 text-[#073330]">
-                        <div className="w-9 h-9 rounded-xl bg-emerald-100 flex items-center justify-center text-emerald-800">
-                          <DollarSign className="w-4 h-4 text-emerald-700" />
-                        </div>
-                        <span>Budget Status</span>
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-2xl font-black tracking-tight text-[#073330]">
-                        {formatCurrency(event.total_budget)}
-                      </p>
-                      <p className="mt-1 text-xs text-slate-600 font-medium">
-                        {event.total_planned_budget > 0
-                          ? `${formatCurrency(event.total_planned_budget)} planned across categories`
-                          : 'No category breakdown configured yet.'}
-                      </p>
-                      <button
-                        type="button"
-                        onClick={() => setActiveTab('budget')}
-                        className="mt-4 inline-flex items-center gap-1.5 text-xs font-bold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 px-3 py-1.5 rounded-xl cursor-pointer transition-colors"
-                      >
-                        <span>Manage Budget Categories</span>
-                        <ArrowRight className="w-3.5 h-3.5 text-emerald-700" />
-                      </button>
-                    </CardContent>
-                  </Card>
-
-                  {/* Timeline & Deadlines Card */}
-                  <Card className="rounded-3xl border border-[#073330]/10 bg-white shadow-xs hover:shadow-md transition-shadow">
-                    <CardHeader className="pb-3">
-                      <CardTitle className="text-base font-black flex items-center gap-2.5 text-[#073330]">
-                        <div className="w-9 h-9 rounded-xl bg-amber-100 flex items-center justify-center text-amber-800">
-                          <Calendar className="w-4 h-4 text-amber-700" />
-                        </div>
-                        <span>Timeline & Deadlines</span>
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-2xl font-black tracking-tight text-[#073330]">
-                        {event.milestones_count} Milestones
-                      </p>
-                      <p className="mt-1 text-xs text-slate-600 font-medium">
-                        {event.milestones_completed} completed so far
-                      </p>
-                      <button
-                        type="button"
-                        onClick={() => setActiveTab('timeline')}
-                        className="mt-4 inline-flex items-center gap-1.5 text-xs font-bold text-amber-800 bg-amber-50 hover:bg-amber-100 px-3 py-1.5 rounded-xl cursor-pointer transition-colors"
-                      >
-                        <span>View Timeline Milestones</span>
-                        <ArrowRight className="w-3.5 h-3.5 text-amber-700" />
-                      </button>
-                    </CardContent>
-                  </Card>
-
-                  {/* Vendor Checklist Card */}
-                  <Card className="rounded-3xl border border-[#073330]/10 bg-white shadow-xs hover:shadow-md transition-shadow">
-                    <CardHeader className="pb-3">
-                      <CardTitle className="text-base font-black flex items-center gap-2.5 text-[#073330]">
-                        <div className="w-9 h-9 rounded-xl bg-blue-100 flex items-center justify-center text-blue-800">
-                          <Users className="w-4 h-4 text-blue-700" />
-                        </div>
-                        <span>Vendor Checklist</span>
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-2xl font-black tracking-tight text-[#073330]">
-                        {event.vendors_count} Vendors
-                      </p>
-                      <p className="mt-1 text-xs text-slate-600 font-medium">
-                        Track inquiries, quotes, and booked contracts
-                      </p>
-                      <button
-                        type="button"
-                        onClick={() => setActiveTab('vendors')}
-                        className="mt-4 inline-flex items-center gap-1.5 text-xs font-bold text-blue-800 bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-xl cursor-pointer transition-colors"
-                      >
-                        <span>Open Vendor Checklist</span>
-                        <ArrowRight className="w-3.5 h-3.5 text-blue-700" />
-                      </button>
-                    </CardContent>
-                  </Card>
-                </div>
-
-                {/* AI Assistant teaser / callout */}
-                <div className="rounded-3xl border border-[#073330]/20 bg-[#073330] p-6 sm:p-8 text-white shadow-md">
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5">
-                    <div className="max-w-2xl">
-                      <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-xs font-bold text-[#00e599]">
-                        <Sparkles className="w-3.5 h-3.5 text-[#00e599]" />
-                        AI Planning Concierge
-                      </span>
-                      <h3 className="mt-3 text-xl font-bold tracking-tight text-white">
-                        Generate personalized recommendations for {event.name}
-                      </h3>
-                      <p className="mt-1.5 text-sm text-slate-300 leading-relaxed">
-                        The AI Assistant will tailor recommendations to your {event.event_type} celebration with {event.guest_count} guests and a {formatCurrency(event.total_budget)} budget.
-                      </p>
-                    </div>
-                    <Button
-                      onClick={() => setActiveTab('assistant')}
-                      variant="mint"
-                      className="gap-2 text-[#073330] font-bold shadow-sm shrink-0 cursor-pointer"
-                    >
-                      <Bot className="w-4 h-4" />
-                      <span>Open AI Chat Assistant</span>
-                    </Button>
+                {/* Metrics Row */}
+                <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-3.5 border-t border-slate-100 pt-6">
+                  <div className="p-3.5 rounded-2xl bg-[#f2f5f3] border border-[#073330]/10">
+                    <span className="text-xs font-semibold text-slate-600 flex items-center gap-1.5">
+                      <Calendar className="w-3.5 h-3.5 text-[#073330]" />
+                      Celebration Date
+                    </span>
+                    <p className="mt-1 text-sm sm:text-base font-bold text-[#073330]">
+                      {formatDate(event.event_date)}
+                    </p>
+                  </div>
+                  <div className="p-3.5 rounded-2xl bg-[#f2f5f3] border border-[#073330]/10">
+                    <span className="text-xs font-semibold text-slate-600 flex items-center gap-1.5">
+                      <DollarSign className="w-3.5 h-3.5 text-emerald-700" />
+                      Target Budget
+                    </span>
+                    <p className="mt-1 text-sm sm:text-base font-bold text-[#073330]">
+                      {formatCurrency(event.total_budget)}
+                    </p>
+                  </div>
+                  <div className="p-3.5 rounded-2xl bg-[#f2f5f3] border border-[#073330]/10">
+                    <span className="text-xs font-semibold text-slate-600 flex items-center gap-1.5">
+                      <Users className="w-3.5 h-3.5 text-blue-700" />
+                      Expected Guests
+                    </span>
+                    <p className="mt-1 text-sm sm:text-base font-bold text-[#073330]">
+                      {event.guest_count.toLocaleString()} attendees
+                    </p>
+                  </div>
+                  <div className="p-3.5 rounded-2xl bg-[#f2f5f3] border border-[#073330]/10">
+                    <span className="text-xs font-semibold text-slate-600 flex items-center gap-1.5">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700" />
+                      Planning Status
+                    </span>
+                    <p className="mt-1 text-sm sm:text-base font-bold text-[#073330]">
+                      {relativeDate.isPast ? 'Completed' : 'Active Planning'}
+                    </p>
                   </div>
                 </div>
+              </section>
+
+              {/* The 3 High-Contrast Overview Cards */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {/* Budget Status Card */}
+                <Card className="rounded-3xl border border-[#073330]/10 bg-white shadow-xs hover:shadow-md transition-shadow">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-base font-black flex items-center gap-2.5 text-[#073330]">
+                      <div className="w-9 h-9 rounded-xl bg-emerald-100 flex items-center justify-center text-emerald-800">
+                        <DollarSign className="w-4 h-4 text-emerald-700" />
+                      </div>
+                      <span>Budget Status</span>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-2xl font-black tracking-tight text-[#073330]">
+                      {formatCurrency(event.total_budget)}
+                    </p>
+                    <p className="mt-1 text-xs text-slate-600 font-medium">
+                      {event.total_planned_budget > 0
+                        ? `${formatCurrency(event.total_planned_budget)} planned across categories`
+                        : 'No category breakdown configured yet.'}
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => setActiveTab('budget')}
+                      className="mt-4 inline-flex items-center gap-1.5 text-xs font-bold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 px-3 py-1.5 rounded-xl cursor-pointer transition-colors"
+                    >
+                      <span>Manage Budget Categories</span>
+                      <ArrowRight className="w-3.5 h-3.5 text-emerald-700" />
+                    </button>
+                  </CardContent>
+                </Card>
+
+                {/* Timeline & Deadlines Card */}
+                <Card className="rounded-3xl border border-[#073330]/10 bg-white shadow-xs hover:shadow-md transition-shadow">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-base font-black flex items-center gap-2.5 text-[#073330]">
+                      <div className="w-9 h-9 rounded-xl bg-amber-100 flex items-center justify-center text-amber-800">
+                        <Calendar className="w-4 h-4 text-amber-700" />
+                      </div>
+                      <span>Timeline & Deadlines</span>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-2xl font-black tracking-tight text-[#073330]">
+                      {event.milestones_count} Milestones
+                    </p>
+                    <p className="mt-1 text-xs text-slate-600 font-medium">
+                      {event.milestones_completed} completed so far
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => setActiveTab('timeline')}
+                      className="mt-4 inline-flex items-center gap-1.5 text-xs font-bold text-amber-800 bg-amber-50 hover:bg-amber-100 px-3 py-1.5 rounded-xl cursor-pointer transition-colors"
+                    >
+                      <span>View Timeline Milestones</span>
+                      <ArrowRight className="w-3.5 h-3.5 text-amber-700" />
+                    </button>
+                  </CardContent>
+                </Card>
+
+                {/* Vendor Checklist Card */}
+                <Card className="rounded-3xl border border-[#073330]/10 bg-white shadow-xs hover:shadow-md transition-shadow">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-base font-black flex items-center gap-2.5 text-[#073330]">
+                      <div className="w-9 h-9 rounded-xl bg-blue-100 flex items-center justify-center text-blue-800">
+                        <Users className="w-4 h-4 text-blue-700" />
+                      </div>
+                      <span>Vendor Checklist</span>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-2xl font-black tracking-tight text-[#073330]">
+                      {event.vendors_count} Vendors
+                    </p>
+                    <p className="mt-1 text-xs text-slate-600 font-medium">
+                      Track inquiries, quotes, and booked contracts
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => setActiveTab('vendors')}
+                      className="mt-4 inline-flex items-center gap-1.5 text-xs font-bold text-blue-800 bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-xl cursor-pointer transition-colors"
+                    >
+                      <span>Open Vendor Checklist</span>
+                      <ArrowRight className="w-3.5 h-3.5 text-blue-700" />
+                    </button>
+                  </CardContent>
+                </Card>
               </div>
-            )}
 
-            {activeTab === 'checklist' && (
-              <ChecklistTracker event={event} onChecklistUpdated={fetchEvent} />
-            )}
+              {/* AI Assistant Callout */}
+              <div className="rounded-3xl border border-[#073330]/20 bg-[#073330] p-6 sm:p-8 text-white shadow-md">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5">
+                  <div className="max-w-2xl">
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-xs font-bold text-[#00e599]">
+                      <Sparkles className="w-3.5 h-3.5 text-[#00e599]" />
+                      AI Planning Concierge
+                    </span>
+                    <h3 className="mt-3 text-xl font-bold tracking-tight text-white">
+                      Generate personalized recommendations for {event.name}
+                    </h3>
+                    <p className="mt-1.5 text-sm text-slate-300 leading-relaxed">
+                      The AI Assistant will tailor recommendations to your {event.event_type} celebration with {event.guest_count} guests and a {formatCurrency(event.total_budget)} budget.
+                    </p>
+                  </div>
+                  <Button
+                    onClick={() => setActiveTab('assistant')}
+                    variant="mint"
+                    className="gap-2 text-[#073330] font-bold shadow-sm shrink-0 cursor-pointer"
+                  >
+                    <Bot className="w-4 h-4" />
+                    <span>Open AI Chat Assistant</span>
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
 
-            {activeTab === 'budget' && (
-              <BudgetTracker event={event} onBudgetUpdated={fetchEvent} />
-            )}
+          {activeTab === 'checklist' && (
+            <ChecklistTracker event={event} onChecklistUpdated={fetchEvent} />
+          )}
 
-            {activeTab === 'timeline' && (
-              <TimelineTracker event={event} onTimelineUpdated={fetchEvent} />
-            )}
+          {activeTab === 'budget' && (
+            <BudgetTracker event={event} onBudgetUpdated={fetchEvent} />
+          )}
 
-            {activeTab === 'vendors' && (
-              <VendorTracker event={event} onVendorUpdated={fetchEvent} />
-            )}
+          {activeTab === 'timeline' && (
+            <TimelineTracker event={event} onTimelineUpdated={fetchEvent} />
+          )}
 
-            {activeTab === 'assistant' && (
-              <ChatAssistant event={event} />
-            )}
-          </div>
+          {activeTab === 'vendors' && (
+            <VendorTracker event={event} onVendorUpdated={fetchEvent} />
+          )}
+
+          {activeTab === 'assistant' && (
+            <ChatAssistant event={event} />
+          )}
         </main>
       </div>
 

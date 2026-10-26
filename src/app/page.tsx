@@ -466,29 +466,6 @@ export default function HomePage() {
                     );
                   })}
                 </div>
-
-                {/* Portfolio Summary Card in Sidebar */}
-                <div className="p-4 rounded-2xl bg-[#f2f5f3] border border-[#073330]/10 space-y-2.5 text-xs">
-                  <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 block">
-                    Portfolio Summary
-                  </span>
-                  <div className="flex justify-between items-center text-slate-700">
-                    <span className="font-medium">Total Events:</span>
-                    <span className="font-extrabold text-[#073330]">{stats.totalEvents}</span>
-                  </div>
-                  <div className="flex justify-between items-center text-slate-700">
-                    <span className="font-medium">Upcoming:</span>
-                    <span className="font-extrabold text-emerald-700">{stats.upcomingCount}</span>
-                  </div>
-                  <div className="flex justify-between items-center text-slate-700">
-                    <span className="font-medium">Total Budget:</span>
-                    <span className="font-extrabold text-[#073330]">{formatCurrency(stats.totalBudget)}</span>
-                  </div>
-                  <div className="flex justify-between items-center text-slate-700">
-                    <span className="font-medium">Total Guests:</span>
-                    <span className="font-extrabold text-[#073330]">{stats.totalGuests.toLocaleString()}</span>
-                  </div>
-                </div>
               </div>
 
               {/* Sidebar Bottom: Back to Landing Page & Sign Out */}
@@ -548,16 +525,6 @@ export default function HomePage() {
                   >
                     <RefreshCw className={`h-3.5 w-3.5 ${isSyncing ? 'animate-spin' : ''}`} />
                     <span>Sync Now</span>
-                  </Button>
-
-                  <Button
-                    variant="mint"
-                    size="sm"
-                    onClick={() => setIsCreateModalOpen(true)}
-                    className="rounded-full px-4 font-black text-xs uppercase tracking-wider text-[#073330] bg-[#00e599] hover:bg-[#1cf3a6] shadow-sm cursor-pointer"
-                  >
-                    <Plus className="h-3.5 w-3.5" />
-                    <span>Plan Celebration</span>
                   </Button>
                 </div>
               </div>
