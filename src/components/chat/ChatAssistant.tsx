@@ -118,12 +118,12 @@ export function ChatAssistant({ event }: ChatAssistantProps) {
   return (
     <section
       aria-label="AI Planning Assistant Chat"
-      className="bg-white rounded-3xl border border-slate-200/90 shadow-sm overflow-hidden flex flex-col h-[700px]"
+      className="bg-[#fffdfa] rounded-3xl border border-[#073330]/15 shadow-sm overflow-hidden flex flex-col h-[700px]"
     >
       {/* Header */}
-      <div className="px-6 py-4 bg-gradient-to-r from-slate-900 to-indigo-950 text-white flex items-center justify-between shrink-0">
+      <div className="px-6 py-4 bg-[#073330] text-white flex items-center justify-between shrink-0">
         <div className="flex items-center space-x-3">
-          <div className="w-9 h-9 rounded-xl bg-indigo-500/20 border border-indigo-400/30 flex items-center justify-center text-lg">
+          <div className="w-9 h-9 rounded-xl bg-[#00e599] text-[#073330] font-bold flex items-center justify-center text-base shadow-xs">
             ✨
           </div>
           <div>
@@ -131,11 +131,11 @@ export function ChatAssistant({ event }: ChatAssistantProps) {
               <h3 className="font-bold text-sm tracking-tight text-white">
                 GenAI Planning Assistant
               </h3>
-              <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-indigo-500/30 border border-indigo-400/30 text-indigo-200">
+              <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-white/10 border border-white/20 text-[#00e599]">
                 AI Event Concierge
               </span>
             </div>
-            <p className="text-xs text-indigo-200">
+            <p className="text-xs text-white/70">
               Grounded in your budget, vendors, timeline & checklist for {event.name}
             </p>
           </div>
@@ -145,7 +145,7 @@ export function ChatAssistant({ event }: ChatAssistantProps) {
           <button
             type="button"
             onClick={handleClearChat}
-            className="text-xs text-indigo-200 hover:text-white px-3 py-1.5 rounded-lg hover:bg-white/10 transition-colors"
+            className="text-xs text-white/70 hover:text-white px-3 py-1.5 rounded-lg hover:bg-white/10 transition-colors cursor-pointer"
           >
             Clear Chat
           </button>
@@ -154,21 +154,21 @@ export function ChatAssistant({ event }: ChatAssistantProps) {
 
       {/* Message List */}
       <div
-        className="flex-1 p-6 overflow-y-auto space-y-4 bg-slate-50/50"
+        className="flex-1 p-6 overflow-y-auto space-y-4 bg-[#faf8f4]"
         role="log"
         aria-live="polite"
       >
         {isLoadingHistory ? (
           <div className="flex items-center justify-center h-full text-slate-500 text-sm">
-            <div className="inline-block w-6 h-6 border-3 border-indigo-600 border-t-transparent rounded-full animate-spin mr-2" />
+            <div className="inline-block w-6 h-6 border-3 border-[#073330] border-t-transparent rounded-full animate-spin mr-2" />
             <span>Loading conversation...</span>
           </div>
         ) : messages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center max-w-lg mx-auto py-8">
-            <div className="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-2xl mb-3 shadow-xs">
+            <div className="w-12 h-12 rounded-2xl bg-[#00e599]/20 text-[#073330] flex items-center justify-center text-2xl mb-3 shadow-xs">
               🤖
             </div>
-            <h4 className="text-base font-bold text-slate-900">
+            <h4 className="text-base font-bold text-[#073330]">
               How can I assist your {event.event_type} planning?
             </h4>
             <p className="text-xs text-slate-500 mt-1 mb-6">
@@ -186,10 +186,10 @@ export function ChatAssistant({ event }: ChatAssistantProps) {
                     key={prompt}
                     type="button"
                     onClick={() => handleSendMessage(prompt)}
-                    className="text-left text-xs text-slate-700 bg-white hover:bg-indigo-50/60 hover:text-indigo-900 hover:border-indigo-200 p-3 rounded-xl border border-slate-200/80 shadow-2xs transition-all flex items-center justify-between group"
+                    className="text-left text-xs font-semibold text-[#073330] bg-[#fffdfa] hover:bg-white hover:border-[#073330]/30 p-3 rounded-xl border border-[#073330]/15 shadow-2xs transition-all flex items-center justify-between group cursor-pointer"
                   >
                     <span>{prompt}</span>
-                    <span className="text-slate-300 group-hover:text-indigo-500 transition-colors">
+                    <span className="text-slate-300 group-hover:text-[#073330] transition-colors">
                       →
                     </span>
                   </button>
@@ -209,7 +209,7 @@ export function ChatAssistant({ event }: ChatAssistantProps) {
                   }`}
                 >
                   {!isUser && (
-                    <div className="w-7 h-7 rounded-lg bg-indigo-600 text-white flex items-center justify-center text-xs shrink-0 mt-1 shadow-xs">
+                    <div className="w-7 h-7 rounded-lg bg-[#073330] text-[#00e599] flex items-center justify-center text-xs shrink-0 mt-1 shadow-xs">
                       ✨
                     </div>
                   )}
@@ -217,8 +217,8 @@ export function ChatAssistant({ event }: ChatAssistantProps) {
                   <div
                     className={`max-w-[85%] sm:max-w-[75%] rounded-2xl px-4 py-3 text-sm leading-relaxed shadow-xs ${
                       isUser
-                        ? 'bg-indigo-600 text-white rounded-tr-xs'
-                        : 'bg-white text-slate-900 border border-slate-200/80 rounded-tl-xs'
+                        ? 'bg-[#073330] text-white rounded-tr-xs'
+                        : 'bg-white text-[#073330] border border-[#073330]/15 rounded-tl-xs'
                     }`}
                   >
                     <div className="whitespace-pre-wrap font-normal prose prose-xs max-w-none text-inherit">
@@ -227,7 +227,7 @@ export function ChatAssistant({ event }: ChatAssistantProps) {
                   </div>
 
                   {isUser && (
-                    <div className="w-7 h-7 rounded-lg bg-slate-800 text-white flex items-center justify-center text-xs shrink-0 mt-1 shadow-xs">
+                    <div className="w-7 h-7 rounded-lg bg-[#00e599] text-[#073330] font-bold flex items-center justify-center text-xs shrink-0 mt-1 shadow-xs">
                       👤
                     </div>
                   )}
@@ -237,14 +237,14 @@ export function ChatAssistant({ event }: ChatAssistantProps) {
 
             {isSending && (
               <div className="flex items-start space-x-2.5 justify-start">
-                <div className="w-7 h-7 rounded-lg bg-indigo-600 text-white flex items-center justify-center text-xs shrink-0 mt-1 shadow-xs">
+                <div className="w-7 h-7 rounded-lg bg-[#073330] text-[#00e599] flex items-center justify-center text-xs shrink-0 mt-1 shadow-xs">
                   ✨
                 </div>
-                <div className="bg-white border border-slate-200/80 rounded-2xl rounded-tl-xs px-4 py-3 shadow-xs">
+                <div className="bg-white border border-[#073330]/15 rounded-2xl rounded-tl-xs px-4 py-3 shadow-xs">
                   <div className="flex items-center space-x-1.5 py-1">
-                    <span className="w-2 h-2 rounded-full bg-indigo-500 animate-bounce" />
-                    <span className="w-2 h-2 rounded-full bg-indigo-500 animate-bounce [animation-delay:0.2s]" />
-                    <span className="w-2 h-2 rounded-full bg-indigo-500 animate-bounce [animation-delay:0.4s]" />
+                    <span className="w-2 h-2 rounded-full bg-[#073330] animate-bounce" />
+                    <span className="w-2 h-2 rounded-full bg-[#073330] animate-bounce [animation-delay:0.2s]" />
+                    <span className="w-2 h-2 rounded-full bg-[#073330] animate-bounce [animation-delay:0.4s]" />
                   </div>
                 </div>
               </div>
@@ -270,7 +270,7 @@ export function ChatAssistant({ event }: ChatAssistantProps) {
           e.preventDefault();
           handleSendMessage();
         }}
-        className="p-4 bg-white border-t border-slate-200/80 shrink-0"
+        className="p-4 bg-[#fffdfa] border-t border-[#073330]/10 shrink-0"
       >
         <div className="flex items-center space-x-2">
           <input
@@ -281,16 +281,16 @@ export function ChatAssistant({ event }: ChatAssistantProps) {
             placeholder="Ask about budget, vendor gaps, timeline deadlines, or custom ideas..."
             aria-label="Type your planning question"
             disabled={isSending}
-            className="flex-1 px-4 py-2.5 text-sm rounded-xl border border-slate-200 text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-indigo-500 bg-slate-50 hover:bg-white focus:bg-white transition-colors"
+            className="flex-1 px-4 py-2.5 text-sm rounded-xl border border-[#073330]/20 text-[#073330] focus:outline-hidden focus:ring-2 focus:ring-[#073330] bg-white transition-colors"
           />
           <button
             type="submit"
             disabled={!inputMessage.trim() || isSending}
             aria-label="Send message to assistant"
-            className="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 disabled:opacity-40 text-white rounded-xl shadow-xs transition-colors flex items-center justify-center shrink-0"
+            className="px-4 py-2.5 bg-[#00e599] hover:bg-[#1cf3a6] active:bg-[#00e599] disabled:opacity-40 text-[#073330] font-bold rounded-xl shadow-xs transition-colors flex items-center justify-center shrink-0 cursor-pointer"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
             </svg>
           </button>
         </div>

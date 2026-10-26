@@ -179,47 +179,47 @@ export function BudgetTracker({ event, onBudgetUpdated }: BudgetTrackerProps) {
 
       {/* KPI Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-xs dark:border-zinc-800 dark:bg-zinc-900">
-          <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">Target Budget</span>
-          <p className="mt-1 text-2xl font-extrabold text-zinc-900 dark:text-zinc-100">
+        <div className="rounded-2xl border border-[#073330]/15 bg-[#fffdfa] p-5 shadow-xs">
+          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Target Budget</span>
+          <p className="mt-1 text-2xl font-black text-[#073330]">
             {formatCurrency(targetBudget)}
           </p>
-          <span className="text-xs text-zinc-400">Total event limit</span>
+          <span className="text-xs text-slate-400">Total event limit</span>
         </div>
 
-        <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-xs dark:border-zinc-800 dark:bg-zinc-900">
-          <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">Total Planned</span>
-          <p className="mt-1 text-2xl font-extrabold text-zinc-900 dark:text-zinc-100">
+        <div className="rounded-2xl border border-[#073330]/15 bg-[#fffdfa] p-5 shadow-xs">
+          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Planned</span>
+          <p className="mt-1 text-2xl font-black text-[#073330]">
             {formatCurrency(totalPlanned)}
           </p>
-          <span className={`text-xs ${unallocated >= 0 ? 'text-zinc-500' : 'text-amber-600'}`}>
+          <span className={`text-xs font-semibold ${unallocated >= 0 ? 'text-slate-500' : 'text-amber-600'}`}>
             {unallocated >= 0 ? `${formatCurrency(unallocated)} unallocated` : `${formatCurrency(Math.abs(unallocated))} over target`}
           </span>
         </div>
 
-        <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-xs dark:border-zinc-800 dark:bg-zinc-900">
-          <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">Actual Spent</span>
-          <p className="mt-1 text-2xl font-extrabold text-zinc-900 dark:text-zinc-100">
+        <div className="rounded-2xl border border-[#073330]/15 bg-[#fffdfa] p-5 shadow-xs">
+          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Actual Spent</span>
+          <p className="mt-1 text-2xl font-black text-[#073330]">
             {formatCurrency(totalSpent)}
           </p>
-          <span className="text-xs text-zinc-500">
+          <span className="text-xs text-slate-500">
             {summary?.percentSpent ?? 0}% of target
           </span>
         </div>
 
-        <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-xs dark:border-zinc-800 dark:bg-zinc-900">
-          <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">Remaining to Spend</span>
-          <p className={`mt-1 text-2xl font-extrabold ${remaining >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400'}`}>
+        <div className="rounded-2xl border border-[#073330]/15 bg-[#fffdfa] p-5 shadow-xs">
+          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Remaining to Spend</span>
+          <p className={`mt-1 text-2xl font-black ${remaining >= 0 ? 'text-emerald-700' : 'text-red-600'}`}>
             {formatCurrency(remaining)}
           </p>
-          <span className="text-xs text-zinc-500">
+          <span className="text-xs text-slate-500">
             {remaining >= 0 ? 'Available balance' : 'Over limit'}
           </span>
         </div>
       </div>
 
       {/* Progress Bar Card */}
-      <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-xs dark:border-zinc-800 dark:bg-zinc-900">
+      <div className="rounded-2xl border border-[#073330]/15 bg-[#fffdfa] p-6 shadow-xs">
         <BudgetProgressBar
           spentCents={totalSpent}
           targetCents={targetBudget}
@@ -232,7 +232,7 @@ export function BudgetTracker({ event, onBudgetUpdated }: BudgetTrackerProps) {
       {/* Actions Bar */}
       <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
         <div className="flex items-center gap-2">
-          <h3 className="text-base font-bold text-zinc-900 dark:text-zinc-100">
+          <h3 className="text-base font-bold text-[#073330]">
             Expense Categories ({categories.length})
           </h3>
         </div>
@@ -242,7 +242,7 @@ export function BudgetTracker({ event, onBudgetUpdated }: BudgetTrackerProps) {
             type="button"
             onClick={handleApplyTemplate}
             disabled={isApplyingTemplate}
-            className="inline-flex items-center gap-1.5 rounded-xl border border-blue-200 bg-blue-50/50 px-3.5 py-2 text-xs font-semibold text-blue-700 hover:bg-blue-100 dark:border-blue-900/60 dark:bg-blue-950/30 dark:text-blue-300 transition-colors"
+            className="inline-flex items-center gap-1.5 rounded-xl border border-[#073330]/20 bg-white px-3.5 py-2 text-xs font-bold text-[#073330] hover:bg-[#faf8f4] transition-colors cursor-pointer"
           >
             <span>✨</span>
             <span>{isApplyingTemplate ? 'Generating...' : `Auto-Allocate ${event.event_type} Template`}</span>
@@ -254,7 +254,7 @@ export function BudgetTracker({ event, onBudgetUpdated }: BudgetTrackerProps) {
               setCategoryToEdit(null);
               setIsCategoryModalOpen(true);
             }}
-            className="inline-flex items-center gap-1.5 rounded-xl bg-blue-600 px-4 py-2 text-xs font-semibold text-white shadow-xs hover:bg-blue-700 transition-colors"
+            className="inline-flex items-center gap-1.5 rounded-xl bg-[#00e599] hover:bg-[#1cf3a6] px-4 py-2 text-xs font-bold text-[#073330] shadow-xs transition-colors cursor-pointer"
           >
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -266,14 +266,14 @@ export function BudgetTracker({ event, onBudgetUpdated }: BudgetTrackerProps) {
 
       {/* Categories Table / Empty state */}
       {categories.length === 0 ? (
-        <div className="rounded-3xl border-2 border-dashed border-zinc-200 bg-white p-10 text-center dark:border-zinc-800 dark:bg-zinc-900/50">
-          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-2xl dark:bg-emerald-950/60 text-emerald-600">
+        <div className="rounded-3xl border-2 border-dashed border-[#073330]/20 bg-[#fffdfa] p-10 text-center">
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-[#00e599]/20 text-2xl text-[#073330]">
             💰
           </div>
-          <h4 className="mt-3 text-base font-bold text-zinc-900 dark:text-zinc-100">
+          <h4 className="mt-3 text-base font-bold text-[#073330]">
             No budget categories created yet
           </h4>
-          <p className="mt-1 text-xs text-zinc-500 max-w-sm mx-auto">
+          <p className="mt-1 text-xs text-slate-500 max-w-sm mx-auto">
             Break down your {formatCurrency(targetBudget)} budget across venues, catering, photography, and entertainment.
           </p>
           <div className="mt-5 flex justify-center gap-3">
@@ -281,7 +281,7 @@ export function BudgetTracker({ event, onBudgetUpdated }: BudgetTrackerProps) {
               type="button"
               onClick={handleApplyTemplate}
               disabled={isApplyingTemplate}
-              className="rounded-xl bg-blue-600 px-4 py-2 text-xs font-semibold text-white shadow-xs hover:bg-blue-700"
+              className="rounded-xl bg-[#00e599] hover:bg-[#1cf3a6] px-4 py-2 text-xs font-bold text-[#073330] shadow-xs cursor-pointer"
             >
               ✨ Apply Recommended {event.event_type.toUpperCase()} Template
             </button>
@@ -291,17 +291,17 @@ export function BudgetTracker({ event, onBudgetUpdated }: BudgetTrackerProps) {
                 setCategoryToEdit(null);
                 setIsCategoryModalOpen(true);
               }}
-              className="rounded-xl border border-zinc-300 bg-white px-4 py-2 text-xs font-semibold text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
+              className="rounded-xl border border-[#073330]/20 bg-white px-4 py-2 text-xs font-bold text-[#073330] hover:bg-[#faf8f4] cursor-pointer"
             >
               + Add Custom Category
             </button>
           </div>
         </div>
       ) : (
-        <div className="overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-xs dark:border-zinc-800 dark:bg-zinc-900">
+        <div className="overflow-hidden rounded-2xl border border-[#073330]/15 bg-[#fffdfa] shadow-xs">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm border-collapse" aria-label="Budget categories table">
-              <thead className="border-b border-zinc-200 bg-zinc-50/70 text-xs font-semibold text-zinc-600 dark:border-zinc-800 dark:bg-zinc-800/40 dark:text-zinc-300">
+              <thead className="border-b border-[#073330]/10 bg-[#faf8f4] text-xs font-bold text-[#073330]">
                 <tr>
                   <th scope="col" className="py-3.5 pl-6 pr-3">Category & Notes</th>
                   <th scope="col" className="px-3 py-3.5 text-right">Planned</th>
@@ -311,7 +311,7 @@ export function BudgetTracker({ event, onBudgetUpdated }: BudgetTrackerProps) {
                   <th scope="col" className="py-3.5 pl-3 pr-6 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800">
+              <tbody className="divide-y divide-[#073330]/10">
                 {categories.map((cat) => {
                   const variance = cat.planned_amount - cat.actual_amount;
                   const catPercent = cat.planned_amount > 0
@@ -320,34 +320,34 @@ export function BudgetTracker({ event, onBudgetUpdated }: BudgetTrackerProps) {
                   const isCatOver = cat.actual_amount > cat.planned_amount;
 
                   return (
-                    <tr key={cat.id} className="hover:bg-zinc-50/50 dark:hover:bg-zinc-800/30 transition-colors">
+                    <tr key={cat.id} className="hover:bg-[#faf8f4]/60 transition-colors">
                       <td className="py-4 pl-6 pr-3">
-                        <span className="font-semibold text-zinc-900 dark:text-zinc-100 block">
+                        <span className="font-bold text-[#073330] block">
                           {cat.name}
                         </span>
                         {cat.notes && (
-                          <span className="text-xs text-zinc-500 dark:text-zinc-400 block mt-0.5 line-clamp-1">
+                          <span className="text-xs text-slate-500 block mt-0.5 line-clamp-1">
                             {cat.notes}
                           </span>
                         )}
                       </td>
-                      <td className="px-3 py-4 text-right font-medium text-zinc-900 dark:text-zinc-200">
+                      <td className="px-3 py-4 text-right font-medium text-[#073330]">
                         {formatCurrency(cat.planned_amount)}
                       </td>
-                      <td className="px-3 py-4 text-right font-semibold text-zinc-900 dark:text-zinc-100">
+                      <td className="px-3 py-4 text-right font-bold text-[#073330]">
                         {formatCurrency(cat.actual_amount)}
                       </td>
-                      <td className={`px-3 py-4 text-right font-semibold ${isCatOver ? 'text-red-600 dark:text-red-400' : 'text-emerald-600 dark:text-emerald-400'}`}>
+                      <td className={`px-3 py-4 text-right font-bold ${isCatOver ? 'text-red-600' : 'text-emerald-700'}`}>
                         {variance >= 0 ? `${formatCurrency(variance)} left` : `${formatCurrency(Math.abs(variance))} over`}
                       </td>
                       <td className="px-3 py-4 text-center">
                         <span
-                          className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold ${
+                          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold ${
                             isCatOver
-                              ? 'bg-red-100 text-red-700 dark:bg-red-950/60 dark:text-red-300'
+                              ? 'bg-red-100 text-red-700'
                               : catPercent >= 80
-                              ? 'bg-amber-100 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300'
-                              : 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300'
+                              ? 'bg-[#ff9e7d]/30 text-[#073330]'
+                              : 'bg-[#dcfce7] text-[#073330]'
                           }`}
                         >
                           {catPercent}%

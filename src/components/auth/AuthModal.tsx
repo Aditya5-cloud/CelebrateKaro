@@ -86,18 +86,18 @@ export function AuthModal({
       />
 
       {/* Modal Dialog Card */}
-      <div className="relative w-full max-w-md overflow-hidden rounded-2xl border border-zinc-200/90 bg-white p-6 shadow-2xl dark:border-zinc-800 dark:bg-zinc-900 animate-in zoom-in-95 duration-150">
+      <div className="relative w-full max-w-md overflow-hidden rounded-3xl border border-[#073330]/15 bg-[#fffdfa] p-6 sm:p-7 shadow-2xl animate-in zoom-in-95 duration-150">
         {/* Header */}
-        <div className="flex items-center justify-between pb-4 border-b border-zinc-100 dark:border-zinc-800">
+        <div className="flex items-center justify-between pb-4 border-b border-[#073330]/10">
           <div className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-violet-600 to-indigo-600 text-white shadow-xs">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#00e599] text-[#073330] shadow-xs">
               <Sparkles className="h-4 w-4" />
             </div>
             <div>
-              <h2 id="auth-modal-title" className="text-base font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
+              <h2 id="auth-modal-title" className="text-base font-bold tracking-tight text-[#073330]">
                 {tab === 'signin' ? 'Sign in to Your Account' : 'Create Your Planner Account'}
               </h2>
-              <p className="text-xs text-zinc-500 dark:text-zinc-400">
+              <p className="text-xs text-slate-500">
                 {tab === 'signin' ? 'Access your celebrations workspace' : 'Plan celebrations with effortless elegance'}
               </p>
             </div>
@@ -107,7 +107,7 @@ export function AuthModal({
             type="button"
             onClick={onClose}
             aria-label="Close dialog"
-            className="rounded-lg p-1.5 text-zinc-400 hover:bg-zinc-100 hover:text-zinc-700 dark:hover:bg-zinc-800 dark:hover:text-zinc-200 transition-colors"
+            className="rounded-lg p-1.5 text-slate-400 hover:bg-[#073330]/5 hover:text-[#073330] transition-colors cursor-pointer"
           >
             <X className="h-4 w-4" />
           </button>
@@ -115,9 +115,9 @@ export function AuthModal({
 
         {/* Tab Navigation */}
         <div className="mt-4">
-          <TabsList className="w-full">
+          <TabsList className="w-full bg-[#073330]/5 border border-[#073330]/10 p-1">
             <TabsTrigger
-              className="flex-1"
+              className={`flex-1 font-bold ${tab === 'signin' ? 'bg-[#073330] text-white shadow-xs' : 'text-slate-600 hover:text-[#073330]'}`}
               active={tab === 'signin'}
               onClick={() => {
                 setTab('signin');
@@ -127,7 +127,7 @@ export function AuthModal({
               Sign In
             </TabsTrigger>
             <TabsTrigger
-              className="flex-1"
+              className={`flex-1 font-bold ${tab === 'register' ? 'bg-[#073330] text-white shadow-xs' : 'text-slate-600 hover:text-[#073330]'}`}
               active={tab === 'register'}
               onClick={() => {
                 setTab('register');
@@ -180,12 +180,12 @@ export function AuthModal({
               />
             </div>
 
-            <Button type="submit" className="w-full mt-2">
+            <Button type="submit" variant="mint" className="w-full mt-2 font-bold cursor-pointer">
               <span>Sign In to Dashboard</span>
               <ArrowRight className="h-3.5 w-3.5" />
             </Button>
 
-            <p className="text-center text-[11px] text-zinc-500 dark:text-zinc-400 pt-1">
+            <p className="text-center text-[11px] text-slate-500 pt-1">
               Don&apos;t have an account yet?{' '}
               <button
                 type="button"
@@ -193,7 +193,7 @@ export function AuthModal({
                   setTab('register');
                   setError(null);
                 }}
-                className="font-semibold text-violet-600 hover:text-violet-700 dark:text-violet-400"
+                className="font-bold text-[#073330] underline hover:text-[#0c4b47] cursor-pointer"
               >
                 Create one now
               </button>
@@ -205,8 +205,8 @@ export function AuthModal({
         {tab === 'register' && (
           <form onSubmit={handleRegister} className="mt-4 space-y-3.5">
             <div className="space-y-1">
-              <label className="flex items-center gap-1.5 text-xs font-semibold text-zinc-700 dark:text-zinc-300">
-                <UserIcon className="h-3.5 w-3.5 text-zinc-400" /> Your Full Name
+              <label className="flex items-center gap-1.5 text-xs font-semibold text-[#073330]">
+                <UserIcon className="h-3.5 w-3.5 text-slate-400" /> Your Full Name
               </label>
               <Input
                 type="text"
@@ -219,8 +219,8 @@ export function AuthModal({
             </div>
 
             <div className="space-y-1">
-              <label className="flex items-center gap-1.5 text-xs font-semibold text-zinc-700 dark:text-zinc-300">
-                <Mail className="h-3.5 w-3.5 text-zinc-400" /> Email Address
+              <label className="flex items-center gap-1.5 text-xs font-semibold text-[#073330]">
+                <Mail className="h-3.5 w-3.5 text-slate-400" /> Email Address
               </label>
               <Input
                 type="email"
@@ -232,8 +232,8 @@ export function AuthModal({
             </div>
 
             <div className="space-y-1">
-              <label className="flex items-center gap-1.5 text-xs font-semibold text-zinc-700 dark:text-zinc-300">
-                <Lock className="h-3.5 w-3.5 text-zinc-400" /> Password
+              <label className="flex items-center gap-1.5 text-xs font-semibold text-[#073330]">
+                <Lock className="h-3.5 w-3.5 text-slate-400" /> Password
               </label>
               <Input
                 type="password"
@@ -245,27 +245,27 @@ export function AuthModal({
             </div>
 
             <div className="space-y-1">
-              <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300">
+              <label className="block text-xs font-semibold text-[#073330]">
                 Planning Focus
               </label>
               <select
                 value={role}
                 onChange={(e) => setRole(e.target.value as UserRole)}
-                className="flex h-9 w-full rounded-xl border border-zinc-200 bg-white px-3 py-1.5 text-xs sm:text-sm text-zinc-900 shadow-2xs focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-zinc-950 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-50"
+                className="flex h-9 w-full rounded-xl border border-[#073330]/20 bg-white px-3 py-1.5 text-xs sm:text-sm text-[#073330] shadow-2xs focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#073330]"
               >
                 <option value="host">💍 Wedding or Private Host</option>
                 <option value="planner">🎂 Birthday & Family Celebrations Lead</option>
-                <option value="community">🏘️ Community Festival Director</option>
+                <option value="community">🥂 Gala & Community Festival Director</option>
                 <option value="coordinator">🌟 Professional Event Producer</option>
               </select>
             </div>
 
-            <Button type="submit" className="w-full mt-2">
+            <Button type="submit" variant="mint" className="w-full mt-2 font-bold cursor-pointer">
               <span>Register & Go to Dashboard</span>
               <ArrowRight className="h-3.5 w-3.5" />
             </Button>
 
-            <p className="text-center text-[11px] text-zinc-500 dark:text-zinc-400 pt-1">
+            <p className="text-center text-[11px] text-slate-500 pt-1">
               Already have an account?{' '}
               <button
                 type="button"
@@ -273,7 +273,7 @@ export function AuthModal({
                   setTab('signin');
                   setError(null);
                 }}
-                className="font-semibold text-violet-600 hover:text-violet-700 dark:text-violet-400"
+                className="font-bold text-[#073330] underline hover:text-[#0c4b47] cursor-pointer"
               >
                 Sign in
               </button>

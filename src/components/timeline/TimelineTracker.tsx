@@ -202,46 +202,46 @@ export function TimelineTracker({ event, onTimelineUpdated }: TimelineTrackerPro
 
       {/* KPI Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-xs dark:border-zinc-800 dark:bg-zinc-900">
-          <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">Total Milestones</span>
-          <p className="mt-1 text-2xl font-extrabold text-zinc-900 dark:text-zinc-100">{totalCount}</p>
-          <span className="text-xs text-zinc-400">Scheduled checkpoints</span>
+        <div className="rounded-2xl border border-[#073330]/15 bg-[#fffdfa] p-5 shadow-xs">
+          <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">Total Milestones</span>
+          <p className="mt-1 text-2xl font-black text-[#073330]">{totalCount}</p>
+          <span className="text-xs text-slate-400">Scheduled checkpoints</span>
         </div>
 
-        <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-xs dark:border-zinc-800 dark:bg-zinc-900">
-          <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">Completed</span>
-          <p className="mt-1 text-2xl font-extrabold text-emerald-600 dark:text-emerald-400">
+        <div className="rounded-2xl border border-[#073330]/15 bg-[#fffdfa] p-5 shadow-xs">
+          <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">Completed</span>
+          <p className="mt-1 text-2xl font-black text-emerald-700">
             {completedCount}
           </p>
-          <span className="text-xs text-zinc-500">{percentCompleted}% complete</span>
+          <span className="text-xs text-slate-500">{percentCompleted}% complete</span>
         </div>
 
-        <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-xs dark:border-zinc-800 dark:bg-zinc-900">
-          <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">Pending Actions</span>
-          <p className="mt-1 text-2xl font-extrabold text-zinc-900 dark:text-zinc-100">{pendingCount}</p>
-          <span className="text-xs text-zinc-500">Awaiting completion</span>
+        <div className="rounded-2xl border border-[#073330]/15 bg-[#fffdfa] p-5 shadow-xs">
+          <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">Pending Actions</span>
+          <p className="mt-1 text-2xl font-black text-[#073330]">{pendingCount}</p>
+          <span className="text-xs text-slate-500">Awaiting completion</span>
         </div>
 
-        <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-xs dark:border-zinc-800 dark:bg-zinc-900">
-          <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">Overdue</span>
+        <div className="rounded-2xl border border-[#073330]/15 bg-[#fffdfa] p-5 shadow-xs">
+          <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">Overdue</span>
           <p
-            className={`mt-1 text-2xl font-extrabold ${
-              overdueCount > 0 ? 'text-red-600 dark:text-red-400' : 'text-zinc-900 dark:text-zinc-100'
+            className={`mt-1 text-2xl font-black ${
+              overdueCount > 0 ? 'text-red-600' : 'text-[#073330]'
             }`}
           >
             {overdueCount}
           </p>
-          <span className="text-xs text-zinc-500">
+          <span className="text-xs text-slate-500">
             {overdueCount > 0 ? 'Requires attention' : 'All deadlines on track'}
           </span>
         </div>
       </div>
 
       {/* Progress Bar Card */}
-      <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-xs dark:border-zinc-800 dark:bg-zinc-900">
+      <div className="rounded-2xl border border-[#073330]/15 bg-[#fffdfa] p-6 shadow-xs">
         <div className="flex items-center justify-between text-xs mb-2">
-          <span className="font-semibold text-zinc-700 dark:text-zinc-300">Milestone Completion Progress</span>
-          <span className="font-bold text-blue-600 dark:text-blue-400">{percentCompleted}%</span>
+          <span className="font-bold text-[#073330]">Milestone Completion Progress</span>
+          <span className="font-bold text-[#073330]">{percentCompleted}%</span>
         </div>
         <div
           role="progressbar"
@@ -250,10 +250,10 @@ export function TimelineTracker({ event, onTimelineUpdated }: TimelineTrackerPro
           aria-valuemax={100}
           aria-label="Milestone Completion Progress"
           aria-valuetext={`${percentCompleted}% completed (${completedCount} of ${totalCount} milestones)`}
-          className="w-full h-3 overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-800"
+          className="w-full h-3.5 overflow-hidden rounded-full bg-[#073330]/10"
         >
           <div
-            className="h-full bg-blue-600 transition-all duration-300 rounded-full"
+            className="h-full bg-[#00e599] transition-all duration-300 rounded-full"
             style={{ width: `${percentCompleted}%` }}
           />
         </div>
@@ -264,7 +264,7 @@ export function TimelineTracker({ event, onTimelineUpdated }: TimelineTrackerPro
         <div
           role="toolbar"
           aria-label="Filter milestones by status"
-          className="flex flex-wrap items-center gap-1.5 rounded-xl border border-zinc-200 bg-white p-1 dark:border-zinc-800 dark:bg-zinc-900"
+          className="flex flex-wrap items-center gap-1.5 rounded-xl border border-[#073330]/15 bg-[#fffdfa] p-1.5"
         >
           {[
             { id: 'all', label: `All (${totalCount})` },
@@ -279,10 +279,10 @@ export function TimelineTracker({ event, onTimelineUpdated }: TimelineTrackerPro
                 type="button"
                 onClick={() => setActiveFilter(tab.id as typeof activeFilter)}
                 aria-pressed={active}
-                className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
+                className={`rounded-lg px-3.5 py-1.5 text-xs font-bold transition-colors cursor-pointer ${
                   active
-                    ? 'bg-blue-600 text-white shadow-xs'
-                    : 'text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:text-zinc-200 dark:hover:bg-zinc-800'
+                    ? 'bg-[#073330] text-white shadow-xs'
+                    : 'text-slate-600 hover:text-[#073330] hover:bg-[#faf8f4]'
                 }`}
               >
                 {tab.label}
@@ -296,7 +296,7 @@ export function TimelineTracker({ event, onTimelineUpdated }: TimelineTrackerPro
             type="button"
             onClick={handleGenerateTemplate}
             disabled={isGeneratingTemplate}
-            className="inline-flex items-center gap-1.5 rounded-xl border border-blue-200 bg-blue-50/50 px-3.5 py-2 text-xs font-semibold text-blue-700 hover:bg-blue-100 dark:border-blue-900/60 dark:bg-blue-950/30 dark:text-blue-300 transition-colors"
+            className="inline-flex items-center gap-1.5 rounded-xl border border-[#073330]/20 bg-white px-3.5 py-2 text-xs font-bold text-[#073330] hover:bg-[#faf8f4] transition-colors cursor-pointer"
           >
             <span>📅</span>
             <span>{isGeneratingTemplate ? 'Generating...' : `Generate ${event.event_type} Roadmap`}</span>
@@ -308,7 +308,7 @@ export function TimelineTracker({ event, onTimelineUpdated }: TimelineTrackerPro
               setMilestoneToEdit(null);
               setIsModalOpen(true);
             }}
-            className="inline-flex items-center gap-1.5 rounded-xl bg-blue-600 px-4 py-2 text-xs font-semibold text-white shadow-xs hover:bg-blue-700 transition-colors"
+            className="inline-flex items-center gap-1.5 rounded-xl bg-[#00e599] hover:bg-[#1cf3a6] px-4 py-2 text-xs font-bold text-[#073330] shadow-xs transition-colors cursor-pointer"
           >
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />

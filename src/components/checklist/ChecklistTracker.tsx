@@ -248,33 +248,33 @@ export function ChecklistTracker({ event, onChecklistUpdated }: ChecklistTracker
       )}
 
       {/* AI Generator Control Panel */}
-      <div className="rounded-3xl border border-indigo-200/90 bg-gradient-to-br from-indigo-900 via-indigo-950 to-slate-900 p-6 sm:p-8 text-white shadow-lg overflow-hidden relative">
+      <div className="rounded-3xl border border-[#073330]/20 bg-[#073330] p-6 sm:p-8 text-white shadow-xl overflow-hidden relative">
         {/* Subtle decorative glow */}
-        <div className="absolute -right-12 -top-12 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -right-12 -top-12 w-64 h-64 bg-[#00e599]/10 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative z-10 space-y-5">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center space-x-2.5">
-              <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-indigo-500/20 text-indigo-300 font-bold border border-indigo-400/30">
+              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#00e599] text-[#073330] font-black text-base shadow-sm">
                 ✨
               </span>
               <div>
-                <h3 className="text-xl font-bold tracking-tight text-white">
+                <h3 className="text-xl font-black tracking-tight text-white">
                   GenAI Personalized Checklist Generator
                 </h3>
-                <p className="text-xs text-indigo-200 mt-0.5">
+                <p className="text-xs text-white/70 mt-0.5">
                   Generates customized planning tasks tailored to your {event.event_type} celebration, guest scale, and budget.
                 </p>
               </div>
             </div>
-            <span className="text-[11px] font-medium px-3 py-1 rounded-full bg-indigo-800/60 border border-indigo-700/50 text-indigo-200">
+            <span className="text-[11px] font-bold px-3 py-1 rounded-full bg-white/10 border border-white/20 text-[#00e599]">
               Personalized Celebration Roadmap
             </span>
           </div>
 
           {/* Quick Focus Tags */}
           <div>
-            <label className="block text-xs font-semibold text-indigo-200 uppercase tracking-wider mb-2">
+            <label className="block text-xs font-bold text-white/80 uppercase tracking-wider mb-2">
               Select or customize planning focus:
             </label>
             <div className="flex flex-wrap gap-2">
@@ -283,10 +283,10 @@ export function ChecklistTracker({ event, onChecklistUpdated }: ChecklistTracker
                   key={tag}
                   type="button"
                   onClick={() => setCustomFocus(tag)}
-                  className={`px-3 py-1.5 text-xs font-medium rounded-xl transition-colors border ${
+                  className={`px-3 py-1.5 text-xs font-bold rounded-xl transition-all border cursor-pointer ${
                     customFocus === tag
-                      ? 'bg-indigo-500 text-white border-indigo-400 shadow-xs'
-                      : 'bg-white/10 text-indigo-100 hover:bg-white/15 border-white/10'
+                      ? 'bg-[#00e599] text-[#073330] border-[#00e599] shadow-xs'
+                      : 'bg-white/10 text-white hover:bg-white/15 border-white/15'
                   }`}
                 >
                   {tag}
@@ -303,17 +303,17 @@ export function ChecklistTracker({ event, onChecklistUpdated }: ChecklistTracker
               onChange={(e) => setCustomFocus(e.target.value)}
               placeholder="e.g., Focus on outdoor tent setup, dietary food trucks, live acoustic music..."
               aria-label="Custom planning focus prompt"
-              className="flex-1 px-4 py-2.5 text-sm rounded-xl bg-white/10 border border-white/20 text-white placeholder-indigo-300/60 focus:outline-hidden focus:ring-2 focus:ring-indigo-400 focus:bg-white/15 transition-all"
+              className="flex-1 px-4 py-2.5 text-sm rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-hidden focus:ring-2 focus:ring-[#00e599] focus:bg-white/15 transition-all"
             />
             <button
               type="button"
               onClick={handleGenerateAI}
               disabled={isGenerating}
-              className="px-6 py-2.5 text-sm font-semibold rounded-xl bg-indigo-500 hover:bg-indigo-400 active:bg-indigo-600 text-white shadow-md transition-colors focus:outline-hidden focus:ring-2 focus:ring-white flex items-center justify-center space-x-2 shrink-0 disabled:opacity-50"
+              className="px-6 py-2.5 text-sm font-bold rounded-xl bg-[#00e599] hover:bg-[#1cf3a6] text-[#073330] shadow-md transition-all flex items-center justify-center space-x-2 shrink-0 disabled:opacity-50 cursor-pointer"
             >
               {isGenerating ? (
                 <>
-                  <svg className="w-4 h-4 animate-spin text-white" fill="none" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 animate-spin text-[#073330]" fill="none" viewBox="0 0 24 24">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
                   </svg>
@@ -328,19 +328,19 @@ export function ChecklistTracker({ event, onChecklistUpdated }: ChecklistTracker
           </div>
 
           {/* Options & Generation Notice */}
-          <div className="flex flex-wrap items-center justify-between text-xs text-indigo-200 gap-2 pt-1 border-t border-white/10">
+          <div className="flex flex-wrap items-center justify-between text-xs text-white/70 gap-2 pt-1 border-t border-white/10">
             <label className="flex items-center space-x-2 cursor-pointer select-none">
               <input
                 type="checkbox"
                 checked={replaceExisting}
                 onChange={(e) => setReplaceExisting(e.target.checked)}
-                className="rounded-sm border-white/30 text-indigo-500 focus:ring-indigo-400 h-4 w-4 bg-white/10"
+                className="rounded-sm border-white/30 text-[#00e599] focus:ring-[#00e599] h-4 w-4 bg-white/10"
               />
               <span>Replace existing checklist items with fresh AI generation</span>
             </label>
 
             {generationNotice && (
-              <span className="text-emerald-300 font-medium animate-in fade-in">
+              <span className="text-[#00e599] font-bold animate-in fade-in">
                 {generationNotice}
               </span>
             )}
@@ -351,46 +351,46 @@ export function ChecklistTracker({ event, onChecklistUpdated }: ChecklistTracker
       {/* Progress & Summary Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Total Tasks */}
-        <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
+        <div className="bg-[#fffdfa] p-5 rounded-2xl border border-[#073330]/15 shadow-xs">
           <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Tasks</p>
-          <p className="text-3xl font-bold text-slate-900 mt-2">{stats ? stats.total : 0}</p>
-          <p className="text-xs text-slate-500 mt-1">Checklist items</p>
+          <p className="text-3xl font-black text-[#073330] mt-2">{stats ? stats.total : 0}</p>
+          <p className="text-xs text-slate-400 mt-1">Checklist items</p>
         </div>
 
         {/* Completed */}
-        <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
+        <div className="bg-[#fffdfa] p-5 rounded-2xl border border-[#073330]/15 shadow-xs">
           <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Completed</p>
-          <p className="text-3xl font-bold text-emerald-600 mt-2">{stats ? stats.completed : 0}</p>
-          <div className="mt-2 w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+          <p className="text-3xl font-black text-emerald-700 mt-2">{stats ? stats.completed : 0}</p>
+          <div className="mt-2 w-full bg-[#073330]/10 rounded-full h-1.5 overflow-hidden">
             <div
-              className="bg-emerald-500 h-full rounded-full transition-all duration-300"
+              className="bg-[#00e599] h-full rounded-full transition-all duration-300"
               style={{ width: `${stats ? stats.percentCompleted : 0}%` }}
             />
           </div>
-          <p className="text-xs text-emerald-700 mt-1 font-medium">
+          <p className="text-xs text-emerald-700 mt-1 font-bold">
             {stats ? `${stats.percentCompleted}% completed` : '0%'}
           </p>
         </div>
 
         {/* AI-Generated */}
-        <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
+        <div className="bg-[#fffdfa] p-5 rounded-2xl border border-[#073330]/15 shadow-xs">
           <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">AI Suggestions</p>
-          <p className="text-3xl font-bold text-indigo-600 mt-2">
+          <p className="text-3xl font-black text-[#073330] mt-2">
             {stats ? stats.aiGeneratedCount : 0}
           </p>
-          <p className="text-xs text-indigo-600 mt-1 font-medium">Personalized ideas</p>
+          <p className="text-xs text-slate-500 mt-1 font-medium">Personalized ideas</p>
         </div>
 
         {/* Active Pending */}
-        <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
+        <div className="bg-[#fffdfa] p-5 rounded-2xl border border-[#073330]/15 shadow-xs">
           <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Active Pending</p>
-          <p className="text-3xl font-bold text-amber-600 mt-2">{stats ? stats.pending : 0}</p>
+          <p className="text-3xl font-black text-[#073330] mt-2">{stats ? stats.pending : 0}</p>
           <p className="text-xs text-slate-500 mt-1">Awaiting completion</p>
         </div>
       </div>
 
       {/* Manual Task Add Bar */}
-      <form onSubmit={handleManualAdd} className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs">
+      <form onSubmit={handleManualAdd} className="bg-[#fffdfa] p-4 rounded-2xl border border-[#073330]/15 shadow-xs">
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
           <input
             type="text"
@@ -398,14 +398,14 @@ export function ChecklistTracker({ event, onChecklistUpdated }: ChecklistTracker
             onChange={(e) => setNewTaskText(e.target.value)}
             placeholder="+ Add a custom task (e.g., Pick up party favors on Friday)..."
             aria-label="Add custom task"
-            className="flex-1 px-3.5 py-2 text-sm rounded-xl border border-slate-200 focus:outline-hidden focus:ring-2 focus:ring-indigo-500 text-slate-900"
+            className="flex-1 px-3.5 py-2 text-sm rounded-xl border border-[#073330]/20 focus:outline-hidden focus:ring-2 focus:ring-[#073330] text-[#073330] bg-white"
           />
           <div className="flex items-center space-x-2">
             <select
               value={newTaskCategory}
               onChange={(e) => setNewTaskCategory(e.target.value)}
               aria-label="Task category"
-              className="text-xs py-2 px-3 rounded-xl border border-slate-200 bg-white text-slate-700 hover:border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-indigo-500"
+              className="text-xs py-2 px-3 rounded-xl border border-[#073330]/20 bg-white text-[#073330] hover:border-[#073330]/40 focus:outline-hidden focus:ring-2 focus:ring-[#073330]"
             >
               <option value="general">General</option>
               <option value="venue">Venue</option>

@@ -159,15 +159,15 @@ export function EventFormModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby="modal-title"
-        className="w-full max-w-lg rounded-3xl bg-white p-6 sm:p-7 shadow-2xl dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 animate-in zoom-in-95 duration-150"
+        className="w-full max-w-lg rounded-3xl bg-[#fffdfa] p-6 sm:p-7 shadow-2xl border border-[#073330]/15 animate-in zoom-in-95 duration-150"
       >
-        <div className="flex items-center justify-between pb-4 border-b border-zinc-100 dark:border-zinc-800">
+        <div className="flex items-center justify-between pb-4 border-b border-[#073330]/10">
           <div>
-            <h2 id="modal-title" className="text-lg sm:text-xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+            <h2 id="modal-title" className="text-lg sm:text-xl font-bold tracking-tight text-[#073330] flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-[#00e599]" />
               {isEdit ? 'Edit Celebration Details' : 'Plan a New Celebration'}
             </h2>
-            <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
+            <p className="text-xs text-slate-500 mt-1">
               {isEdit
                 ? 'Update your event details and budget targets.'
                 : 'Enter your event basics to get customized AI planning, budgets, and timelines.'}
@@ -177,7 +177,7 @@ export function EventFormModal({
             type="button"
             onClick={onClose}
             aria-label="Close dialog"
-            className="rounded-xl p-2 text-zinc-400 hover:bg-zinc-100 hover:text-zinc-700 dark:hover:bg-zinc-800 dark:hover:text-zinc-200 transition-colors"
+            className="rounded-xl p-2 text-slate-400 hover:bg-[#073330]/5 hover:text-[#073330] transition-colors cursor-pointer"
           >
             <X className="h-4 w-4" />
           </button>
@@ -186,7 +186,7 @@ export function EventFormModal({
         {serverError && (
           <div
             role="alert"
-            className="mt-4 rounded-xl bg-red-50 p-3 text-sm text-red-700 dark:bg-red-950/50 dark:text-red-300 border border-red-200 dark:border-red-900 flex items-center gap-2"
+            className="mt-4 rounded-xl bg-red-50 p-3 text-sm text-red-700 border border-red-200 flex items-center gap-2"
           >
             <AlertCircle className="w-4 h-4 shrink-0" />
             <span>{serverError}</span>
@@ -195,7 +195,7 @@ export function EventFormModal({
 
         <form onSubmit={handleSubmit} noValidate className="mt-5 space-y-4">
           <div>
-            <label htmlFor="event-name" className="block text-xs font-semibold uppercase tracking-wider text-zinc-700 dark:text-zinc-300">
+            <label htmlFor="event-name" className="block text-xs font-semibold uppercase tracking-wider text-[#073330]">
               Event Name <span className="text-red-500">*</span>
             </label>
             <input
@@ -212,14 +212,14 @@ export function EventFormModal({
               }}
               aria-invalid={!!errors.name}
               aria-describedby={errors.name ? 'name-error' : undefined}
-              className={`mt-1.5 block w-full rounded-xl border px-3.5 py-2 text-sm transition-all focus:outline-hidden focus:ring-2 focus:ring-indigo-500 dark:bg-zinc-800/80 dark:text-zinc-100 ${
+              className={`mt-1.5 block w-full rounded-xl border px-3.5 py-2 text-sm text-[#073330] transition-all focus:outline-hidden focus:ring-2 focus:ring-[#073330] bg-white ${
                 errors.name
-                  ? 'border-red-500 ring-1 ring-red-500 dark:border-red-500'
-                  : 'border-zinc-200 hover:border-zinc-300 dark:border-zinc-700 dark:hover:border-zinc-600'
+                  ? 'border-red-500 ring-1 ring-red-500'
+                  : 'border-[#073330]/20 hover:border-[#073330]/40'
               }`}
             />
             {errors.name && (
-              <p id="name-error" className="mt-1 text-xs font-medium text-red-600 dark:text-red-400">
+              <p id="name-error" className="mt-1 text-xs font-medium text-red-600">
                 {errors.name}
               </p>
             )}
@@ -227,24 +227,24 @@ export function EventFormModal({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label htmlFor="event-type" className="block text-xs font-semibold uppercase tracking-wider text-zinc-700 dark:text-zinc-300">
+              <label htmlFor="event-type" className="block text-xs font-semibold uppercase tracking-wider text-[#073330]">
                 Celebration Type <span className="text-red-500">*</span>
               </label>
               <select
                 id="event-type"
                 value={eventType}
                 onChange={(e) => setEventType(e.target.value as EventType)}
-                className="mt-1.5 block w-full rounded-xl border border-zinc-200 bg-white px-3.5 py-2 text-sm transition-all hover:border-zinc-300 focus:outline-hidden focus:ring-2 focus:ring-indigo-500 dark:border-zinc-700 dark:bg-zinc-800/80 dark:text-zinc-100"
+                className="mt-1.5 block w-full rounded-xl border border-[#073330]/20 bg-white px-3.5 py-2 text-sm text-[#073330] transition-all hover:border-[#073330]/40 focus:outline-hidden focus:ring-2 focus:ring-[#073330]"
               >
                 <option value="wedding">💍 Wedding</option>
                 <option value="birthday">🎂 Birthday</option>
-                <option value="community">🏘️ Community Event</option>
+                <option value="community">🥂 Gala & Banquet</option>
                 <option value="other">🎉 Other Celebration</option>
               </select>
             </div>
 
             <div>
-              <label htmlFor="event-date" className="block text-xs font-semibold uppercase tracking-wider text-zinc-700 dark:text-zinc-300">
+              <label htmlFor="event-date" className="block text-xs font-semibold uppercase tracking-wider text-[#073330]">
                 Event Date <span className="text-red-500">*</span>
               </label>
               <input
@@ -258,14 +258,14 @@ export function EventFormModal({
                 }}
                 aria-invalid={!!errors.eventDate}
                 aria-describedby={errors.eventDate ? 'date-error' : undefined}
-                className={`mt-1.5 block w-full rounded-xl border px-3.5 py-2 text-sm transition-all focus:outline-hidden focus:ring-2 focus:ring-indigo-500 dark:bg-zinc-800/80 dark:text-zinc-100 ${
+                className={`mt-1.5 block w-full rounded-xl border px-3.5 py-2 text-sm text-[#073330] transition-all focus:outline-hidden focus:ring-2 focus:ring-[#073330] bg-white ${
                   errors.eventDate
-                    ? 'border-red-500 ring-1 ring-red-500 dark:border-red-500'
-                    : 'border-zinc-200 hover:border-zinc-300 dark:border-zinc-700 dark:hover:border-zinc-600'
+                    ? 'border-red-500 ring-1 ring-red-500'
+                    : 'border-[#073330]/20 hover:border-[#073330]/40'
                 }`}
               />
               {errors.eventDate && (
-                <p id="date-error" className="mt-1 text-xs font-medium text-red-600 dark:text-red-400">
+                <p id="date-error" className="mt-1 text-xs font-medium text-red-600">
                   {errors.eventDate}
                 </p>
               )}
@@ -274,7 +274,7 @@ export function EventFormModal({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label htmlFor="guest-count" className="block text-xs font-semibold uppercase tracking-wider text-zinc-700 dark:text-zinc-300">
+              <label htmlFor="guest-count" className="block text-xs font-semibold uppercase tracking-wider text-[#073330]">
                 Expected Guests <span className="text-red-500">*</span>
               </label>
               <input
@@ -290,25 +290,25 @@ export function EventFormModal({
                 }}
                 aria-invalid={!!errors.guestCount}
                 aria-describedby={errors.guestCount ? 'guest-error' : undefined}
-                className={`mt-1.5 block w-full rounded-xl border px-3.5 py-2 text-sm transition-all focus:outline-hidden focus:ring-2 focus:ring-indigo-500 dark:bg-zinc-800/80 dark:text-zinc-100 ${
+                className={`mt-1.5 block w-full rounded-xl border px-3.5 py-2 text-sm text-[#073330] transition-all focus:outline-hidden focus:ring-2 focus:ring-[#073330] bg-white ${
                   errors.guestCount
-                    ? 'border-red-500 ring-1 ring-red-500 dark:border-red-500'
-                    : 'border-zinc-200 hover:border-zinc-300 dark:border-zinc-700 dark:hover:border-zinc-600'
+                    ? 'border-red-500 ring-1 ring-red-500'
+                    : 'border-[#073330]/20 hover:border-[#073330]/40'
                 }`}
               />
               {errors.guestCount && (
-                <p id="guest-error" className="mt-1 text-xs font-medium text-red-600 dark:text-red-400">
+                <p id="guest-error" className="mt-1 text-xs font-medium text-red-600">
                   {errors.guestCount}
                 </p>
               )}
             </div>
 
             <div>
-              <label htmlFor="total-budget" className="block text-xs font-semibold uppercase tracking-wider text-zinc-700 dark:text-zinc-300">
+              <label htmlFor="total-budget" className="block text-xs font-semibold uppercase tracking-wider text-[#073330]">
                 Total Budget (USD $) <span className="text-red-500">*</span>
               </label>
               <div className="relative mt-1.5">
-                <span className="absolute inset-y-0 left-0 flex items-center pl-3.5 text-zinc-400 text-sm font-medium">
+                <span className="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400 text-sm font-medium">
                   $
                 </span>
                 <input
@@ -325,15 +325,15 @@ export function EventFormModal({
                   }}
                   aria-invalid={!!errors.totalBudget}
                   aria-describedby={errors.totalBudget ? 'budget-error' : undefined}
-                  className={`block w-full rounded-xl border pl-8 pr-3.5 py-2 text-sm transition-all focus:outline-hidden focus:ring-2 focus:ring-indigo-500 dark:bg-zinc-800/80 dark:text-zinc-100 ${
+                  className={`block w-full rounded-xl border pl-8 pr-3.5 py-2 text-sm text-[#073330] transition-all focus:outline-hidden focus:ring-2 focus:ring-[#073330] bg-white ${
                     errors.totalBudget
-                      ? 'border-red-500 ring-1 ring-red-500 dark:border-red-500'
-                      : 'border-zinc-200 hover:border-zinc-300 dark:border-zinc-700 dark:hover:border-zinc-600'
+                      ? 'border-red-500 ring-1 ring-red-500'
+                      : 'border-[#073330]/20 hover:border-[#073330]/40'
                   }`}
                 />
               </div>
               {errors.totalBudget && (
-                <p id="budget-error" className="mt-1 text-xs font-medium text-red-600 dark:text-red-400">
+                <p id="budget-error" className="mt-1 text-xs font-medium text-red-600">
                   {errors.totalBudget}
                 </p>
               )}
@@ -341,7 +341,7 @@ export function EventFormModal({
           </div>
 
           <div>
-            <label htmlFor="event-description" className="block text-xs font-semibold uppercase tracking-wider text-zinc-700 dark:text-zinc-300">
+            <label htmlFor="event-description" className="block text-xs font-semibold uppercase tracking-wider text-[#073330]">
               Notes & Desired Theme (Optional)
             </label>
             <textarea
@@ -351,23 +351,24 @@ export function EventFormModal({
               placeholder="e.g. Garden party theme, live jazz band preferred, vegan catering options required"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="mt-1.5 block w-full rounded-xl border border-zinc-200 px-3.5 py-2 text-sm transition-all hover:border-zinc-300 focus:outline-hidden focus:ring-2 focus:ring-indigo-500 dark:border-zinc-700 dark:bg-zinc-800/80 dark:text-zinc-100"
+              className="mt-1.5 block w-full rounded-xl border border-[#073330]/20 bg-white px-3.5 py-2 text-sm text-[#073330] transition-all hover:border-[#073330]/40 focus:outline-hidden focus:ring-2 focus:ring-[#073330]"
             />
           </div>
 
-          <div className="flex items-center justify-end gap-3 pt-3 border-t border-zinc-100 dark:border-zinc-800">
+          <div className="flex items-center justify-end gap-3 pt-3 border-t border-[#073330]/10">
             <Button
               type="button"
               variant="outline"
               onClick={onClose}
               disabled={isSubmitting}
+              className="border-[#073330]/20 text-[#073330] hover:bg-[#073330]/5"
             >
               Cancel
             </Button>
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white"
+              className="bg-[#00e599] hover:bg-[#1cf3a6] text-[#073330] font-bold shadow-sm"
             >
               {isSubmitting ? 'Saving...' : isEdit ? 'Save Changes' : 'Create Celebration'}
             </Button>

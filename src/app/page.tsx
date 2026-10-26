@@ -16,7 +16,6 @@ import { InspoFinalCTA } from '@/components/landing/InspoFinalCTA';
 import { InspoFooter } from '@/components/landing/InspoFooter';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/Badge';
-import { Card } from '@/components/ui/card';
 import { formatCurrency } from '@/lib/formatters';
 import {
   getCurrentUser,
@@ -308,8 +307,9 @@ export default function HomePage() {
                   onClick={handleLogout}
                   title="Sign Out"
                   aria-label="Sign Out"
+                  className="text-slate-300 hover:text-white hover:bg-white/10"
                 >
-                  <LogOut className="h-4 w-4 text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100" />
+                  <LogOut className="h-4 w-4" />
                 </Button>
               </div>
             )}
@@ -379,203 +379,311 @@ export default function HomePage() {
           </div>
         ) : (
           /* ═══════════════════════════════════════════════════════════ */
-          /*  VIEW 2: FULL WORKING PLANNER DASHBOARD                     */
+          /*  VIEW 2: FULL WORKING PLANNER DASHBOARD WITH SIDEBAR         */
           /* ═══════════════════════════════════════════════════════════ */
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
-            {/* Dashboard Sub-Header */}
-            <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-zinc-200/70 pb-5 dark:border-zinc-800">
-              <div>
-                <div className="flex items-center gap-2">
-                  <h2 className="text-xl sm:text-2xl font-extrabold tracking-tight text-zinc-900 dark:text-white">
-                    Celebrations Workspace
-                  </h2>
-                  <Badge variant="secondary" className="font-bold">
-                    {filteredEvents.length} {filteredEvents.length === 1 ? 'event' : 'events'}
-                  </Badge>
-                </div>
-                <p className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 mt-1">
-                  {currentUser ? (
-                    <span>
-                      Active User: <strong className="text-zinc-800 dark:text-zinc-200">{currentUser.name}</strong> ({currentUser.roleLabel}) • Database synced
+          <div className="min-h-[calc(100vh-64px)] bg-[#faf8f4] text-[#073330] flex flex-col md:flex-row">
+            {/* ─── LEFT SIDEBAR ─── */}
+            <aside aria-label="Dashboard Sidebar" className="w-full md:w-64 lg:w-72 bg-[#fffdfa] border-r border-[#073330]/10 p-5 sm:p-6 flex flex-col justify-between shrink-0 shadow-xs">
+              <div className="space-y-6">
+                {/* User / Workspace Profile Card */}
+                <div className="p-4 rounded-2xl bg-[#073330] text-white shadow-sm space-y-3">
+                  <div className="flex items-center gap-3">
+                    <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${currentUser?.avatarColor || 'bg-[#00e599] text-[#073330]'} font-black text-sm shadow-xs`}>
+                      {currentUser ? currentUser.name[0] : 'P'}
+                    </div>
+                    <div className="overflow-hidden">
+                      <p className="text-sm font-bold truncate leading-tight text-white">
+                        {currentUser ? currentUser.name : 'Celebration Host'}
+                      </p>
+                      <p className="text-xs text-[#00e599] font-medium leading-tight mt-0.5">
+                        {currentUser ? currentUser.roleLabel : 'Planner'}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="pt-2.5 border-t border-white/10 flex items-center justify-between text-[11px] text-slate-300 font-medium">
+                    <span>Database</span>
+                    <span className="text-[#00e599] font-bold flex items-center gap-1.5">
+                      <span className="h-1.5 w-1.5 rounded-full bg-[#00e599] animate-pulse" />
+                      Synced
                     </span>
-                  ) : (
-                    <span>Private celebrations workspace • Dedicated planning assistance</span>
-                  )}
-                </p>
-              </div>
+                  </div>
+                </div>
 
-              <div className="flex items-center gap-2">
+                {/* Primary Action Button */}
                 <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => fetchEvents()}
-                  disabled={isSyncing}
-                >
-                  <RefreshCw className={`h-3.5 w-3.5 ${isSyncing ? 'animate-spin' : ''}`} />
-                  <span>Sync Now</span>
-                </Button>
-
-                <Button
-                  size="sm"
+                  variant="mint"
                   onClick={() => setIsCreateModalOpen(true)}
+                  className="w-full h-11 rounded-full font-black text-xs uppercase tracking-wider text-[#073330] bg-[#00e599] hover:bg-[#1cf3a6] shadow-sm flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <Plus className="h-4 w-4" />
                   <span>Plan Celebration</span>
                 </Button>
-              </div>
-            </div>
 
-            {/* Dashboard Overview Cards */}
-            <section aria-labelledby="stats-heading" className="mb-8">
-              <h3 id="stats-heading" className="sr-only">
-                Event Planning Statistics
-              </h3>
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                <Card className="p-5">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">Total Celebrations</span>
-                    <Calendar className="h-4 w-4 text-zinc-400" />
-                  </div>
-                  <p className="mt-2 text-2xl sm:text-3xl font-extrabold text-zinc-900 dark:text-zinc-100 tabular-nums">
-                    {stats.totalEvents}
-                  </p>
-                  <span className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
-                    {stats.upcomingCount} upcoming
+                {/* Navigation / Filter Categories in Sidebar */}
+                <div className="space-y-1">
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 px-3 block mb-2">
+                    Celebration Categories
                   </span>
-                </Card>
-
-                <Card className="p-5">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">Total Budget Managed</span>
-                    <DollarSign className="h-4 w-4 text-emerald-600" />
-                  </div>
-                  <p className="mt-2 text-2xl sm:text-3xl font-extrabold text-zinc-900 dark:text-zinc-100 tabular-nums">
-                    {formatCurrency(stats.totalBudget)}
-                  </p>
-                  <span className="mt-1 text-xs text-emerald-600 dark:text-emerald-400 font-medium">
-                    Across active celebrations
-                  </span>
-                </Card>
-
-                <Card className="p-5">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">Total Expected Guests</span>
-                    <Users className="h-4 w-4 text-zinc-400" />
-                  </div>
-                  <p className="mt-2 text-2xl sm:text-3xl font-extrabold text-zinc-900 dark:text-zinc-100 tabular-nums">
-                    {stats.totalGuests.toLocaleString()}
-                  </p>
-                  <span className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">Across all events</span>
-                </Card>
-
-                <Card className="p-5 border-violet-200/70 bg-violet-50/50 dark:border-violet-900/40 dark:bg-violet-950/20">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-semibold text-violet-700 dark:text-violet-300">GenAI Assistant</span>
-                    <Sparkles className="h-4 w-4 text-violet-600" />
-                  </div>
-                  <p className="mt-1 text-xs sm:text-sm font-medium text-zinc-800 dark:text-zinc-200">
-                    Ready to synthesize custom vendor checklists and timelines.
-                  </p>
-                  <span className="mt-2 inline-block text-xs font-semibold text-violet-600 dark:text-violet-400">
-                    {filteredEvents.length > 0 ? 'Select an event below' : 'Create an event to start'}
-                  </span>
-                </Card>
-              </div>
-            </section>
-
-            {/* Filter Pills */}
-            <section aria-labelledby="filter-heading" className="mb-6 flex flex-wrap items-center justify-between gap-4">
-              <h3 id="filter-heading" className="text-base sm:text-lg font-bold text-zinc-900 dark:text-zinc-100">
-                Your Celebrations
-              </h3>
-
-              <div
-                role="toolbar"
-                aria-label="Filter events by category"
-                className="flex flex-wrap items-center gap-1 rounded-xl border border-zinc-200 bg-white p-1 dark:border-zinc-800 dark:bg-zinc-900 shadow-2xs"
-              >
-                {[
-                  { id: 'all', label: 'All Celebrations' },
-                  { id: 'wedding', label: '💍 Weddings' },
-                  { id: 'birthday', label: '🎂 Birthdays' },
-                  { id: 'community', label: '🏘️ Community' },
-                  { id: 'other', label: '🎉 Other' },
-                ].map((tab) => {
-                  const active = activeFilter === tab.id;
-                  return (
-                    <button
-                      key={tab.id}
-                      type="button"
-                      onClick={() => setActiveFilter(tab.id as EventType | 'all')}
-                      aria-pressed={active}
-                      className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-all ${
-                        active
-                          ? 'bg-zinc-900 text-white shadow-2xs dark:bg-zinc-100 dark:text-zinc-900'
-                          : 'text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:text-zinc-200 dark:hover:bg-zinc-800'
-                      }`}
-                    >
-                      {tab.label}
-                    </button>
-                  );
-                })}
-              </div>
-            </section>
-
-            {/* Events Grid / Empty States */}
-            {isLoading ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-pulse" aria-busy="true">
-                {[1, 2, 3].map((i) => (
-                  <div key={i} className="h-64 rounded-2xl bg-zinc-200 dark:bg-zinc-800" />
-                ))}
-              </div>
-            ) : error ? (
-              <div
-                role="alert"
-                className="rounded-2xl border border-red-200 bg-red-50 p-8 text-center text-red-800 dark:border-red-900 dark:bg-red-950/30 dark:text-red-300"
-              >
-                <p className="font-semibold">{error}</p>
-                <Button
-                  variant="destructive"
-                  size="sm"
-                  onClick={() => fetchEvents()}
-                  className="mt-4"
-                >
-                  Retry
-                </Button>
-              </div>
-            ) : filteredEvents.length === 0 ? (
-              <div className="rounded-3xl border-2 border-dashed border-zinc-200 p-12 text-center dark:border-zinc-800 bg-white dark:bg-zinc-900/50">
-                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100">
-                  <CalendarDays className="h-7 w-7 text-zinc-400" />
+                  {[
+                    { id: 'all', label: 'All Celebrations' },
+                    { id: 'wedding', label: '💍 Weddings' },
+                    { id: 'birthday', label: '🎂 Birthdays' },
+                    { id: 'community', label: '🥂 Galas & Banquets' },
+                    { id: 'other', label: '🎉 Other Socials' },
+                  ].map((tab) => {
+                    const active = activeFilter === tab.id;
+                    const count = tab.id === 'all'
+                      ? events.length
+                      : events.filter(e => e.event_type === tab.id).length;
+                    return (
+                      <button
+                        key={tab.id}
+                        type="button"
+                        onClick={() => setActiveFilter(tab.id as EventType | 'all')}
+                        aria-pressed={active}
+                        className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                          active
+                            ? 'bg-[#073330] text-white shadow-xs'
+                            : 'text-slate-600 hover:bg-[#faf8f4] hover:text-[#073330]'
+                        }`}
+                      >
+                        <span className="truncate">{tab.label}</span>
+                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold shrink-0 ${
+                          active ? 'bg-[#00e599] text-[#073330]' : 'bg-slate-100 text-slate-600'
+                        }`}>
+                          {count}
+                        </span>
+                      </button>
+                    );
+                  })}
                 </div>
-                <h4 className="mt-4 text-lg font-bold text-zinc-900 dark:text-zinc-100">
-                  {activeFilter === 'all'
-                    ? 'No celebrations created yet'
-                    : `No ${activeFilter} celebrations found`}
-                </h4>
-                <p className="mx-auto mt-2 max-w-md text-sm text-zinc-600 dark:text-zinc-400">
-                  Create your celebration to get personalized planning checklists, milestone countdowns, and precision budget tracking.
-                </p>
-                <div className="mt-6">
-                  <Button
-                    onClick={() => setIsCreateModalOpen(true)}
+
+                {/* Portfolio Summary Card in Sidebar */}
+                <div className="p-4 rounded-2xl bg-[#faf8f4] border border-[#073330]/10 space-y-2.5 text-xs">
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 block">
+                    Portfolio Summary
+                  </span>
+                  <div className="flex justify-between items-center text-slate-700">
+                    <span>Total Events:</span>
+                    <span className="font-extrabold text-[#073330]">{stats.totalEvents}</span>
+                  </div>
+                  <div className="flex justify-between items-center text-slate-700">
+                    <span>Upcoming:</span>
+                    <span className="font-extrabold text-emerald-600">{stats.upcomingCount}</span>
+                  </div>
+                  <div className="flex justify-between items-center text-slate-700">
+                    <span>Total Budget:</span>
+                    <span className="font-extrabold text-[#073330]">{formatCurrency(stats.totalBudget)}</span>
+                  </div>
+                  <div className="flex justify-between items-center text-slate-700">
+                    <span>Total Guests:</span>
+                    <span className="font-extrabold text-[#073330]">{stats.totalGuests.toLocaleString()}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Sidebar Bottom: Back to Landing Page & Sign Out */}
+              <div className="pt-6 mt-6 border-t border-slate-200/80 flex items-center justify-between">
+                <button
+                  type="button"
+                  onClick={() => setViewMode('landing')}
+                  className="text-xs font-bold text-slate-600 hover:text-[#073330] flex items-center gap-1.5 cursor-pointer"
+                >
+                  <ArrowRight className="w-3.5 h-3.5 rotate-180" />
+                  <span>Home</span>
+                </button>
+                {currentUser && (
+                  <button
+                    type="button"
+                    onClick={handleLogout}
+                    className="text-xs font-semibold text-rose-600 hover:text-rose-700 flex items-center gap-1 cursor-pointer"
                   >
-                    <Plus className="h-4 w-4" />
-                    <span>Plan Your First Celebration</span>
+                    <LogOut className="w-3.5 h-3.5" />
+                    <span>Sign Out</span>
+                  </button>
+                )}
+              </div>
+            </aside>
+
+            {/* ─── MAIN CONTENT AREA ─── */}
+            <div className="flex-1 p-6 sm:p-8 lg:p-10 space-y-8 overflow-y-auto max-w-7xl">
+              {/* Header inside main area */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#073330]/10 pb-5">
+                <div>
+                  <div className="flex items-center gap-2.5">
+                    <h2 className="text-xl sm:text-2xl font-black tracking-tight text-[#073330]">
+                      Celebrations Workspace
+                    </h2>
+                    <Badge variant="secondary" className="font-bold bg-[#dcfce7] text-[#073330] border border-[#bbf7d0]">
+                      {filteredEvents.length} {filteredEvents.length === 1 ? 'event' : 'events'}
+                    </Badge>
+                  </div>
+                  <p className="text-xs sm:text-sm text-slate-600 mt-1 font-medium">
+                    {currentUser ? (
+                      <span>
+                        Active User: <strong className="text-[#073330]">{currentUser.name}</strong> ({currentUser.roleLabel}) • Database synced
+                      </span>
+                    ) : (
+                      <span>Private celebrations workspace • Dedicated planning assistance</span>
+                    )}
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => fetchEvents()}
+                    disabled={isSyncing}
+                    className="border-slate-300 text-[#073330] hover:bg-slate-100 rounded-xl font-bold cursor-pointer"
+                  >
+                    <RefreshCw className={`h-3.5 w-3.5 ${isSyncing ? 'animate-spin' : ''}`} />
+                    <span>Sync Now</span>
+                  </Button>
+
+                  <Button
+                    variant="mint"
+                    size="sm"
+                    onClick={() => setIsCreateModalOpen(true)}
+                    className="rounded-full px-4 font-black text-xs uppercase tracking-wider text-[#073330] bg-[#00e599] hover:bg-[#1cf3a6] shadow-sm cursor-pointer"
+                  >
+                    <Plus className="h-3.5 w-3.5" />
+                    <span>Plan Celebration</span>
                   </Button>
                 </div>
               </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredEvents.map((event) => (
-                  <EventCard
-                    key={event.id}
-                    event={event}
-                    onDeleteRequest={(evt) => setEventToDelete(evt)}
-                  />
-                ))}
+
+              {/* Dashboard Overview Cards */}
+              <section aria-labelledby="stats-heading">
+                <h3 id="stats-heading" className="sr-only">
+                  Event Planning Statistics
+                </h3>
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                  <div className="p-5 rounded-3xl border border-[#073330]/10 bg-[#fffdfa] shadow-xs">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Celebrations</span>
+                      <Calendar className="h-4 w-4 text-[#073330]" />
+                    </div>
+                    <p className="mt-2 text-2xl sm:text-3xl font-black text-[#073330] tabular-nums">
+                      {stats.totalEvents}
+                    </p>
+                    <span className="mt-1 text-xs text-slate-500 font-medium block">
+                      {stats.upcomingCount} upcoming
+                    </span>
+                  </div>
+
+                  <div className="p-5 rounded-3xl border border-[#073330]/10 bg-[#fffdfa] shadow-xs">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Budget Managed</span>
+                      <DollarSign className="h-4 w-4 text-emerald-600" />
+                    </div>
+                    <p className="mt-2 text-2xl sm:text-3xl font-black text-[#073330] tabular-nums">
+                      {formatCurrency(stats.totalBudget)}
+                    </p>
+                    <span className="mt-1 text-xs text-emerald-600 font-bold block">
+                      Across active celebrations
+                    </span>
+                  </div>
+
+                  <div className="p-5 rounded-3xl border border-[#073330]/10 bg-[#fffdfa] shadow-xs">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Expected Guests</span>
+                      <Users className="h-4 w-4 text-blue-600" />
+                    </div>
+                    <p className="mt-2 text-2xl sm:text-3xl font-black text-[#073330] tabular-nums">
+                      {stats.totalGuests.toLocaleString()}
+                    </p>
+                    <span className="mt-1 text-xs text-slate-500 font-medium block">Across all events</span>
+                  </div>
+
+                  <div className="p-5 rounded-3xl border border-[#00e599]/30 bg-[#dcfce7]/40 shadow-xs">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold text-[#073330] uppercase tracking-wider">AI Planner Assistant</span>
+                      <Sparkles className="h-4 w-4 text-[#073330]" />
+                    </div>
+                    <p className="mt-1 text-xs sm:text-sm font-semibold text-[#073330] leading-snug">
+                      Ready to synthesize custom vendor checklists and timelines.
+                    </p>
+                    <span className="mt-2 inline-block text-xs font-black text-[#073330]">
+                      {filteredEvents.length > 0 ? 'Select an event below' : 'Create an event to start'}
+                    </span>
+                  </div>
+                </div>
+              </section>
+
+              {/* Celebrations Section Heading */}
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-black tracking-tight text-[#073330]">
+                  {activeFilter === 'all'
+                    ? 'All Celebrations'
+                    : activeFilter === 'wedding'
+                    ? '💍 Weddings'
+                    : activeFilter === 'birthday'
+                    ? '🎂 Birthdays'
+                    : activeFilter === 'community'
+                    ? '🥂 Galas & Banquets'
+                    : '🎉 Other Socials'}
+                </h3>
               </div>
-            )}
+
+              {/* Events Grid / Empty States */}
+              {isLoading ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-pulse" aria-busy="true">
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="h-64 rounded-3xl bg-slate-200" />
+                  ))}
+                </div>
+              ) : error ? (
+                <div
+                  role="alert"
+                  className="rounded-3xl border border-red-200 bg-red-50 p-8 text-center text-red-800"
+                >
+                  <p className="font-semibold">{error}</p>
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={() => fetchEvents()}
+                    className="mt-4"
+                  >
+                    Retry
+                  </Button>
+                </div>
+              ) : filteredEvents.length === 0 ? (
+                <div className="rounded-3xl border-2 border-dashed border-[#073330]/20 p-12 text-center bg-[#fffdfa]">
+                  <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[#dcfce7] text-[#073330]">
+                    <CalendarDays className="h-7 w-7 text-[#073330]" />
+                  </div>
+                  <h4 className="mt-4 text-lg font-bold text-[#073330]">
+                    {activeFilter === 'all'
+                      ? 'No celebrations created yet'
+                      : `No ${activeFilter} celebrations found`}
+                  </h4>
+                  <p className="mx-auto mt-2 max-w-md text-sm text-slate-600">
+                    Create your celebration to get personalized planning checklists, milestone countdowns, and precision budget tracking.
+                  </p>
+                  <div className="mt-6">
+                    <Button
+                      variant="mint"
+                      onClick={() => setIsCreateModalOpen(true)}
+                      className="rounded-full px-6 font-bold text-[#073330] bg-[#00e599] hover:bg-[#1cf3a6] cursor-pointer"
+                    >
+                      <Plus className="h-4 w-4" />
+                      <span>Plan Your First Celebration</span>
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {filteredEvents.map((event) => (
+                    <EventCard
+                      key={event.id}
+                      event={event}
+                      onDeleteRequest={(evt) => setEventToDelete(evt)}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         )}
       </main>

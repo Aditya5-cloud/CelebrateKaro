@@ -231,36 +231,36 @@ export function VendorTracker({ event, onVendorUpdated }: VendorTrackerProps) {
       {/* Summary KPI Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Total Vendors */}
-        <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
+        <div className="bg-[#fffdfa] p-5 rounded-2xl border border-[#073330]/15 shadow-xs">
           <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Vendors</p>
-          <p className="text-3xl font-bold text-slate-900 mt-2">{stats ? stats.total : 0}</p>
-          <p className="text-xs text-slate-500 mt-1">Directory entries</p>
+          <p className="text-3xl font-black text-[#073330] mt-2">{stats ? stats.total : 0}</p>
+          <p className="text-xs text-slate-400 mt-1">Directory entries</p>
         </div>
 
         {/* Confirmed / Booked */}
-        <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
+        <div className="bg-[#fffdfa] p-5 rounded-2xl border border-[#073330]/15 shadow-xs">
           <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Confirmed & Paid</p>
-          <p className="text-3xl font-bold text-emerald-600 mt-2">
+          <p className="text-3xl font-black text-emerald-700 mt-2">
             {stats ? stats.booked + stats.paid : 0}
           </p>
-          <p className="text-xs text-emerald-700 mt-1 font-medium">
+          <p className="text-xs text-emerald-700 mt-1 font-bold">
             {stats ? `${stats.percentBookedOrPaid}% secured` : '0%'}
           </p>
         </div>
 
         {/* Total Quoted Commitments */}
-        <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
+        <div className="bg-[#fffdfa] p-5 rounded-2xl border border-[#073330]/15 shadow-xs">
           <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Quoted</p>
-          <p className="text-3xl font-bold text-indigo-600 mt-2">
+          <p className="text-3xl font-black text-[#073330] mt-2">
             {stats ? formatCurrency(stats.totalQuotes) : '$0'}
           </p>
-          <p className="text-xs text-slate-500 mt-1">Active vendor estimates</p>
+          <p className="text-xs text-slate-500 mt-1 font-medium">Active vendor estimates</p>
         </div>
 
         {/* In Negotiation */}
-        <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
+        <div className="bg-[#fffdfa] p-5 rounded-2xl border border-[#073330]/15 shadow-xs">
           <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">In Negotiation</p>
-          <p className="text-3xl font-bold text-amber-600 mt-2">
+          <p className="text-3xl font-black text-[#073330] mt-2">
             {stats ? stats.considering + stats.contacted : 0}
           </p>
           <p className="text-xs text-slate-500 mt-1">Considering or inquiry sent</p>
@@ -268,7 +268,7 @@ export function VendorTracker({ event, onVendorUpdated }: VendorTrackerProps) {
       </div>
 
       {/* Action Bar & Controls */}
-      <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs space-y-4">
+      <div className="bg-[#fffdfa] p-5 rounded-2xl border border-[#073330]/15 shadow-xs space-y-4">
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
           {/* Search Bar */}
           <div className="relative flex-1 max-w-md">
@@ -283,7 +283,7 @@ export function VendorTracker({ event, onVendorUpdated }: VendorTrackerProps) {
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search vendor name, contact, notes..."
               aria-label="Search vendors"
-              className="w-full pl-9 pr-3.5 py-2 text-sm rounded-xl border border-slate-200 focus:outline-hidden focus:ring-2 focus:ring-indigo-500 bg-slate-50 hover:bg-white transition-colors"
+              className="w-full pl-9 pr-3.5 py-2 text-sm rounded-xl border border-[#073330]/20 focus:outline-hidden focus:ring-2 focus:ring-[#073330] bg-white text-[#073330] transition-colors"
             />
           </div>
 
@@ -293,9 +293,9 @@ export function VendorTracker({ event, onVendorUpdated }: VendorTrackerProps) {
               type="button"
               onClick={handleGenerateTemplate}
               disabled={isGeneratingTemplate}
-              className="px-3.5 py-2 text-xs sm:text-sm font-medium text-indigo-700 bg-indigo-50 hover:bg-indigo-100 rounded-xl transition-colors border border-indigo-200 focus:outline-hidden focus:ring-2 focus:ring-indigo-500 flex items-center space-x-1.5"
+              className="px-3.5 py-2 text-xs sm:text-sm font-bold text-[#073330] bg-[#073330]/5 hover:bg-[#073330]/10 rounded-xl transition-colors border border-[#073330]/20 focus:outline-hidden focus:ring-2 focus:ring-[#073330] flex items-center space-x-1.5 cursor-pointer"
             >
-              <svg className="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4 text-[#073330]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
               </svg>
               <span>{isGeneratingTemplate ? 'Generating...' : 'Load Checklist Template'}</span>
@@ -307,7 +307,7 @@ export function VendorTracker({ event, onVendorUpdated }: VendorTrackerProps) {
                 setVendorToEdit(null);
                 setIsModalOpen(true);
               }}
-              className="px-4 py-2 text-xs sm:text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl shadow-xs transition-colors focus:outline-hidden focus:ring-2 focus:ring-indigo-500 flex items-center space-x-1.5"
+              className="px-4 py-2 text-xs sm:text-sm font-bold text-[#073330] bg-[#00e599] hover:bg-[#1cf3a6] rounded-xl shadow-xs transition-colors focus:outline-hidden focus:ring-2 focus:ring-[#073330] flex items-center space-x-1.5 cursor-pointer"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -318,16 +318,16 @@ export function VendorTracker({ event, onVendorUpdated }: VendorTrackerProps) {
         </div>
 
         {/* Filter Pills */}
-        <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-slate-100">
+        <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-[#073330]/10">
           {/* Status Tabs */}
           <div className="flex flex-wrap gap-1.5">
             <button
               type="button"
               onClick={() => setStatusFilter('all')}
-              className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors ${
+              className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-colors cursor-pointer ${
                 statusFilter === 'all'
-                  ? 'bg-slate-900 text-white shadow-xs'
-                  : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                  ? 'bg-[#073330] text-white shadow-xs'
+                  : 'bg-white border border-[#073330]/15 text-slate-700 hover:bg-[#faf8f4]'
               }`}
             >
               All ({vendors.length})

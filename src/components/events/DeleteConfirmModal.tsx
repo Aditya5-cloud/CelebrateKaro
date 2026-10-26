@@ -53,19 +53,19 @@ export function DeleteConfirmModal({
         aria-modal="true"
         aria-labelledby="delete-dialog-title"
         aria-describedby="delete-dialog-desc"
-        className="w-full max-w-md rounded-3xl bg-white p-6 sm:p-7 shadow-2xl dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 animate-in zoom-in-95 duration-150"
+        className="w-full max-w-md rounded-3xl bg-[#fffdfa] p-6 sm:p-7 shadow-2xl border border-[#073330]/15 animate-in zoom-in-95 duration-150"
       >
-        <div className="flex items-center gap-3.5 text-rose-600 dark:text-rose-400">
-          <div className="rounded-2xl bg-rose-100/80 p-3 dark:bg-rose-950/60 ring-4 ring-rose-50 dark:ring-rose-950/30">
+        <div className="flex items-center gap-3.5 text-rose-600">
+          <div className="rounded-2xl bg-rose-100/80 p-3 ring-4 ring-rose-50">
             <Trash2 className="h-5 w-5" />
           </div>
-          <h2 id="delete-dialog-title" className="text-lg font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
+          <h2 id="delete-dialog-title" className="text-lg font-bold tracking-tight text-[#073330]">
             Delete Celebration?
           </h2>
         </div>
 
-        <p id="delete-dialog-desc" className="mt-3.5 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
-          Are you sure you want to delete <span className="font-semibold text-zinc-900 dark:text-zinc-100">&ldquo;{event.name}&rdquo;</span>?
+        <p id="delete-dialog-desc" className="mt-3.5 text-sm leading-relaxed text-slate-600">
+          Are you sure you want to delete <span className="font-semibold text-[#073330]">&ldquo;{event.name}&rdquo;</span>?
           This will permanently remove all associated budget items, milestones, vendor checklists, and assistant conversations. This action cannot be undone.
         </p>
 
@@ -76,6 +76,7 @@ export function DeleteConfirmModal({
             variant="outline"
             onClick={onClose}
             disabled={isDeleting}
+            className="border-[#073330]/20 text-[#073330] hover:bg-[#073330]/5"
           >
             Keep Event
           </Button>
@@ -84,7 +85,7 @@ export function DeleteConfirmModal({
             variant="destructive"
             onClick={() => onConfirm(event)}
             disabled={isDeleting}
-            className="bg-rose-600 hover:bg-rose-700 text-white"
+            className="bg-rose-600 hover:bg-rose-700 text-white font-bold"
           >
             {isDeleting ? 'Deleting...' : 'Yes, Delete'}
           </Button>
