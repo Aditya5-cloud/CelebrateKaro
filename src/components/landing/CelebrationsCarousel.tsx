@@ -57,7 +57,8 @@ const CELEBRATIONS: CelebrationCard[] = [
   },
 ];
 
-export function CelebrationsCarousel({ onSelectEvent }: { onSelectEvent?: (title: string) => void }) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function CelebrationsCarousel({ onSelectEvent }: { onSelectEvent?: (title: string) => void } = {}) {
   const [activeIndex, setActiveIndex] = useState(1);
 
   const handlePrev = () => {
@@ -93,14 +94,10 @@ export function CelebrationsCarousel({ onSelectEvent }: { onSelectEvent?: (title
               return (
                 <div
                   key={item.id}
-                  onClick={() => {
-                    setActiveIndex(idx);
-                    onSelectEvent?.(item.title);
-                  }}
-                  className={`group relative rounded-3xl overflow-hidden cursor-pointer transition-all duration-300 ${
+                  className={`group relative rounded-3xl overflow-hidden cursor-default transition-all duration-300 select-none ${
                     isSelected
                       ? 'scale-105 shadow-2xl ring-4 ring-[#00e599] -translate-y-2 z-20'
-                      : 'opacity-85 hover:opacity-100 hover:scale-[1.02] shadow-lg z-10'
+                      : 'opacity-90 shadow-lg z-10'
                   }`}
                 >
                   {/* Photo Frame */}

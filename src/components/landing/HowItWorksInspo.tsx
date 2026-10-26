@@ -1,14 +1,13 @@
 'use client';
 
 import React from 'react';
-import { ArrowRight } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 
 interface HowItWorksInspoProps {
-  onStartPlanning: () => void;
+  onStartPlanning?: () => void;
 }
 
-export function HowItWorksInspo({ onStartPlanning }: HowItWorksInspoProps) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function HowItWorksInspo({ onStartPlanning }: HowItWorksInspoProps = {}) {
   return (
     <section className="relative pt-16 pb-20 overflow-hidden bg-slate-900">
       {/* Scenic Background Image with cinematic overlay */}
@@ -140,27 +139,6 @@ export function HowItWorksInspo({ onStartPlanning }: HowItWorksInspoProps) {
                 Step 03
               </span>
             </div>
-          </div>
-        </div>
-
-        {/* Overlapping Lime Banner (Matching Screenshot 3) */}
-        <div className="mt-14 max-w-4xl mx-auto rounded-3xl bg-[#dcfce7] p-8 sm:p-12 text-center text-[#073330] shadow-2xl border border-[#bbf7d0]">
-          <h3 className="text-3xl sm:text-4xl font-black tracking-tight">
-            Planned. Coordinated. <span className="text-[#073330] underline decoration-[#00e599] decoration-4">Celebrated.</span>
-          </h3>
-          <p className="mt-3 text-sm sm:text-base text-slate-700 max-w-xl mx-auto font-medium">
-            Curated timelines, precision budget envelopes, and seamless vendor coordination — all in one place.
-          </p>
-          <div className="mt-6 flex justify-center">
-            <Button
-              variant="royal"
-              size="lg"
-              onClick={onStartPlanning}
-              className="h-12 px-8 text-sm font-bold tracking-wide rounded-full cursor-pointer hover:scale-105 transition-all text-white bg-[#4f46e5] hover:bg-[#4338ca] shadow-xl flex items-center gap-2"
-            >
-              <span>START PLANNING NOW</span>
-              <ArrowRight className="h-4 w-4" />
-            </Button>
           </div>
         </div>
       </div>
