@@ -11,7 +11,6 @@ import { AuthModal } from '@/components/auth/AuthModal';
 import { InspoHero } from '@/components/landing/InspoHero';
 import { HowItWorksInspo } from '@/components/landing/HowItWorksInspo';
 import { CelebrationsCarousel } from '@/components/landing/CelebrationsCarousel';
-import { CleanInteractiveStudio } from '@/components/landing/CleanInteractiveStudio';
 import { LovedByHosts } from '@/components/landing/LovedByHosts';
 import { InspoFinalCTA } from '@/components/landing/InspoFinalCTA';
 import { InspoFooter } from '@/components/landing/InspoFooter';
@@ -368,29 +367,15 @@ export default function HomePage() {
               onSelectEvent={() => handleOpenAuth('register')}
             />
 
-            {/* 4. INTERACTIVE EVENT STUDIO (Budget Calculator & AI Event Concierge in Inspo Palette) */}
-            <CleanInteractiveStudio
-              onStartPlanning={() => {
-                if (!currentUser) {
-                  handleOpenAuth('register');
-                } else {
-                  setIsCreateModalOpen(true);
-                }
-              }}
-            />
-
-            {/* 5. LOVED BY OVER 5,000+ HOSTS (Warm Cream Testimonial Cards & Whimsical Details) */}
+            {/* 4. LOVED BY OVER 5,000+ HOSTS (Warm Cream Testimonial Cards & Whimsical Details) */}
             <LovedByHosts />
 
-            {/* 6. INSPO FINAL CTA BANNER (Sky-Blue Container with Whimsical Illustrated Host & Cat) */}
+            {/* 5. INSPO FINAL CTA BANNER (Sky-Blue Container with Whimsical Illustrated Host & Cat) */}
             <InspoFinalCTA
               onStartPlanning={() => handleOpenAuth('register')}
               isLoggedIn={!!currentUser}
               onOpenDashboard={() => setViewMode('dashboard')}
             />
-
-            {/* 7. EDITORIAL FOOTER (Deep Evergreen Multi-Column) */}
-            <InspoFooter />
           </div>
         ) : (
           /* ═══════════════════════════════════════════════════════════ */
@@ -596,22 +581,9 @@ export default function HomePage() {
       </main>
 
       {/* ───────────────────────────────────────────────────────────── */}
-      {/*  FOOTER                                                       */}
+      {/*  FOOTER (Clean Evergreen Inspo Footer)                        */}
       {/* ───────────────────────────────────────────────────────────── */}
-      <footer className="border-t border-zinc-200/80 bg-white py-8 text-center text-xs text-zinc-500 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-400">
-        <div className="mx-auto max-w-7xl px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p>© {new Date().getFullYear()} CelebratePro. Crafted with elegance for weddings, birthdays, galas, and life&apos;s memorable moments.</p>
-          <div className="flex items-center gap-3 sm:gap-4 text-[11px] text-zinc-400 dark:text-zinc-500">
-            <span>💍 Weddings</span>
-            <span>•</span>
-            <span>🎂 Birthdays & Galas</span>
-            <span>•</span>
-            <span>🏘️ Community Gatherings</span>
-            <span>•</span>
-            <span>Private Events</span>
-          </div>
-        </div>
-      </footer>
+      <InspoFooter />
 
       {/* ───────────────────────────────────────────────────────────── */}
       {/*  MODALS                                                       */}

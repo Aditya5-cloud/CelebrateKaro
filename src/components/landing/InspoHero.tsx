@@ -115,11 +115,6 @@ export function InspoHero({
                   Starlight Gala
                 </div>
               </div>
-
-              {/* Floating Accent Badge: "On Budget" */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-40 bg-[#00e599] text-[#073330] font-black text-xs px-3.5 py-1.5 rounded-full shadow-lg border border-white/40 flex items-center gap-1.5 animate-bounce">
-                <span>✓ 100% On Budget</span>
-              </div>
             </div>
           </div>
         </div>
