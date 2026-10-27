@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Star } from 'lucide-react';
+import { Star, Heart } from 'lucide-react';
 
 const TESTIMONIALS = [
   {
@@ -29,7 +29,7 @@ const TESTIMONIALS = [
 
 export function LovedByHosts() {
   return (
-    <section className="relative py-20 bg-gradient-to-b from-[#1E1B4B] via-[#161233] to-[#1E1B4B] text-white overflow-hidden border-b border-amber-500/15">
+    <section className="relative py-20 sm:py-24 bg-gradient-to-b from-[#1E1B4B] via-[#161233] to-[#1E1B4B] text-white overflow-hidden border-b border-amber-500/15">
       {/* Decorative Traditional Paisley / Ring Texture */}
       <div className="absolute inset-0 opacity-10 pointer-events-none">
         <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
@@ -45,7 +45,11 @@ export function LovedByHosts() {
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Section Heading */}
         <div className="text-center max-w-2xl mx-auto mb-16 space-y-4">
-          <h2 className="text-4xl sm:text-6xl font-bold tracking-tight leading-tight font-headline">
+          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-amber-500/15 border border-amber-400/30 text-xs font-bold text-amber-300 font-body">
+            <Heart className="w-3.5 h-3.5 text-amber-400 fill-amber-400/40" />
+            <span>Community Trust</span>
+          </div>
+          <h2 className="font-serif text-3xl sm:text-5xl lg:text-6xl font-semibold tracking-tight leading-tight text-white">
             Loved by Over 5,000+ Happy Hosts
           </h2>
           <p className="text-base sm:text-lg text-slate-200 font-body">
@@ -58,7 +62,7 @@ export function LovedByHosts() {
           {TESTIMONIALS.map((t, idx) => (
             <div
               key={idx}
-              className="bg-[#FAF6EF] rounded-3xl p-8 text-[#1E1B4B] shadow-xl flex flex-col justify-between border border-amber-300/40 hover:shadow-2xl transition-all duration-300"
+              className="bg-[#FAF6EF] rounded-3xl p-7 sm:p-8 text-[#1E1B4B] shadow-xl flex flex-col justify-between border border-amber-300/40 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300"
             >
               <div className="space-y-4">
                 {/* 5 Stars */}
@@ -75,14 +79,14 @@ export function LovedByHosts() {
 
               <div className="pt-6 mt-6 border-t border-amber-900/10 flex items-center justify-between font-body">
                 <div>
-                  <h4 className="text-lg font-bold text-[#1E1B4B] font-headline">
+                  <h4 className="font-serif text-lg font-bold text-[#1E1B4B]">
                     {t.author}
                   </h4>
                   <p className="text-xs text-stone-500 font-medium">
                     {t.event}
                   </p>
                 </div>
-                <span className="text-[11px] font-bold text-amber-900 bg-amber-100 border border-amber-200 px-2.5 py-1 rounded-full">
+                <span className="text-[11px] font-bold text-amber-900 bg-amber-100/90 border border-amber-200 px-2.5 py-1 rounded-full">
                   {t.scale}
                 </span>
               </div>
