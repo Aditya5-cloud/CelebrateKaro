@@ -1,4 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;0,800;1,600&family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,400;1,700&display=swap');
 @import "tailwindcss";
+
+@theme {
+  --font-headline: "Cormorant Garamond", Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-serif: "Cormorant Garamond", Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-body: "Lato", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-sans: "Lato", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
 
 :root {
   --background: #faf6ef;
@@ -7,7 +15,8 @@
   --brand-marigold: #f59e0b;
   --brand-crimson: #9e1b32;
   --brand-indigo: #1e1b4b;
-  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-headline: "Cormorant Garamond", Georgia, serif;
+  --font-sans: "Lato", system-ui, -apple-system, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
@@ -18,6 +27,16 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Regal Indian Typography: Cormorant Garamond for Headlines, Lato for Body */
+h1, h2, h3, h4, .font-headline {
+  font-family: var(--font-headline);
+  letter-spacing: -0.015em;
+}
+
+p, span, button, input, textarea, select, label, .font-body {
+  font-family: var(--font-sans);
 }
 
 /* Smooth scroll */

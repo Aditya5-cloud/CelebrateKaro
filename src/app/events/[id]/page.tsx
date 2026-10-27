@@ -183,16 +183,29 @@ export default function EventDetailPage({
       {/* Top Header bar */}
       <header className="border-b border-amber-500/20 bg-[#1E1B4B] text-white sticky top-0 z-20 shadow-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 py-3.5">
-          <Link
-            href="/?view=dashboard"
-            className="inline-flex items-center gap-2 text-sm font-bold text-amber-200 hover:text-white transition-colors group cursor-pointer"
-          >
-            <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-0.5" />
-            <span>Back to Dashboard</span>
-          </Link>
+          <div className="flex items-center gap-4">
+            <Link
+              href="/?view=dashboard"
+              className="inline-flex items-center gap-2 text-sm font-bold text-amber-200 hover:text-white transition-colors group cursor-pointer font-body"
+            >
+              <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-0.5" />
+              <span>Back to Dashboard</span>
+            </Link>
+          </div>
 
-          <div className="flex items-center gap-2.5">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-xs font-semibold text-slate-200">
+          <div className="flex items-center gap-3">
+            <Link href="/" className="hidden sm:flex items-center gap-2 group">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/icon.png"
+                alt="CelebrateKaro Logo"
+                className="h-7 w-7 rounded-lg object-contain shadow-xs border border-amber-400/30 group-hover:scale-105 transition-transform"
+              />
+              <span className="text-sm font-bold text-white font-headline">
+                CelebrateKaro
+              </span>
+            </Link>
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-xs font-semibold text-slate-200 font-body">
               <span className="w-2 h-2 rounded-full bg-amber-400" />
               <span className="truncate max-w-[200px] sm:max-w-xs">{event.name}</span>
             </span>
@@ -303,16 +316,16 @@ export default function EventDetailPage({
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <h1 className="text-xl sm:text-2xl font-black tracking-tight text-[#1E1B4B]">
+                  <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#1E1B4B] font-headline">
                     {tabConfig.title}
                   </h1>
                   {tabConfig.badge && (
-                    <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-[#1E1B4B] border border-amber-300">
+                    <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-[#1E1B4B] border border-amber-300 font-body">
                       {tabConfig.badge}
                     </span>
                   )}
                 </div>
-                <p className="text-xs text-stone-500 font-medium mt-0.5">
+                <p className="text-xs text-stone-500 font-medium mt-0.5 font-body">
                   {tabConfig.subtitle}
                 </p>
               </div>

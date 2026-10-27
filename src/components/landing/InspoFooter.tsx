@@ -1,17 +1,19 @@
 'use client';
 
 import React from 'react';
-import { Sparkles } from 'lucide-react';
 
 export function InspoFooter() {
   return (
     <footer className="bg-[#161233] text-white border-t border-white/10 py-8">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div className="flex items-center gap-2">
-          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#F59E0B] text-[#1E1B4B] font-black">
-            <Sparkles className="h-4 w-4" />
-          </div>
-          <span className="font-black text-sm tracking-tight text-white">
+        <div className="flex items-center gap-2.5">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/icon.png"
+            alt="CelebrateKaro Logo"
+            className="h-7 w-7 rounded-lg object-contain shadow-xs border border-amber-400/30 shrink-0"
+          />
+          <span className="font-bold text-base tracking-tight text-white font-headline">
             CelebrateKaro Studio
           </span>
         </div>

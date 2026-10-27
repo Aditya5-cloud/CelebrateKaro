@@ -6,21 +6,21 @@ import { Star } from 'lucide-react';
 const TESTIMONIALS = [
   {
     quote:
-      'Our Jaipur palace Shaadi was completely stress-free. From Halwai headcount to Mandap flower delivery, CelebrateKaro kept both families synchronized without a single dispute!',
+      'Hamari Jaipur palace Shaadi bilkul stress-free rahi. Halwai headcount se Mandap floral setup tak, CelebrateKaro ne dono families ko bina kisi misunderstanding ke sync rakha!',
     author: 'Priya & Rohan M.',
-    event: 'Jaipur Royal Shaadi',
+    event: 'Jaipur Destination Shaadi',
     scale: '350 Guests',
   },
   {
     quote:
-      'Organized Dadaji’s 80th Janamdin for 85 relatives across three generations. The AI checklist kept our caterers, pandit, and mithai boxes on track with zero last-minute panic.',
+      'Dadaji ke 80th Janamdin par 85 relatives the across 3 generations. The AI checklist reminded us of everything from pandit timings to return gift mithai — zero last-minute panic!',
     author: 'Ananya S.',
     event: 'South Mumbai Milestone Janamdin',
     scale: '85 Guests',
   },
   {
     quote:
-      'Coordinating our annual community Mahaprasad Bhandara for 1,200 people used to be absolute chaos. CelebrateKaro’s ration envelopes and volunteer checklists made service serene.',
+      'Annual community Mahaprasad Bhandara organize karna hamesha stressful hota tha. CelebrateKaro ke ration budget envelopes aur volunteer checklists se 1,200 logon ki service bilkul peaceful rahi.',
     author: 'Rajesh K. (Sewa Samiti)',
     event: 'Varanasi Mahaprasad Bhandara',
     scale: '1,200 Guests',
@@ -45,15 +45,11 @@ export function LovedByHosts() {
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Section Heading */}
         <div className="text-center max-w-2xl mx-auto mb-16 space-y-4">
-          <h2 className="text-3xl sm:text-5xl font-black tracking-tight leading-tight">
-            Loved by over{' '}
-            <span className="bg-amber-100 text-[#9E1B32] px-4 py-1 rounded-2xl inline-block shadow-sm">
-              5,000+
-            </span>{' '}
-            Indian hosts
+          <h2 className="text-4xl sm:text-6xl font-bold tracking-tight leading-tight font-headline">
+            Loved by Over 5,000+ Happy Hosts
           </h2>
-          <p className="text-sm sm:text-base text-slate-200 font-normal">
-            Read what couples, birthday families, and sewa samitis say about planning with CelebrateKaro.
+          <p className="text-base sm:text-lg text-slate-200 font-body">
+            Read what couples, birthday families, aur community samitis say about planning with CelebrateKaro.
           </p>
         </div>
 
@@ -72,14 +68,14 @@ export function LovedByHosts() {
                   ))}
                 </div>
 
-                <p className="text-sm sm:text-base text-stone-700 leading-relaxed font-normal italic">
+                <p className="text-sm sm:text-base text-stone-700 leading-relaxed font-body italic">
                   &ldquo;{t.quote}&rdquo;
                 </p>
               </div>
 
-              <div className="pt-6 mt-6 border-t border-amber-900/10 flex items-center justify-between">
+              <div className="pt-6 mt-6 border-t border-amber-900/10 flex items-center justify-between font-body">
                 <div>
-                  <h4 className="text-sm font-black text-[#1E1B4B]">
+                  <h4 className="text-lg font-bold text-[#1E1B4B] font-headline">
                     {t.author}
                   </h4>
                   <p className="text-xs text-stone-500 font-medium">

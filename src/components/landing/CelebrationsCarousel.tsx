@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ArrowLeft, ArrowRight, DollarSign, Sparkles } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Sparkles, CheckCircle2 } from 'lucide-react';
 
 interface CelebrationCard {
   id: string;
@@ -18,10 +18,10 @@ const CELEBRATIONS: CelebrationCard[] = [
   {
     id: '1',
     title: 'Royal Vivah & Shaadi',
-    location: 'Palace Courtyard, Jaipur • Sunset Pheras',
+    location: 'Palace Courtyard, Jaipur • Sunset Pheras & Sangeet',
     image: '/images/wedding.jpg',
-    badge: '$38,000 Target',
-    scale: '350 Guests • Mandap, Sangeet & Halwai Synced',
+    badge: '$38,000 Budget',
+    scale: '350 Guests • Mandap & Halwai Sorted',
     guests: 350,
     category: '💍 Shaadi & Vivah',
   },
@@ -30,7 +30,7 @@ const CELEBRATIONS: CelebrationCard[] = [
     title: 'Family Janamdin Milestone',
     location: 'Family Courtyard, South Mumbai • 80th Milestone',
     image: '/images/BIrthday.jpg',
-    badge: '$6,500 Target',
+    badge: '$6,500 Budget',
     scale: '85 Guests • Multi-Generation Feast & Mithai',
     guests: 85,
     category: '🎂 Janamdin',
@@ -38,9 +38,9 @@ const CELEBRATIONS: CelebrationCard[] = [
   {
     id: '3',
     title: 'Mahaprasad Sewa Bhandara',
-    location: 'Community Ghats, Varanasi • Annual Festivity',
+    location: 'Community Ghats, Varanasi • Annual Parv & Mela',
     image: '/images/Bhandara.jpg',
-    badge: '$12,500 Target',
+    badge: '$12,500 Budget',
     scale: '1,200 Guests • Traditional Pangat Service',
     guests: 1200,
     category: '🍲 Bhandara & Mela',
@@ -48,9 +48,9 @@ const CELEBRATIONS: CelebrationCard[] = [
   {
     id: '4',
     title: 'Sangeet & Tayaari Studio',
-    location: 'Heritage Resort, Delhi NCR • Choreography & Band',
+    location: 'Heritage Resort, Delhi NCR • Choreography & Live Band',
     image: '/images/image (1).jpg',
-    badge: '$22,000 Target',
+    badge: '$22,000 Budget',
     scale: '220 Guests • Stage, Audio & Decor Envelopes',
     guests: 220,
     category: '🎉 Festive Social',
@@ -72,67 +72,74 @@ export function CelebrationsCarousel({ onSelectEvent }: { onSelectEvent?: (title
   return (
     <section className="py-16 sm:py-24 bg-[#FAF6EF] text-[#1E1B4B] overflow-hidden border-b border-amber-900/10">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* Section Heading with Saffron Accent */}
-        <div className="text-center max-w-3xl mx-auto mb-12 space-y-3">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-xs font-bold border border-amber-300">
+        {/* Section Heading with clean, non-overlapping spacing */}
+        <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
+          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-amber-100 text-amber-900 text-xs font-bold border border-amber-300 font-body">
             <Sparkles className="w-3.5 h-3.5 text-amber-700" />
-            <span>Real Indian Celebrations</span>
+            <span>Real Celebrations Planned with CelebrateKaro</span>
           </div>
-          <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-[#1E1B4B]">
-            From grand <span className="bg-amber-100 text-[#9E1B32] px-3 py-1 rounded-2xl shadow-xs">Shaadis</span> to sacred <span className="bg-amber-100 text-[#D97706] px-3 py-1 rounded-2xl shadow-xs">Bhandaras</span>
+          <h2 className="text-4xl sm:text-6xl font-bold tracking-tight text-[#1E1B4B] leading-tight font-headline">
+            Palace Shaadis se Lekar Sacred Bhandaras Tak
           </h2>
-          <p className="text-sm sm:text-base text-stone-600 font-normal">
-            Every tradition, every auspicious date, and every caterer tracked with peace of mind.
+          <p className="text-base sm:text-lg text-stone-600 font-body max-w-2xl mx-auto">
+            Har ceremony, auspicious muhurat, aur Halwai budget — bina kisi spreadsheet chaos ke serene tareeqe se manage karo.
           </p>
         </div>
 
-        {/* Carousel Showcase */}
+        {/* Showcase Grid with clean image on top, structured content below — 0 text overlap */}
         <div className="relative">
-          {/* Card Strip */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
             {CELEBRATIONS.map((item, idx) => {
               const isSelected = idx === activeIndex;
               return (
                 <div
                   key={item.id}
-                  className={`group relative rounded-3xl overflow-hidden cursor-default transition-all duration-300 select-none border border-amber-900/10 ${
+                  className={`group flex flex-col bg-white rounded-3xl overflow-hidden border transition-all duration-300 select-none ${
                     isSelected
-                      ? 'scale-103 shadow-2xl ring-3 ring-[#F59E0B] -translate-y-1.5 z-20'
-                      : 'opacity-95 shadow-md hover:shadow-xl z-10'
+                      ? 'border-amber-400 ring-2 ring-amber-400 shadow-xl -translate-y-1'
+                      : 'border-amber-900/10 shadow-sm hover:shadow-md hover:border-amber-300'
                   }`}
                 >
-                  {/* Photo Frame */}
-                  <div className="relative aspect-3/4 w-full overflow-hidden bg-slate-900">
+                  {/* Photo Frame with Category & Target Budget Badges */}
+                  <div className="relative aspect-16/10 w-full overflow-hidden bg-slate-900 shrink-0">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={item.image}
                       alt={item.title}
-                      className="w-full h-full object-cover group-hover:scale-106 transition-transform duration-700"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#161233] via-[#161233]/40 to-transparent" />
-
-                    {/* Floating Badge: Top Left Category */}
-                    <div className="absolute top-3.5 left-3.5 bg-[#1E1B4B]/90 backdrop-blur-md text-amber-300 text-[11px] font-bold px-3 py-1 rounded-full shadow-md border border-amber-400/30">
+                    {/* Category Chip */}
+                    <div className="absolute top-3 left-3 bg-[#1E1B4B]/85 backdrop-blur-md text-amber-300 text-[11px] font-bold px-3 py-1 rounded-full border border-amber-400/30 font-body shadow-xs">
                       {item.category}
                     </div>
-
-                    {/* Floating Budget Badge: Top Right */}
-                    <div className="absolute top-3.5 right-3.5 bg-gradient-to-r from-amber-500 to-amber-600 text-white text-[11px] font-black px-2.5 py-1 rounded-full shadow-md flex items-center gap-1">
-                      <DollarSign className="w-3 h-3" />
-                      <span>{item.badge}</span>
+                    {/* Budget Badge */}
+                    <div className="absolute top-3 right-3 bg-gradient-to-r from-amber-500 to-amber-600 text-white text-[11px] font-black px-2.5 py-1 rounded-full shadow-xs font-body">
+                      {item.badge}
                     </div>
+                  </div>
 
-                    {/* Card Content Overlay at Bottom */}
-                    <div className="absolute bottom-4 left-4 right-4 text-white space-y-1.5">
-                      <span className="text-[11px] text-amber-300 font-bold block">
+                  {/* Clean Content Area (Completely below image, no overlapping text!) */}
+                  <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
+                    <div>
+                      <span className="text-xs font-bold text-amber-700 font-body block uppercase tracking-wider">
                         {item.scale}
                       </span>
-                      <h3 className="text-lg font-black tracking-tight leading-snug">
+                      <h3 className="text-2xl font-bold text-[#1E1B4B] font-headline mt-1 leading-snug">
                         {item.title}
                       </h3>
-                      <p className="text-xs text-slate-300 leading-tight">
+                      <p className="text-xs sm:text-sm text-stone-600 font-body mt-1.5 leading-relaxed">
                         {item.location}
                       </p>
+                    </div>
+
+                    <div className="pt-3 border-t border-amber-900/10 flex items-center justify-between text-xs font-body">
+                      <span className="flex items-center gap-1.5 text-emerald-800 font-semibold">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                        <span>Milestones Sorted</span>
+                      </span>
+                      <span className="font-bold text-[#1E1B4B] bg-amber-50 border border-amber-200/80 px-2 py-0.5 rounded-full">
+                        {item.guests} Attending
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -141,7 +148,7 @@ export function CelebrationsCarousel({ onSelectEvent }: { onSelectEvent?: (title
           </div>
 
           {/* Navigation Controls */}
-          <div className="mt-8 flex items-center justify-center gap-4">
+          <div className="mt-10 flex items-center justify-center gap-4">
             <button
               type="button"
               onClick={handlePrev}

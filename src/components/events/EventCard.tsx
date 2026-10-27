@@ -55,7 +55,7 @@ export function EventCard({ event, onDeleteRequest }: EventCardProps) {
         {/* Title */}
         <h3
           id={`event-title-${event.id}`}
-          className="mt-4 text-base sm:text-lg font-black tracking-tight text-[#1E1B4B] group-hover:text-amber-700 transition-colors"
+          className="mt-4 text-xl sm:text-2xl font-bold tracking-tight text-[#1E1B4B] group-hover:text-amber-700 transition-colors font-headline"
         >
           <Link href={`/events/${event.id}`} prefetch={false} className="focus:outline-hidden focus:underline">
             {event.name}

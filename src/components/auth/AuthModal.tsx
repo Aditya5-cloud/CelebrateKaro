@@ -6,7 +6,6 @@ import { loginUser, registerUser, DEMO_ACCOUNTS } from '@/lib/auth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
-  Sparkles,
   X,
   AlertCircle,
   ArrowRight,
@@ -207,25 +206,28 @@ export function AuthModal({
         {/* Header Bar */}
         <div className="flex items-start justify-between pb-4 border-b border-zinc-100 dark:border-zinc-800 relative">
           <div className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#1E1B4B] text-amber-400 shadow-md shrink-0">
-              <Sparkles className="h-5 w-5" />
-            </div>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/icon.png"
+              alt="CelebrateKaro Logo"
+              className="h-11 w-11 rounded-2xl object-contain shadow-md shrink-0 border border-amber-400/30"
+            />
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-50 dark:bg-amber-950/60 text-amber-800 dark:text-amber-400 border border-amber-300 dark:border-amber-700">
+                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-50 dark:bg-amber-950/60 text-amber-800 dark:text-amber-400 border border-amber-300 dark:border-amber-700 font-body">
                   CelebrateKaro Studio
                 </span>
-                <span className="flex items-center gap-1 text-[11px] font-medium text-slate-400">
+                <span className="flex items-center gap-1 text-[11px] font-medium text-slate-400 font-body">
                   <ShieldCheck className="h-3 w-3 text-emerald-500" /> Secure
                 </span>
               </div>
               <h2
                 id="auth-modal-title"
-                className="text-lg sm:text-xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 mt-1"
+                className="text-xl sm:text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 mt-1 font-headline"
               >
                 {tab === 'signin' ? 'Welcome Back' : 'Create Your Account'}
               </h2>
-              <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
+              <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5 font-body">
                 {tab === 'signin'
                   ? 'Sign in with your registered credentials to access celebrations'
                   : 'Join CelebrateKaro to manage budgets, vendors & AI checklists'}

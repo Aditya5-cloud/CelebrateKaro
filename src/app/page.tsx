@@ -229,17 +229,20 @@ export default function HomePage() {
               onClick={() => setViewMode('landing')}
               className="flex items-center gap-2.5 group focus:outline-hidden"
             >
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 text-[#1E1B4B] shadow-sm group-hover:scale-105 transition-transform font-black">
-                <Sparkles className="h-4 w-4" />
-              </div>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/icon.png"
+                alt="CelebrateKaro Logo"
+                className="h-9 w-9 rounded-xl object-contain shadow-sm border border-amber-400/30 group-hover:scale-105 transition-transform shrink-0"
+              />
               <div>
-                <span className="text-sm sm:text-base font-extrabold tracking-tight text-white flex items-center gap-1.5">
+                <span className="text-sm sm:text-base font-bold tracking-tight text-white flex items-center gap-1.5 font-headline">
                   CelebrateKaro
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-400/20 text-amber-300 border border-amber-400/30">
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-400/20 text-amber-300 border border-amber-400/30 font-body">
                     AI Studio
                   </span>
                 </span>
-                <span className="text-[11px] text-amber-200/80 block leading-tight font-medium">
+                <span className="text-[11px] text-amber-200/80 block leading-tight font-medium font-body">
                   AI Celebration & Event Planner
                 </span>
               </div>
@@ -488,20 +491,20 @@ export default function HomePage() {
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-amber-900/10 pb-5">
                 <div>
                   <div className="flex items-center gap-2.5">
-                    <h2 className="text-xl sm:text-2xl font-black tracking-tight text-[#1E1B4B]">
+                    <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#1E1B4B] font-headline">
                       CelebrateKaro Workspace
                     </h2>
-                    <Badge variant="secondary" className="font-bold bg-amber-100 text-[#1E1B4B] border border-amber-300">
+                    <Badge variant="secondary" className="font-bold bg-amber-100 text-[#1E1B4B] border border-amber-300 font-body">
                       {filteredEvents.length} {filteredEvents.length === 1 ? 'event' : 'events'}
                     </Badge>
                   </div>
-                  <p className="text-xs sm:text-sm text-stone-600 mt-1 font-medium">
+                  <p className="text-xs sm:text-sm text-stone-600 mt-1 font-medium font-body">
                     {currentUser ? (
                       <span>
-                        Active Host: <strong className="text-[#1E1B4B]">{currentUser.name}</strong> ({currentUser.roleLabel}) • Database synced
+                        Active Host: <strong className="text-[#1E1B4B]">{currentUser.name}</strong> ({currentUser.roleLabel}) • Database synced • Tayaari on track
                       </span>
                     ) : (
-                      <span>Private celebrations workspace • Dedicated planning assistance</span>
+                      <span>Private celebrations workspace • Dedicated AI planning assistance</span>
                     )}
                   </p>
                 </div>
@@ -512,7 +515,7 @@ export default function HomePage() {
                     size="sm"
                     onClick={() => fetchEvents()}
                     disabled={isSyncing}
-                    className="border-stone-300 text-[#1E1B4B] hover:bg-amber-50 rounded-xl font-bold cursor-pointer"
+                    className="border-stone-300 text-[#1E1B4B] hover:bg-amber-50 rounded-xl font-bold cursor-pointer font-body"
                   >
                     <RefreshCw className={`h-3.5 w-3.5 ${isSyncing ? 'animate-spin' : ''}`} />
                     <span>Sync Now</span>
@@ -528,58 +531,58 @@ export default function HomePage() {
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                   <div className="p-5 rounded-3xl border border-amber-900/10 bg-white shadow-xs hover:shadow-md transition-shadow">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-stone-500 uppercase tracking-wider">Total Celebrations</span>
+                      <span className="text-xs font-bold text-stone-500 uppercase tracking-wider font-body">Total Celebrations</span>
                       <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-amber-100 text-[#1E1B4B]">
                         <Calendar className="h-4 w-4" />
                       </div>
                     </div>
-                    <p className="mt-2 text-2xl sm:text-3xl font-black text-[#1E1B4B] tabular-nums">
+                    <p className="mt-2 text-2xl sm:text-3xl font-bold text-[#1E1B4B] tabular-nums font-headline">
                       {stats.totalEvents}
                     </p>
-                    <span className="mt-1 text-xs text-stone-500 font-medium block">
+                    <span className="mt-1 text-xs text-stone-500 font-medium block font-body">
                       {stats.upcomingCount} upcoming
                     </span>
                   </div>
 
                   <div className="p-5 rounded-3xl border border-amber-900/10 bg-white shadow-xs hover:shadow-md transition-shadow">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-stone-500 uppercase tracking-wider">Total Budget Managed</span>
+                      <span className="text-xs font-bold text-stone-500 uppercase tracking-wider font-body">Total Budget Managed</span>
                       <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-800">
                         <DollarSign className="h-4 w-4" />
                       </div>
                     </div>
-                    <p className="mt-2 text-2xl sm:text-3xl font-black text-[#1E1B4B] tabular-nums">
+                    <p className="mt-2 text-2xl sm:text-3xl font-bold text-[#1E1B4B] tabular-nums font-headline">
                       {formatCurrency(stats.totalBudget)}
                     </p>
-                    <span className="mt-1 text-xs text-emerald-700 font-bold block">
+                    <span className="mt-1 text-xs text-emerald-700 font-bold block font-body">
                       Across active celebrations
                     </span>
                   </div>
 
                   <div className="p-5 rounded-3xl border border-amber-900/10 bg-white shadow-xs hover:shadow-md transition-shadow">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-stone-500 uppercase tracking-wider">Total Expected Guests</span>
+                      <span className="text-xs font-bold text-stone-500 uppercase tracking-wider font-body">Total Expected Guests</span>
                       <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-blue-100 text-blue-800">
                         <Users className="h-4 w-4" />
                       </div>
                     </div>
-                    <p className="mt-2 text-2xl sm:text-3xl font-black text-[#1E1B4B] tabular-nums">
+                    <p className="mt-2 text-2xl sm:text-3xl font-bold text-[#1E1B4B] tabular-nums font-headline">
                       {stats.totalGuests.toLocaleString()}
                     </p>
-                    <span className="mt-1 text-xs text-stone-500 font-medium block">Across all events</span>
+                    <span className="mt-1 text-xs text-stone-500 font-medium block font-body">Across all events</span>
                   </div>
 
                   <div className="p-5 rounded-3xl border border-amber-400/40 bg-amber-50/80 shadow-xs hover:shadow-md transition-shadow">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-amber-900 uppercase tracking-wider">AI Tayaari Assistant</span>
+                      <span className="text-xs font-bold text-amber-900 uppercase tracking-wider font-body">AI Tayaari Assistant</span>
                       <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-amber-400 text-[#1E1B4B] shadow-xs">
                         <Sparkles className="h-4 w-4" />
                       </div>
                     </div>
-                    <p className="mt-1.5 text-xs sm:text-sm font-semibold text-amber-950 leading-snug">
+                    <p className="mt-1.5 text-xs sm:text-sm font-semibold text-amber-950 leading-snug font-body">
                       Ready to synthesize Halwai catering, Mandap decor & vendor checklists.
                     </p>
-                    <span className="mt-2 inline-block text-xs font-black text-[#9E1B32]">
+                    <span className="mt-2 inline-block text-xs font-black text-[#9E1B32] font-body">
                       {filteredEvents.length > 0 ? 'Select an event below' : 'Create an event to start'}
                     </span>
                   </div>
@@ -588,7 +591,7 @@ export default function HomePage() {
 
               {/* Celebrations Section Heading */}
               <div className="flex items-center justify-between">
-                <h3 className="text-lg font-black tracking-tight text-[#1E1B4B]">
+                <h3 className="text-2xl font-bold tracking-tight text-[#1E1B4B] font-headline">
                   {activeFilter === 'all'
                     ? 'All Celebrations'
                     : activeFilter === 'wedding'
