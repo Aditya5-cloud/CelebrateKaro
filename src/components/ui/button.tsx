@@ -2,33 +2,37 @@ import * as React from 'react';
 import { cn } from '@/lib/utils';
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link' | 'vibrant' | 'mint' | 'royal';
+  variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link' | 'vibrant' | 'mint' | 'royal' | 'saffron' | 'festive';
   size?: 'default' | 'sm' | 'lg' | 'icon';
 }
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = 'default', size = 'default', ...props }, ref) => {
     const baseStyles =
-      'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-xs sm:text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98] select-none';
+      'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-xs sm:text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98] select-none';
 
     const variants = {
       default:
-        'bg-zinc-900 text-zinc-50 shadow-sm hover:bg-zinc-800 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200',
+        'bg-[#1e1b4b] text-white shadow-sm hover:bg-[#2e1065]',
       destructive:
-        'bg-red-600 text-white shadow-sm hover:bg-red-700 dark:bg-red-900 dark:text-red-100 dark:hover:bg-red-800',
+        'bg-red-600 text-white shadow-sm hover:bg-red-700',
       outline:
-        'border border-zinc-200/90 bg-white text-zinc-800 shadow-2xs hover:bg-zinc-100 hover:text-zinc-900 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:bg-zinc-800',
+        'border border-amber-900/20 bg-white/90 text-stone-800 shadow-2xs hover:bg-amber-50 hover:text-amber-950 hover:border-amber-500/40',
       secondary:
-        'bg-zinc-100 text-zinc-900 shadow-2xs hover:bg-zinc-200/80 dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-700',
+        'bg-[#fff7ed] text-[#9a3412] border border-[#fed7aa] shadow-2xs hover:bg-[#ffedd5]',
       ghost:
-        'text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-100',
-      link: 'text-zinc-900 underline-offset-4 hover:underline dark:text-zinc-100',
+        'text-stone-700 hover:bg-amber-100/60 hover:text-stone-900',
+      link: 'text-[#c2410c] underline-offset-4 hover:underline',
       vibrant:
-        'bg-gradient-to-r from-violet-600 via-fuchsia-600 to-rose-600 text-white shadow-md shadow-fuchsia-500/25 hover:from-violet-700 hover:via-fuchsia-700 hover:to-rose-700 hover:shadow-lg hover:shadow-fuchsia-500/35 border-0 font-semibold',
+        'bg-gradient-to-r from-amber-500 via-orange-500 to-rose-600 text-white shadow-md shadow-orange-500/25 hover:from-amber-600 hover:via-orange-600 hover:to-rose-700 border-0 font-bold',
       mint:
-        'bg-[#00e599] text-[#073330] shadow-md shadow-[#00e599]/20 hover:bg-[#1cf3a6] border-0 font-bold',
+        'bg-[#d97706] text-white shadow-md shadow-amber-500/25 hover:bg-[#b45309] border-0 font-extrabold',
       royal:
-        'bg-[#4f46e5] text-white shadow-md shadow-indigo-500/20 hover:bg-[#4338ca] border-0 font-bold',
+        'bg-[#1e1b4b] text-amber-300 border border-amber-500/30 shadow-md shadow-indigo-950/30 hover:bg-[#2e1065] hover:text-amber-200 border-0 font-bold',
+      saffron:
+        'bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 text-slate-950 font-black shadow-md shadow-orange-500/30 hover:from-amber-400 hover:via-orange-400 hover:to-amber-500 hover:shadow-lg border-0 tracking-wide',
+      festive:
+        'bg-gradient-to-r from-[#881337] via-[#9e1b32] to-[#b45309] text-white font-bold shadow-md shadow-rose-950/20 hover:from-[#9f1239] hover:to-[#d97706] border-0',
     };
 
     const sizes = {

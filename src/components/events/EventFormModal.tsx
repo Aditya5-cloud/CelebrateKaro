@@ -169,18 +169,18 @@ export function EventFormModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby="modal-title"
-        className="w-full max-w-lg rounded-3xl bg-white p-6 sm:p-7 shadow-2xl border border-[#073330]/15 animate-in zoom-in-95 duration-150"
+        className="w-full max-w-lg rounded-3xl bg-white p-6 sm:p-7 shadow-2xl border border-amber-900/15 animate-in zoom-in-95 duration-150"
       >
-        <div className="flex items-center justify-between pb-4 border-b border-[#073330]/10">
+        <div className="flex items-center justify-between pb-4 border-b border-amber-900/10">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#00e599] text-[#073330] shadow-xs shrink-0">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#1E1B4B] text-amber-400 shadow-xs shrink-0">
               <Sparkles className="w-5 h-5" />
             </div>
             <div>
-              <h2 id="modal-title" className="text-lg sm:text-xl font-bold tracking-tight text-[#073330]">
+              <h2 id="modal-title" className="text-lg sm:text-xl font-bold tracking-tight text-[#1E1B4B]">
                 {isEdit ? 'Edit Celebration Details' : 'Plan a New Celebration'}
               </h2>
-              <p className="text-xs text-slate-500 mt-0.5">
+              <p className="text-xs text-stone-500 mt-0.5">
                 {isEdit
                   ? 'Update your event details and budget targets.'
                   : 'Enter your event basics to get customized AI planning, budgets, and timelines.'}
@@ -191,7 +191,7 @@ export function EventFormModal({
             type="button"
             onClick={onClose}
             aria-label="Close dialog"
-            className="rounded-xl p-2 text-slate-400 hover:bg-[#073330]/5 hover:text-[#073330] transition-colors cursor-pointer"
+            className="rounded-xl p-2 text-stone-400 hover:bg-amber-50 hover:text-[#1E1B4B] transition-colors cursor-pointer"
           >
             <X className="h-4 w-4" />
           </button>
@@ -209,7 +209,7 @@ export function EventFormModal({
 
         <form onSubmit={handleSubmit} noValidate className="mt-5 space-y-4">
           <div>
-            <label htmlFor="event-name" className="block text-xs font-semibold uppercase tracking-wider text-[#073330]">
+            <label htmlFor="event-name" className="block text-xs font-semibold uppercase tracking-wider text-[#1E1B4B]">
               Event Name <span className="text-red-500">*</span>
             </label>
             <input
@@ -218,7 +218,7 @@ export function EventFormModal({
               type="text"
               required
               maxLength={120}
-              placeholder="e.g. Maya & Liam's Wedding or 40th Birthday Gala"
+              placeholder="e.g. Sharma & Verma Shaadi or 80th Janamdin Gala"
               value={name}
               onChange={(e) => {
                 setName(e.target.value);
@@ -226,10 +226,10 @@ export function EventFormModal({
               }}
               aria-invalid={!!errors.name}
               aria-describedby={errors.name ? 'name-error' : undefined}
-              className={`mt-1.5 block w-full rounded-xl border px-3.5 py-2 text-sm text-[#073330] transition-all focus:outline-hidden focus:ring-2 focus:ring-[#073330] bg-white ${
+              className={`mt-1.5 block w-full rounded-xl border px-3.5 py-2 text-sm text-[#1E1B4B] transition-all focus:outline-hidden focus:ring-2 focus:ring-amber-500 bg-white ${
                 errors.name
                   ? 'border-red-500 ring-1 ring-red-500'
-                  : 'border-[#073330]/20 hover:border-[#073330]/40'
+                  : 'border-stone-300 hover:border-amber-400'
               }`}
             />
             {errors.name && (
@@ -241,19 +241,19 @@ export function EventFormModal({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label htmlFor="event-type" className="block text-xs font-semibold uppercase tracking-wider text-[#073330]">
+              <label htmlFor="event-type" className="block text-xs font-semibold uppercase tracking-wider text-[#1E1B4B]">
                 Celebration Type <span className="text-red-500">*</span>
               </label>
               <select
                 id="event-type"
                 value={eventType}
                 onChange={(e) => setEventType(e.target.value as EventType)}
-                className="mt-1.5 block w-full rounded-xl border border-[#073330]/20 bg-white px-3.5 py-2 text-sm text-[#073330] transition-all hover:border-[#073330]/40 focus:outline-hidden focus:ring-2 focus:ring-[#073330]"
+                className="mt-1.5 block w-full rounded-xl border border-stone-300 bg-white px-3.5 py-2 text-sm text-[#1E1B4B] transition-all hover:border-amber-400 focus:outline-hidden focus:ring-2 focus:ring-amber-500"
               >
-                <option value="wedding">💍 Wedding</option>
-                <option value="birthday">🎂 Birthday</option>
-                <option value="community">🥂 Gala & Banquet</option>
-                <option value="other">🎉 Other Celebration</option>
+                <option value="wedding">💍 Shaadi & Vivah</option>
+                <option value="birthday">🎂 Janamdin / Birthday</option>
+                <option value="community">🍲 Bhandara & Mela</option>
+                <option value="other">🎉 Festive Social</option>
               </select>
             </div>
 
@@ -339,10 +339,10 @@ export function EventFormModal({
                   }}
                   aria-invalid={!!errors.totalBudget}
                   aria-describedby={errors.totalBudget ? 'budget-error' : undefined}
-                  className={`block w-full rounded-xl border pl-8 pr-3.5 py-2 text-sm text-[#073330] transition-all focus:outline-hidden focus:ring-2 focus:ring-[#073330] bg-white ${
+                  className={`block w-full rounded-xl border pl-8 pr-3.5 py-2 text-sm text-[#1E1B4B] transition-all focus:outline-hidden focus:ring-2 focus:ring-amber-500 bg-white ${
                     errors.totalBudget
                       ? 'border-red-500 ring-1 ring-red-500'
-                      : 'border-[#073330]/20 hover:border-[#073330]/40'
+                      : 'border-stone-300 hover:border-amber-400'
                   }`}
                 />
               </div>
@@ -355,34 +355,34 @@ export function EventFormModal({
           </div>
 
           <div>
-            <label htmlFor="event-description" className="block text-xs font-semibold uppercase tracking-wider text-[#073330]">
+            <label htmlFor="event-description" className="block text-xs font-semibold uppercase tracking-wider text-[#1E1B4B]">
               Notes & Desired Theme (Optional)
             </label>
             <textarea
               id="event-description"
               rows={3}
               maxLength={2000}
-              placeholder="e.g. Garden party theme, live jazz band preferred, vegan catering options required"
+              placeholder="e.g. Royal Marigold theme, Shehnai & Dhol welcoming, pure vegetarian Halwai feast"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="mt-1.5 block w-full rounded-xl border border-[#073330]/20 bg-white px-3.5 py-2 text-sm text-[#073330] transition-all hover:border-[#073330]/40 focus:outline-hidden focus:ring-2 focus:ring-[#073330]"
+              className="mt-1.5 block w-full rounded-xl border border-stone-300 bg-white px-3.5 py-2 text-sm text-[#1E1B4B] transition-all hover:border-amber-400 focus:outline-hidden focus:ring-2 focus:ring-amber-500"
             />
           </div>
 
-          <div className="flex items-center justify-end gap-3 pt-3 border-t border-[#073330]/10">
+          <div className="flex items-center justify-end gap-3 pt-3 border-t border-amber-900/10">
             <Button
               type="button"
               variant="outline"
               onClick={onClose}
               disabled={isSubmitting}
-              className="border-[#073330]/20 text-[#073330] hover:bg-[#073330]/5"
+              className="border-stone-300 text-[#1E1B4B] hover:bg-amber-50"
             >
               Cancel
             </Button>
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="bg-[#00e599] hover:bg-[#1cf3a6] text-[#073330] font-bold shadow-sm"
+              className="bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-[#1E1B4B] font-black shadow-sm"
             >
               {isSubmitting ? 'Saving...' : isEdit ? 'Save Changes' : 'Create Celebration'}
             </Button>

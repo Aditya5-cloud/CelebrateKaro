@@ -1,8 +1,12 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f2f5f3;
-  --foreground: #073330;
+  --background: #faf6ef;
+  --foreground: #1c1917;
+  --brand-saffron: #d97706;
+  --brand-marigold: #f59e0b;
+  --brand-crimson: #9e1b32;
+  --brand-indigo: #1e1b4b;
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }

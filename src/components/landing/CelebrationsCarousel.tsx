@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ArrowLeft, ArrowRight, DollarSign } from 'lucide-react';
+import { ArrowLeft, ArrowRight, DollarSign, Sparkles } from 'lucide-react';
 
 interface CelebrationCard {
   id: string;
@@ -11,55 +11,55 @@ interface CelebrationCard {
   badge: string;
   scale: string;
   guests: number;
-  budget: string;
+  category: string;
 }
 
 const CELEBRATIONS: CelebrationCard[] = [
   {
     id: '1',
-    title: 'Amalfi Terrace Wedding',
-    location: 'Positano, Italy • Seaside Reception',
-    image: '/images/celebration-terrace.jpg',
-    badge: '$28,000 Target',
-    scale: '120 Guests • 100% Milestones Met',
-    guests: 120,
-    budget: '$28,000',
+    title: 'Royal Vivah & Shaadi',
+    location: 'Palace Courtyard, Jaipur • Sunset Pheras',
+    image: '/images/wedding.jpg',
+    badge: '$38,000 Target',
+    scale: '350 Guests • Mandap, Sangeet & Halwai Synced',
+    guests: 350,
+    category: '💍 Shaadi & Vivah',
   },
   {
     id: '2',
-    title: 'Skyline Rooftop 30th',
-    location: 'Tribeca Loft, New York • Sunset Cocktails',
-    image: '/images/hero-celebration.jpg',
-    badge: '$8,500 Target',
-    scale: '65 Guests • Bespoke Mixology Bar',
-    guests: 65,
-    budget: '$8,500',
+    title: 'Family Janamdin Milestone',
+    location: 'Family Courtyard, South Mumbai • 80th Milestone',
+    image: '/images/BIrthday.jpg',
+    badge: '$6,500 Target',
+    scale: '85 Guests • Multi-Generation Feast & Mithai',
+    guests: 85,
+    category: '🎂 Janamdin',
   },
   {
     id: '3',
-    title: 'Conservatory Starlight Gala',
-    location: 'Chicago Botanic Gardens • Annual Fundraiser',
-    image: '/images/celebration-gala.jpg',
-    badge: '$48,000 Target',
-    scale: '200 Guests • Black-Tie & Live Auction',
-    guests: 200,
-    budget: '$48,000',
+    title: 'Mahaprasad Sewa Bhandara',
+    location: 'Community Ghats, Varanasi • Annual Festivity',
+    image: '/images/Bhandara.jpg',
+    badge: '$12,500 Target',
+    scale: '1,200 Guests • Traditional Pangat Service',
+    guests: 1200,
+    category: '🍲 Bhandara & Mela',
   },
   {
     id: '4',
-    title: 'Vineyard Harvest Anniversary',
-    location: 'St. Helena, Napa Valley • Long Table Dinner',
-    image: '/images/ballroom-celebration.jpg',
-    badge: '$12,000 Target',
-    scale: '45 Guests • Farm-to-Table Feast',
-    guests: 45,
-    budget: '$12,000',
+    title: 'Sangeet & Tayaari Studio',
+    location: 'Heritage Resort, Delhi NCR • Choreography & Band',
+    image: '/images/image (1).jpg',
+    badge: '$22,000 Target',
+    scale: '220 Guests • Stage, Audio & Decor Envelopes',
+    guests: 220,
+    category: '🎉 Festive Social',
   },
 ];
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function CelebrationsCarousel({ onSelectEvent }: { onSelectEvent?: (title: string) => void } = {}) {
-  const [activeIndex, setActiveIndex] = useState(1);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   const handlePrev = () => {
     setActiveIndex((curr) => (curr > 0 ? curr - 1 : CELEBRATIONS.length - 1));
@@ -70,34 +70,35 @@ export function CelebrationsCarousel({ onSelectEvent }: { onSelectEvent?: (title
   };
 
   return (
-    <section className="py-16 sm:py-24 bg-[#faf8f4] text-[#073330] overflow-hidden">
+    <section className="py-16 sm:py-24 bg-[#FAF6EF] text-[#1E1B4B] overflow-hidden border-b border-amber-900/10">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* Section Heading with Inspo-Style Lime Highlight */}
+        {/* Section Heading with Saffron Accent */}
         <div className="text-center max-w-3xl mx-auto mb-12 space-y-3">
-          <h2 className="text-3xl sm:text-5xl font-black tracking-tight">
-            <span className="bg-[#dcfce7] text-[#073330] px-4 py-1.5 rounded-2xl inline-block mr-2 shadow-xs">
-              Real celebrations
-            </span>{' '}
-            our hosts brought to life
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-xs font-bold border border-amber-300">
+            <Sparkles className="w-3.5 h-3.5 text-amber-700" />
+            <span>Real Indian Celebrations</span>
+          </div>
+          <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-[#1E1B4B]">
+            From grand <span className="bg-amber-100 text-[#9E1B32] px-3 py-1 rounded-2xl shadow-xs">Shaadis</span> to sacred <span className="bg-amber-100 text-[#D97706] px-3 py-1 rounded-2xl shadow-xs">Bhandaras</span>
           </h2>
-          <p className="text-sm sm:text-base text-slate-600 font-normal">
-            Every scale, every milestone, effortlessly tracked and celebrated.
+          <p className="text-sm sm:text-base text-stone-600 font-normal">
+            Every tradition, every auspicious date, and every caterer tracked with peace of mind.
           </p>
         </div>
 
         {/* Carousel Showcase */}
         <div className="relative">
           {/* Card Strip */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-center">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
             {CELEBRATIONS.map((item, idx) => {
               const isSelected = idx === activeIndex;
               return (
                 <div
                   key={item.id}
-                  className={`group relative rounded-3xl overflow-hidden cursor-default transition-all duration-300 select-none ${
+                  className={`group relative rounded-3xl overflow-hidden cursor-default transition-all duration-300 select-none border border-amber-900/10 ${
                     isSelected
-                      ? 'scale-105 shadow-2xl ring-4 ring-[#00e599] -translate-y-2 z-20'
-                      : 'opacity-90 shadow-lg z-10'
+                      ? 'scale-103 shadow-2xl ring-3 ring-[#F59E0B] -translate-y-1.5 z-20'
+                      : 'opacity-95 shadow-md hover:shadow-xl z-10'
                   }`}
                 >
                   {/* Photo Frame */}
@@ -106,19 +107,24 @@ export function CelebrationsCarousel({ onSelectEvent }: { onSelectEvent?: (title
                     <img
                       src={item.image}
                       alt={item.title}
-                      className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700"
+                      className="w-full h-full object-cover group-hover:scale-106 transition-transform duration-700"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#073330] via-black/30 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#161233] via-[#161233]/40 to-transparent" />
 
-                    {/* Floating Peach Badge (Matching Inspo) */}
-                    <div className="absolute top-4 left-4 bg-[#ff9e7d] text-[#073330] text-xs font-black px-3 py-1 rounded-full shadow-md flex items-center gap-1">
-                      <DollarSign className="w-3 h-3 text-[#073330]" />
+                    {/* Floating Badge: Top Left Category */}
+                    <div className="absolute top-3.5 left-3.5 bg-[#1E1B4B]/90 backdrop-blur-md text-amber-300 text-[11px] font-bold px-3 py-1 rounded-full shadow-md border border-amber-400/30">
+                      {item.category}
+                    </div>
+
+                    {/* Floating Budget Badge: Top Right */}
+                    <div className="absolute top-3.5 right-3.5 bg-gradient-to-r from-amber-500 to-amber-600 text-white text-[11px] font-black px-2.5 py-1 rounded-full shadow-md flex items-center gap-1">
+                      <DollarSign className="w-3 h-3" />
                       <span>{item.badge}</span>
                     </div>
 
                     {/* Card Content Overlay at Bottom */}
                     <div className="absolute bottom-4 left-4 right-4 text-white space-y-1.5">
-                      <span className="text-[11px] text-[#00e599] font-bold block">
+                      <span className="text-[11px] text-amber-300 font-bold block">
                         {item.scale}
                       </span>
                       <h3 className="text-lg font-black tracking-tight leading-snug">
@@ -134,13 +140,13 @@ export function CelebrationsCarousel({ onSelectEvent }: { onSelectEvent?: (title
             })}
           </div>
 
-          {/* Navigation Controls (Matching Inspo dark teal circle arrow buttons) */}
+          {/* Navigation Controls */}
           <div className="mt-8 flex items-center justify-center gap-4">
             <button
               type="button"
               onClick={handlePrev}
               aria-label="Previous celebration"
-              className="w-12 h-12 rounded-full bg-[#073330] text-white flex items-center justify-center hover:bg-[#0c4b47] hover:scale-105 transition-all shadow-md cursor-pointer"
+              className="w-11 h-11 rounded-full bg-[#1E1B4B] text-amber-300 flex items-center justify-center hover:bg-[#2e2968] hover:scale-105 transition-all shadow-md cursor-pointer border border-amber-400/20"
             >
               <ArrowLeft className="w-5 h-5" />
             </button>
@@ -152,7 +158,7 @@ export function CelebrationsCarousel({ onSelectEvent }: { onSelectEvent?: (title
                   onClick={() => setActiveIndex(i)}
                   aria-label={`Go to slide ${i + 1}`}
                   className={`h-2.5 rounded-full transition-all cursor-pointer ${
-                    i === activeIndex ? 'w-8 bg-[#073330]' : 'w-2.5 bg-slate-300'
+                    i === activeIndex ? 'w-8 bg-[#D97706]' : 'w-2.5 bg-stone-300'
                   }`}
                 />
               ))}
@@ -161,7 +167,7 @@ export function CelebrationsCarousel({ onSelectEvent }: { onSelectEvent?: (title
               type="button"
               onClick={handleNext}
               aria-label="Next celebration"
-              className="w-12 h-12 rounded-full bg-[#073330] text-white flex items-center justify-center hover:bg-[#0c4b47] hover:scale-105 transition-all shadow-md cursor-pointer"
+              className="w-11 h-11 rounded-full bg-[#1E1B4B] text-amber-300 flex items-center justify-center hover:bg-[#2e2968] hover:scale-105 transition-all shadow-md cursor-pointer border border-amber-400/20"
             >
               <ArrowRight className="w-5 h-5" />
             </button>

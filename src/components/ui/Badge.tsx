@@ -8,16 +8,16 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
 }
 
 const typeStyles: Record<string, string> = {
-  wedding: 'bg-rose-50 text-rose-700 dark:bg-rose-950/40 dark:text-rose-300 border-rose-200/80 dark:border-rose-900/60',
-  birthday: 'bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 border-amber-200/80 dark:border-amber-900/60',
-  community: 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 border-emerald-200/80 dark:border-emerald-900/60',
-  other: 'bg-violet-50 text-violet-700 dark:bg-violet-950/40 dark:text-violet-300 border-violet-200/80 dark:border-violet-900/60',
-  default: 'bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 border-zinc-200 dark:border-zinc-700',
-  booked: 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800',
-  considering: 'bg-sky-50 text-sky-700 dark:bg-sky-950/50 dark:text-sky-300 border-sky-200 dark:border-sky-800',
-  contacted: 'bg-purple-50 text-purple-700 dark:bg-purple-950/50 dark:text-purple-300 border-purple-200 dark:border-purple-800',
-  paid: 'bg-teal-50 text-teal-700 dark:bg-teal-950/50 dark:text-teal-300 border-teal-200 dark:border-teal-800',
-  cancelled: 'bg-zinc-100 text-zinc-500 dark:bg-zinc-800/80 dark:text-zinc-400 border-zinc-200 dark:border-zinc-700 line-through',
+  wedding: 'bg-rose-50 text-rose-800 border-rose-200 font-bold',
+  birthday: 'bg-amber-50 text-amber-800 border-amber-200 font-bold',
+  community: 'bg-orange-50 text-orange-800 border-orange-200 font-bold',
+  other: 'bg-purple-50 text-purple-800 border-purple-200 font-bold',
+  default: 'bg-stone-100 text-stone-700 border-stone-200 font-medium',
+  booked: 'bg-emerald-50 text-emerald-800 border-emerald-300 font-bold',
+  considering: 'bg-amber-50 text-amber-800 border-amber-300 font-medium',
+  contacted: 'bg-blue-50 text-blue-800 border-blue-300 font-medium',
+  paid: 'bg-teal-50 text-teal-800 border-teal-300 font-bold',
+  cancelled: 'bg-stone-100 text-stone-500 border-stone-200 line-through',
 };
 
 const variantStyles: Record<string, string> = {
@@ -53,12 +53,33 @@ export function Badge({ type, variant, children, className = '', ...props }: Bad
 }
 
 export function EventTypeBadge({ type }: { type: EventType }) {
+  const icons: Record<EventType, string> = {
+    wedding: '💍',
+    birthday: '🎂',
+    community: '🍲',
+    other: '🎉',
+  };
+
+  const subLabels: Record<EventType, string> = {
+    wedding: 'Shaadi',
+    birthday: 'Janamdin',
+    community: 'Bhandara',
+    other: 'Utsav',
+  };
+
   const labels: Record<EventType, string> = {
     wedding: 'Wedding',
     birthday: 'Birthday',
     community: 'Community',
-    other: 'Celebration',
+    other: 'Social',
   };
 
-  return <Badge type={type}>{labels[type] || type}</Badge>;
+  return (
+    <Badge type={type} className="gap-1 font-bold">
+      <span aria-hidden="true">{icons[type] || '✨'}</span>
+      <span>{subLabels[type] || 'Parv'}</span>
+      <span className="text-[10px] opacity-60">•</span>
+      <span>{labels[type] || type}</span>
+    </Badge>
+  );
 }

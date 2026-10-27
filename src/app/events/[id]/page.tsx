@@ -118,32 +118,32 @@ export default function EventDetailPage({
 
   const tabs = [
     { id: 'overview', label: 'Overview & Summary', icon: LayoutDashboard, color: 'text-amber-500', badge: undefined },
-    { id: 'checklist', label: 'AI Checklist', icon: Sparkles, color: 'text-emerald-500', badge: undefined },
-    { id: 'budget', label: 'Budget Tracker', icon: DollarSign, color: 'text-emerald-600', badge: formatCurrency(event.total_budget) },
-    { id: 'timeline', label: 'Timeline & Milestones', icon: Calendar, color: 'text-blue-500', badge: `${event.milestones_count}` },
-    { id: 'vendors', label: 'Vendor Directory', icon: Users, color: 'text-purple-500', badge: `${event.vendors_count}` },
-    { id: 'assistant', label: 'AI Chat Assistant', icon: Bot, color: 'text-teal-500', badge: undefined },
+    { id: 'checklist', label: 'AI Tayaari Checklist', icon: Sparkles, color: 'text-amber-600', badge: undefined },
+    { id: 'budget', label: 'Kifayati Budget', icon: DollarSign, color: 'text-emerald-600', badge: formatCurrency(event.total_budget) },
+    { id: 'timeline', label: 'Muhurat & Timeline', icon: Calendar, color: 'text-blue-500', badge: `${event.milestones_count}` },
+    { id: 'vendors', label: 'Halwai & Vendors', icon: Users, color: 'text-purple-500', badge: `${event.vendors_count}` },
+    { id: 'assistant', label: 'AI Planning Concierge', icon: Bot, color: 'text-teal-600', badge: undefined },
   ] as const;
 
   const tabConfig = {
     overview: {
-      title: 'Event Overview',
-      subtitle: `Key metrics, budget summary, and progress for ${event.name}.`,
+      title: 'Celebration Overview',
+      subtitle: `Key metrics, budget breakdown, and tayaari progress for ${event.name}.`,
       icon: LayoutDashboard,
       iconColor: 'text-amber-700',
       iconBg: 'bg-amber-100',
       badge: relativeDate.label,
     },
     checklist: {
-      title: 'AI Checklist & Roadmap',
-      subtitle: 'Tailored celebration milestone checklist and task progress.',
+      title: 'AI Tayaari Checklist & Roadmap',
+      subtitle: 'Tailored celebration milestone checklist, rituals, and ceremony progress.',
       icon: Sparkles,
-      iconColor: 'text-emerald-700',
-      iconBg: 'bg-emerald-100',
+      iconColor: 'text-amber-700',
+      iconBg: 'bg-amber-100',
       badge: undefined,
     },
     budget: {
-      title: 'Budget Tracker',
+      title: 'Kifayati Budget Tracker',
       subtitle: `Allocation envelopes and expense tracking for your ${formatCurrency(event.total_budget)} target.`,
       icon: DollarSign,
       iconColor: 'text-emerald-700',
@@ -151,7 +151,7 @@ export default function EventDetailPage({
       badge: formatCurrency(event.total_budget),
     },
     timeline: {
-      title: 'Timeline & Milestones',
+      title: 'Muhurat & Timeline',
       subtitle: `${event.milestones_count} celebration milestones scheduled for ${formatDate(event.event_date)}.`,
       icon: Calendar,
       iconColor: 'text-blue-700',
@@ -159,8 +159,8 @@ export default function EventDetailPage({
       badge: `${event.milestones_completed}/${event.milestones_count} Done`,
     },
     vendors: {
-      title: 'Vendor Directory',
-      subtitle: `Inquiries, quotes, contracts, and contact info (${event.vendors_count} booked).`,
+      title: 'Halwai & Vendor Directory',
+      subtitle: `Catering, mandap, decor, and entertainment directory (${event.vendors_count} booked).`,
       icon: Users,
       iconColor: 'text-purple-700',
       iconBg: 'bg-purple-100',
@@ -168,10 +168,10 @@ export default function EventDetailPage({
     },
     assistant: {
       title: 'AI Planning Concierge',
-      subtitle: `Personalized AI advice tailored to your ${event.event_type} celebration.`,
+      subtitle: `Personalized Indian celebration advice tailored to your ${event.event_type} celebration.`,
       icon: Bot,
-      iconColor: 'text-[#073330]',
-      iconBg: 'bg-[#00e599]',
+      iconColor: 'text-[#1E1B4B]',
+      iconBg: 'bg-amber-400',
       badge: 'Live',
     },
   }[activeTab];
@@ -179,13 +179,13 @@ export default function EventDetailPage({
   const CurrentTabIcon = tabConfig.icon;
 
   return (
-    <div className="min-h-screen bg-[#f2f5f3] text-[#073330] flex flex-col justify-between">
+    <div className="min-h-screen bg-[#FAF6EF] text-[#1E1B4B] flex flex-col justify-between">
       {/* Top Header bar */}
-      <header className="border-b border-white/10 bg-[#073330] text-white sticky top-0 z-20 shadow-md">
+      <header className="border-b border-amber-500/20 bg-[#1E1B4B] text-white sticky top-0 z-20 shadow-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 py-3.5">
           <Link
             href="/?view=dashboard"
-            className="inline-flex items-center gap-2 text-sm font-bold text-slate-200 hover:text-white transition-colors group cursor-pointer"
+            className="inline-flex items-center gap-2 text-sm font-bold text-amber-200 hover:text-white transition-colors group cursor-pointer"
           >
             <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-0.5" />
             <span>Back to Dashboard</span>
@@ -193,7 +193,7 @@ export default function EventDetailPage({
 
           <div className="flex items-center gap-2.5">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-xs font-semibold text-slate-200">
-              <span className="w-2 h-2 rounded-full bg-[#00e599]" />
+              <span className="w-2 h-2 rounded-full bg-amber-400" />
               <span className="truncate max-w-[200px] sm:max-w-xs">{event.name}</span>
             </span>
           </div>
@@ -205,21 +205,21 @@ export default function EventDetailPage({
         {/* ─── LEFT SIDEBAR ─── */}
         <aside
           aria-label="Event Sidebar"
-          className="w-full md:w-64 lg:w-72 bg-white border-r border-[#073330]/10 p-5 sm:p-6 flex flex-col justify-between shrink-0 shadow-xs"
+          className="w-full md:w-64 lg:w-72 bg-white border-r border-amber-900/10 p-5 sm:p-6 flex flex-col justify-between shrink-0 shadow-xs"
         >
           <div className="space-y-6">
             {/* Event Profile Card */}
-            <div className="p-4 rounded-2xl bg-[#0a3d39] text-white shadow-sm space-y-3 border border-[#00e599]/30">
+            <div className="p-4 rounded-2xl bg-[#161233] text-white shadow-sm space-y-3 border border-amber-500/30">
               <div className="flex items-center justify-between gap-2">
                 <EventTypeBadge type={event.event_type} />
                 <span
                   className={`text-[10px] font-bold px-2 py-0.5 rounded-full inline-flex items-center gap-1 border ${
                     relativeDate.isPast
                       ? 'bg-slate-800 text-slate-300 border-slate-700'
-                      : 'bg-[#00e599]/20 text-[#00e599] border-[#00e599]/40'
+                      : 'bg-amber-400/20 text-amber-300 border-amber-400/40'
                   }`}
                 >
-                  <Clock className="w-3 h-3 text-[#00e599]" />
+                  <Clock className="w-3 h-3 text-amber-400" />
                   {relativeDate.label}
                 </span>
               </div>
@@ -227,14 +227,14 @@ export default function EventDetailPage({
                 <h2 className="text-sm font-black truncate leading-tight text-white" title={event.name}>
                   {event.name}
                 </h2>
-                <p className="text-xs text-slate-300 font-medium leading-tight mt-1 flex items-center gap-1.5">
-                  <Calendar className="w-3 h-3 text-[#00e599]" />
+                <p className="text-xs text-amber-200 font-medium leading-tight mt-1 flex items-center gap-1.5">
+                  <Calendar className="w-3 h-3 text-amber-400" />
                   {formatDate(event.event_date)}
                 </p>
               </div>
-              <div className="pt-2.5 border-t border-white/10 flex items-center justify-between text-[11px] text-slate-300 font-medium">
+              <div className="pt-2.5 border-t border-white/10 flex items-center justify-between text-[11px] text-amber-200 font-medium">
                 <span>Budget</span>
-                <span className="text-[#00e599] font-bold">
+                <span className="text-amber-400 font-bold">
                   {formatCurrency(event.total_budget)}
                 </span>
               </div>
@@ -242,7 +242,7 @@ export default function EventDetailPage({
 
             {/* Vertical Navigation Tabs */}
             <div className="space-y-1">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 px-3 block mb-2">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-stone-500 px-3 block mb-2">
                 Event Sections
               </span>
               <nav aria-label="Event sections" className="space-y-1">
@@ -257,18 +257,18 @@ export default function EventDetailPage({
                       aria-pressed={active}
                       className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                         active
-                          ? 'bg-[#073330] text-white shadow-xs'
-                          : 'text-slate-700 hover:bg-[#f2f5f3] hover:text-[#073330]'
+                          ? 'bg-[#1E1B4B] text-white shadow-xs'
+                          : 'text-stone-700 hover:bg-amber-50 hover:text-[#1E1B4B]'
                       }`}
                     >
                       <div className="flex items-center gap-2.5 truncate">
-                        <Icon className={`h-4 w-4 shrink-0 ${active ? 'text-[#00e599]' : tab.color}`} />
+                        <Icon className={`h-4 w-4 shrink-0 ${active ? 'text-amber-400' : tab.color}`} />
                         <span className="truncate">{tab.label}</span>
                       </div>
                       {tab.badge && (
                         <span
                           className={`px-2 py-0.5 rounded-full text-[10px] font-bold shrink-0 ${
-                            active ? 'bg-[#00e599] text-[#073330]' : 'bg-slate-100 text-slate-600'
+                            active ? 'bg-amber-400 text-[#1E1B4B]' : 'bg-stone-100 text-stone-600'
                           }`}
                         >
                           {tab.badge}
@@ -282,12 +282,12 @@ export default function EventDetailPage({
           </div>
 
           {/* Sidebar Bottom Back Link */}
-          <div className="pt-6 mt-6 border-t border-slate-200/80">
+          <div className="pt-6 mt-6 border-t border-stone-200">
             <Link
               href="/?view=dashboard"
-              className="text-xs font-bold text-slate-600 hover:text-[#073330] flex items-center gap-1.5 cursor-pointer"
+              className="text-xs font-bold text-stone-600 hover:text-[#1E1B4B] flex items-center gap-1.5 cursor-pointer"
             >
-              <ArrowLeft className="w-3.5 h-3.5 text-[#073330]" />
+              <ArrowLeft className="w-3.5 h-3.5 text-[#1E1B4B]" />
               <span>Back to Dashboard</span>
             </Link>
           </div>
@@ -295,24 +295,24 @@ export default function EventDetailPage({
 
         {/* ─── MAIN CONTENT PANE ─── */}
         <main className="flex-1 p-6 sm:p-8 lg:p-10 space-y-6 overflow-y-auto max-w-7xl">
-          {/* Sleek Right-Pane Top Bar: Displays Active Section with Quick Actions */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#073330]/10 pb-4">
+          {/* Top Bar: Displays Active Section with Quick Actions */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-amber-900/10 pb-4">
             <div className="flex items-center gap-3">
               <div className={`w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 ${tabConfig.iconBg}`}>
                 <CurrentTabIcon className={`w-5 h-5 ${tabConfig.iconColor}`} />
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <h1 className="text-xl sm:text-2xl font-black tracking-tight text-[#073330]">
+                  <h1 className="text-xl sm:text-2xl font-black tracking-tight text-[#1E1B4B]">
                     {tabConfig.title}
                   </h1>
                   {tabConfig.badge && (
-                    <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#dcfce7] text-[#073330] border border-[#bbf7d0]">
+                    <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-[#1E1B4B] border border-amber-300">
                       {tabConfig.badge}
                     </span>
                   )}
                 </div>
-                <p className="text-xs text-slate-500 font-medium mt-0.5">
+                <p className="text-xs text-stone-500 font-medium mt-0.5">
                   {tabConfig.subtitle}
                 </p>
               </div>
@@ -324,7 +324,7 @@ export default function EventDetailPage({
                 variant="outline"
                 size="sm"
                 onClick={() => setIsEditModalOpen(true)}
-                className="gap-1.5 text-xs font-bold border-[#073330]/20 text-[#073330] hover:bg-slate-100 rounded-xl cursor-pointer"
+                className="gap-1.5 text-xs font-bold border-stone-300 text-[#1E1B4B] hover:bg-amber-50 rounded-xl cursor-pointer"
               >
                 <Edit3 className="h-3.5 w-3.5" />
                 <span>Edit Details</span>

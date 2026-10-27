@@ -66,7 +66,7 @@ export function EventCategoriesGrid({ onSelectCategory }: EventCategoriesGridPro
             Built for every kind of memorable celebration
           </h2>
           <p className="text-sm text-slate-600 dark:text-slate-400">
-            Whether an intimate dinner of 20 or a grand gala of 300, CelebratePro adapts to your scale.
+            Whether an intimate dinner of 20 or a grand gala of 300, CelebrateKaro adapts to your scale.
           </p>
         </div>
 

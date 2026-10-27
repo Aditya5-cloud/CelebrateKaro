@@ -207,13 +207,13 @@ export function AuthModal({
         {/* Header Bar */}
         <div className="flex items-start justify-between pb-4 border-b border-zinc-100 dark:border-zinc-800 relative">
           <div className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#073330] text-[#00e599] shadow-md shrink-0">
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#1E1B4B] text-amber-400 shadow-md shrink-0">
               <Sparkles className="h-5 w-5" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-800/60">
-                  CelebratePro Studio
+                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-50 dark:bg-amber-950/60 text-amber-800 dark:text-amber-400 border border-amber-300 dark:border-amber-700">
+                  CelebrateKaro Studio
                 </span>
                 <span className="flex items-center gap-1 text-[11px] font-medium text-slate-400">
                   <ShieldCheck className="h-3 w-3 text-emerald-500" /> Secure
@@ -228,7 +228,7 @@ export function AuthModal({
               <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
                 {tab === 'signin'
                   ? 'Sign in with your registered credentials to access celebrations'
-                  : 'Join CelebratePro to manage budgets, vendors & AI checklists'}
+                  : 'Join CelebrateKaro to manage budgets, vendors & AI checklists'}
               </p>
             </div>
           </div>

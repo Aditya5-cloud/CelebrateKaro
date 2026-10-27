@@ -2,9 +2,20 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Celebration & Event Planner",
+  title: "CelebrateKaro — AI Celebration & Event Planner",
   description:
-    "A GenAI-powered assistant to help you plan weddings, birthdays, and community events with budgets, timelines, vendor checklists, and personalized ideas.",
+    "Plan grand Indian weddings, birthdays, and community bhandaras with AI precision, budget allocation, countdown timelines, and vendor checklists.",
+  icons: {
+    icon: [
+      { url: "/favicon/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/favicon/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon/favicon.ico" },
+    ],
+    apple: [
+      { url: "/favicon/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    ],
+  },
+  manifest: "/favicon/site.webmanifest",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

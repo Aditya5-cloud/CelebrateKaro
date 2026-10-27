@@ -14,7 +14,7 @@ export function ChaosVsCalm({ onGetStarted }: { onGetStarted?: () => void }) {
           The Planning Transformation
         </span>
         <h3 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-zinc-950 dark:text-zinc-50">
-          The old spreadsheet chaos vs. CelebratePro calm
+          The old spreadsheet chaos vs. CelebrateKaro calm
         </h3>
         <p className="text-sm text-zinc-500 dark:text-zinc-400">
           Why over 2,500 hosts and couples leave disparate spreadsheets behind.
@@ -28,12 +28,12 @@ export function ChaosVsCalm({ onGetStarted }: { onGetStarted?: () => void }) {
               onClick={() => setActiveTab('calm')}
               className={`flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-bold transition-all ${
                 activeTab === 'calm'
-                  ? 'bg-emerald-600 text-white shadow-xs'
+                  ? 'bg-amber-600 text-white shadow-xs'
                   : 'text-zinc-600 hover:text-zinc-900 dark:text-zinc-300'
               }`}
             >
               <ShieldCheck className="w-4 h-4" />
-              <span>CelebratePro Calm</span>
+              <span>CelebrateKaro Calm</span>
             </button>
             <button
               type="button"
@@ -100,7 +100,7 @@ export function ChaosVsCalm({ onGetStarted }: { onGetStarted?: () => void }) {
           <div className="flex items-center justify-between pb-4 border-b border-emerald-200/50 dark:border-emerald-900/40">
             <h4 className="font-extrabold text-base text-emerald-950 dark:text-emerald-200 flex items-center gap-2">
               <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
-              The CelebratePro Calm
+              The CelebrateKaro Calm
             </h4>
             <span className="text-[11px] font-bold text-emerald-700 dark:text-emerald-400">Serene & Curated</span>
           </div>

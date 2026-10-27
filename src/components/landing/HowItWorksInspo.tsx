@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { Sparkles, Calendar, DollarSign, CheckCircle2 } from 'lucide-react';
 
 interface HowItWorksInspoProps {
   onStartPlanning?: () => void;
@@ -9,133 +10,93 @@ interface HowItWorksInspoProps {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function HowItWorksInspo({ onStartPlanning }: HowItWorksInspoProps = {}) {
   return (
-    <section className="relative pt-16 pb-20 overflow-hidden bg-slate-900">
-      {/* Scenic Background Image with cinematic overlay */}
+    <section className="relative pt-16 pb-20 overflow-hidden bg-[#161233] text-white border-b border-amber-900/20">
+      {/* Background Indian Celebration Studio Image with subtle dark gradient overlay */}
       <div className="absolute inset-0 z-0">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src="/images/celebration-terrace.jpg"
-          alt="Scenic coastal celebration terrace"
-          className="w-full h-full object-cover opacity-35"
+          src="/images/image (1).jpg"
+          alt="CelebrateKaro Planning Studio with Mandap blueprints and Gantt charts"
+          className="w-full h-full object-cover opacity-20"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#073330] via-slate-950/80 to-[#faf8f4]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#161233] via-[#1E1B4B]/95 to-[#161233]" />
       </div>
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Section Heading */}
         <div className="text-center max-w-2xl mx-auto mb-14 space-y-3">
-          <span className="inline-block text-xs font-bold uppercase tracking-widest text-[#00e599] bg-white/10 px-3.5 py-1 rounded-full backdrop-blur-md">
+          <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-amber-300 bg-amber-500/20 border border-amber-400/30 px-3.5 py-1 rounded-full backdrop-blur-md">
+            <Sparkles className="w-3.5 h-3.5 text-amber-400" />
             Simple & Serene
           </span>
           <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-white">
-            How CelebratePro Works
+            How CelebrateKaro Works
           </h2>
           <p className="text-sm sm:text-base text-slate-300">
-            From initial concept to your last dance — three effortless steps to a world-class celebration.
+            From auspicious Muhurat to the last Mithai box — three effortless steps to a world-class Indian celebration.
           </p>
         </div>
 
-        {/* 3 Inspo-Style Warm Cream Cards with Illustrated Headers */}
+        {/* 3 Warm Ivory Indian Cards with Visual Headers */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-          {/* Step 1: Start with your date */}
-          <div className="bg-[#fffdfa] rounded-3xl p-8 text-center text-[#073330] shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between border border-slate-100">
+          {/* Step 1: Muhurat & Archetype */}
+          <div className="bg-[#FAF6EF] rounded-3xl p-8 text-center text-[#1E1B4B] shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between border border-amber-300/40">
             <div className="space-y-4">
-              {/* Whimsical Champagne Toast Illustration */}
-              <div className="mx-auto w-24 h-24 flex items-center justify-center">
-                <svg viewBox="0 0 100 100" className="w-20 h-20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  {/* Confetti Sparks */}
-                  <circle cx="50" cy="18" r="4" fill="#ff9e7d" />
-                  <path d="M28 25 L34 22" stroke="#00e599" strokeWidth="3" strokeLinecap="round" />
-                  <path d="M72 25 L66 22" stroke="#4f46e5" strokeWidth="3" strokeLinecap="round" />
-                  {/* Flute 1 */}
-                  <path d="M38 32 C38 48 46 54 46 64 L46 76" stroke="#073330" strokeWidth="3" strokeLinecap="round" />
-                  <path d="M38 76 L54 76" stroke="#073330" strokeWidth="3" strokeLinecap="round" />
-                  <path d="M35 32 C35 44 43 50 43 50 L53 50 C53 44 51 32 51 32 Z" fill="#ff9e7d" opacity="0.3" stroke="#073330" strokeWidth="3" />
-                  {/* Flute 2 (clinking) */}
-                  <path d="M62 32 C62 48 54 54 54 64 L54 76" stroke="#073330" strokeWidth="3" strokeLinecap="round" />
-                  <path d="M46 76 L62 76" stroke="#073330" strokeWidth="3" strokeLinecap="round" />
-                  <path d="M65 32 C65 44 57 50 57 50 L47 50 C47 44 49 32 49 32 Z" fill="#00e599" opacity="0.3" stroke="#073330" strokeWidth="3" />
-                  {/* Clink burst */}
-                  <circle cx="50" cy="40" r="3" fill="#00e599" />
-                </svg>
+              <div className="mx-auto w-20 h-20 rounded-2xl bg-amber-100 flex items-center justify-center text-amber-800 shadow-sm border border-amber-200">
+                <Calendar className="w-9 h-9 text-amber-700" />
               </div>
 
-              <h3 className="text-xl font-black tracking-tight text-[#073330]">
-                Start with your date & vibe.
+              <h3 className="text-xl font-black tracking-tight text-[#1E1B4B]">
+                1. Muhurat & Vibe
               </h3>
-              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
-                Choose your celebration archetype — whether an intimate coastal wedding, rooftop birthday, or charity gala. Get a tailored countdown roadmap in seconds.
+              <p className="text-xs sm:text-sm text-stone-600 leading-relaxed font-normal">
+                Choose your archetype — whether a royal Jaipur palace Shaadi, rooftop Janamdin, or sacred community Bhandara. Get auspicious milestones in seconds.
               </p>
             </div>
             <div className="pt-6">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-[#00e599] bg-[#073330] px-3 py-1 rounded-full">
+              <span className="text-[11px] font-black uppercase tracking-wider text-amber-900 bg-amber-200 px-3.5 py-1 rounded-full">
                 Step 01
               </span>
             </div>
           </div>
 
-          {/* Step 2: Balance Envelopes */}
-          <div className="bg-[#fffdfa] rounded-3xl p-8 text-center text-[#073330] shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between border border-slate-100">
+          {/* Step 2: Kifayati Envelopes */}
+          <div className="bg-[#FAF6EF] rounded-3xl p-8 text-center text-[#1E1B4B] shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between border border-amber-300/40">
             <div className="space-y-4">
-              {/* Whimsical Binoculars / Precision Envelope Illustration */}
-              <div className="mx-auto w-24 h-24 flex items-center justify-center">
-                <svg viewBox="0 0 100 100" className="w-20 h-20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  {/* Binoculars Body */}
-                  <rect x="24" y="32" width="22" height="36" rx="6" fill="#00e599" stroke="#073330" strokeWidth="3" />
-                  <rect x="54" y="32" width="22" height="36" rx="6" fill="#00e599" stroke="#073330" strokeWidth="3" />
-                  {/* Bridge */}
-                  <rect x="42" y="44" width="16" height="8" rx="2" fill="#073330" />
-                  {/* Lenses */}
-                  <circle cx="35" cy="56" r="6" fill="#073330" />
-                  <circle cx="65" cy="56" r="6" fill="#073330" />
-                  <circle cx="33" cy="54" r="2" fill="white" />
-                  <circle cx="63" cy="54" r="2" fill="white" />
-                  {/* Eyepieces */}
-                  <rect x="28" y="24" width="14" height="8" rx="2" fill="#ff9e7d" stroke="#073330" strokeWidth="2.5" />
-                  <rect x="58" y="24" width="14" height="8" rx="2" fill="#ff9e7d" stroke="#073330" strokeWidth="2.5" />
-                </svg>
+              <div className="mx-auto w-20 h-20 rounded-2xl bg-rose-100 flex items-center justify-center text-rose-800 shadow-sm border border-rose-200">
+                <DollarSign className="w-9 h-9 text-[#9E1B32]" />
               </div>
 
-              <h3 className="text-xl font-black tracking-tight text-[#073330]">
-                Balance your envelopes.
+              <h3 className="text-xl font-black tracking-tight text-[#1E1B4B]">
+                2. Kifayati Envelopes
               </h3>
-              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
-                Allocate venue, catering, floral, and entertainment envelopes in exact integer cents with automated variance tracking so you never overspend.
+              <p className="text-xs sm:text-sm text-stone-600 leading-relaxed font-normal">
+                Allocate Halwai catering, Mandap decor, Sangeet & Photography in exact envelopes with real-time variance so family budgets never get strained.
               </p>
             </div>
             <div className="pt-6">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-[#00e599] bg-[#073330] px-3 py-1 rounded-full">
+              <span className="text-[11px] font-black uppercase tracking-wider text-amber-900 bg-amber-200 px-3.5 py-1 rounded-full">
                 Step 02
               </span>
             </div>
           </div>
 
-          {/* Step 3: Celebrate Flawlessly */}
-          <div className="bg-[#fffdfa] rounded-3xl p-8 text-center text-[#073330] shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between border border-slate-100">
+          {/* Step 3: AI Tayaari & Vendors */}
+          <div className="bg-[#FAF6EF] rounded-3xl p-8 text-center text-[#1E1B4B] shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between border border-amber-300/40">
             <div className="space-y-4">
-              {/* Whimsical Cheering Toast / Checkmark Illustration */}
-              <div className="mx-auto w-24 h-24 flex items-center justify-center">
-                <svg viewBox="0 0 100 100" className="w-20 h-20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  {/* Cheerful Hand with Sleeve */}
-                  <path d="M38 78 L38 52 C38 46 44 42 50 42 C56 42 62 46 62 52 L62 78 Z" fill="#00e599" stroke="#073330" strokeWidth="3" />
-                  <path d="M32 78 L68 78" stroke="#073330" strokeWidth="3" strokeLinecap="round" />
-                  {/* Checkmark card */}
-                  <rect x="36" y="20" width="28" height="32" rx="4" fill="#fffdfa" stroke="#073330" strokeWidth="3" />
-                  <path d="M42 34 L48 40 L58 28" stroke="#00e599" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" />
-                  <circle cx="28" cy="24" r="3" fill="#ff9e7d" />
-                  <circle cx="72" cy="30" r="3" fill="#4f46e5" />
-                </svg>
+              <div className="mx-auto w-20 h-20 rounded-2xl bg-emerald-100 flex items-center justify-center text-emerald-800 shadow-sm border border-emerald-200">
+                <CheckCircle2 className="w-9 h-9 text-emerald-700" />
               </div>
 
-              <h3 className="text-xl font-black tracking-tight text-[#073330]">
-                Celebrate with calm.
+              <h3 className="text-xl font-black tracking-tight text-[#1E1B4B]">
+                3. AI Tayaari Checklist
               </h3>
-              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
-                Coordinate vendors with built-in quote requests, check off run-of-show milestones, and arrive at your celebration completely stress-free.
+              <p className="text-xs sm:text-sm text-stone-600 leading-relaxed font-normal">
+                Coordinate Pandits, Dholwalas, and Mehendi artists with synthesized RFQs and task countdowns. Arrive on celebration day calm and joyous.
               </p>
             </div>
             <div className="pt-6">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-[#00e599] bg-[#073330] px-3 py-1 rounded-full">
+              <span className="text-[11px] font-black uppercase tracking-wider text-amber-900 bg-amber-200 px-3.5 py-1 rounded-full">
                 Step 03
               </span>
             </div>

@@ -1,4 +1,4 @@
-# 🎉 Celebration & Event Planner
+# 🎉 CelebrateKaro — AI Celebration & Event Planner
 ### PromptWar Virtual Challenge 5 — Official Submission
 
 > **Official Problem Statement:**  
@@ -8,9 +8,7 @@
 
 ## 🌟 Executive Summary
 
-**Celebration & Event Planner** is a full-stack, accessible, and robust event planning application engineered with **Next.js 16 (App Router)**, **MongoDB Atlas (`mongodb`)**, **Tailwind CSS v4**, and **Google Gemini (`@google/generative-ai`)**.
-
-The application solves the fragmentation of event planning by uniting:
+**CelebrateKaro** is a full-stack, accessible, and robust event planning application engineered with **Next.js 16 (App Router)**, **MongoDB Atlas (`mongodb`)**, **Tailwind CSS v4**, and **Google Gemini (`@google/generative-ai`)**. Tailored for grand Indian Shaadis, Janamdins, and community Bhandaras, CelebrateKaro brings serene planning to life.
 1. **Dynamic Event Lifecycle Management** (Weddings, Birthdays, Community Festivals, Custom Celebrations).
 2. **Financial Budget Tracker** with integer-cent accuracy, category variance analysis, and event-tailored default distribution templates.
 3. **Timeline & Milestone Roadmap** with chronological sorting, days-until countdowns, and automatic overdue deadline flagging.
@@ -104,8 +102,8 @@ Configure your environment in `.env.local`:
 ```env
 # MongoDB Atlas Database URI
 # Free M0 cluster from https://www.mongodb.com/cloud/atlas
-MONGODB_URI=mongodb+srv://<username>:<password>@<cluster>.mongodb.net/celebratepro?retryWrites=true&w=majority
-MONGODB_DB_NAME=celebratepro
+MONGODB_URI=mongodb+srv://<username>:<password>@<cluster>.mongodb.net/celebratekaro?retryWrites=true&w=majority
+MONGODB_DB_NAME=celebratekaro
 
 # Optional: Google Gemini API Key for Live AI Synthesis
 # Get a key at https://aistudio.google.com/app/apikey

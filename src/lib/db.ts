@@ -1,5 +1,5 @@
 /**
- * Database Module for CelebratePro.
+ * Database Module for CelebrateKaro.
  *
  * Configured for MongoDB Atlas with fallback in-memory database for testing and offline development.
  *

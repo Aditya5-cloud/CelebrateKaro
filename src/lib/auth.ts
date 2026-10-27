@@ -20,28 +20,28 @@ export interface StoredUserRecord extends User {
  */
 export const DEMO_ACCOUNTS = [
   {
-    name: 'Rachel Adams',
-    email: 'host@celebratepro.com',
+    name: 'Priya Sharma',
+    email: 'host@celebratekaro.com',
     password: 'password123',
     role: 'host' as UserRole,
-    roleLabel: 'Event Host',
-    description: 'Planning a dream wedding celebration',
+    roleLabel: 'Shaadi & Family Host',
+    description: 'Planning a royal family celebration',
   },
   {
-    name: 'Marcus Chen',
-    email: 'planner@celebratepro.com',
+    name: 'Aarav Mehta',
+    email: 'planner@celebratekaro.com',
     password: 'password123',
     role: 'planner' as UserRole,
     roleLabel: 'Celebration Coordinator',
-    description: 'Coordinating birthday parties & anniversaries',
+    description: 'Coordinating milestone Janamdins & Sangeet nights',
   },
   {
-    name: 'Sophia Patel',
-    email: 'producer@celebratepro.com',
+    name: 'Rajesh K. Gupta',
+    email: 'producer@celebratekaro.com',
     password: 'password123',
     role: 'coordinator' as UserRole,
-    roleLabel: 'Event Producer',
-    description: 'Directing large galas & multi-day productions',
+    roleLabel: 'Event & Mela Producer',
+    description: 'Directing large Mahaprasad Bhandaras & community utsavs',
   },
 ];
 
@@ -71,7 +71,7 @@ export function generateSalt(): string {
  * Seamlessly works in browser (WebCrypto API) and Node.js / Jest environments.
  */
 export async function hashPassword(password: string, salt: string): Promise<string> {
-  const combined = `${salt}::celebratepro_secure::${password}`;
+  const combined = `${salt}::celebratekaro_secure::${password}`;
 
   // 1. Browser Web Crypto
   if (typeof window !== 'undefined' && window.crypto?.subtle) {
