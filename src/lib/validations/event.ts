@@ -8,6 +8,7 @@ export const eventTypeEnum = z.enum(['wedding', 'birthday', 'community', 'other'
 const dateRegex = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
 
 export const createEventSchema = z.object({
+  user_id: z.string().trim().optional(),
   name: z
     .string()
     .trim()

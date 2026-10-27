@@ -11,6 +11,7 @@ interface EventFormModalProps {
   onClose: () => void;
   onSuccess: (event: Event) => void;
   initialEvent?: Event | null; // If provided, modal is in Edit mode
+  userId?: string;
 }
 
 export function EventFormModal({
@@ -18,6 +19,7 @@ export function EventFormModal({
   onClose,
   onSuccess,
   initialEvent,
+  userId,
 }: EventFormModalProps) {
   const isEdit = !!initialEvent;
   const modalRef = useRef<HTMLDivElement>(null);
@@ -112,7 +114,10 @@ export function EventFormModal({
     setIsSubmitting(true);
 
     try {
+      const resolvedUserId = userId || (typeof window !== 'undefined' ? (JSON.parse(localStorage.getItem('celebration_current_user_v1') || '{}')?.id || undefined) : undefined);
+
       const payload = {
+        user_id: resolvedUserId,
         name: name.trim(),
         event_type: eventType,
         event_date: eventDate,
@@ -124,9 +129,14 @@ export function EventFormModal({
       const url = isEdit ? `/api/events/${initialEvent.id}` : '/api/events';
       const method = isEdit ? 'PATCH' : 'POST';
 
+      const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+      if (resolvedUserId) {
+        headers['x-user-id'] = resolvedUserId;
+      }
+
       const res = await fetch(url, {
         method,
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify(payload),
       });
 

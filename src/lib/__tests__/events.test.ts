@@ -150,4 +150,40 @@ describe('Events Service Layer', () => {
     const result = await deleteEvent(88888);
     expect(result).toBe(false);
   });
+
+  it('separates events by user_id so users only see their own dashboard', async () => {
+    // User 1 creates an event
+    await createEvent({
+      user_id: 'usr_user_1',
+      name: "User 1's Wedding",
+      event_type: 'wedding',
+      event_date: '2027-06-15',
+      guest_count: 100,
+      total_budget: 15000,
+      description: '',
+    });
+
+    // User 2 creates an event
+    await createEvent({
+      user_id: 'usr_user_2',
+      name: "User 2's Birthday Bash",
+      event_type: 'birthday',
+      event_date: '2027-08-20',
+      guest_count: 40,
+      total_budget: 3000,
+      description: '',
+    });
+
+    const user1Events = await getEvents({ userId: 'usr_user_1' });
+    expect(user1Events).toHaveLength(1);
+    expect(user1Events[0].name).toBe("User 1's Wedding");
+
+    const user2Events = await getEvents({ userId: 'usr_user_2' });
+    expect(user2Events).toHaveLength(1);
+    expect(user2Events[0].name).toBe("User 2's Birthday Bash");
+
+    // A brand new registered user (User 3) sees 0 events
+    const user3Events = await getEvents({ userId: 'usr_user_3' });
+    expect(user3Events).toHaveLength(0);
+  });
 });

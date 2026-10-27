@@ -67,6 +67,7 @@ async function initIndexes(db: Db): Promise<void> {
   try {
     await Promise.all([
       db.collection('events').createIndex({ id: 1 }, { unique: true }),
+      db.collection('events').createIndex({ user_id: 1, event_date: 1 }),
       db.collection('events').createIndex({ event_date: 1, created_at: -1 }),
       db.collection('budget_categories').createIndex({ id: 1 }, { unique: true }),
       db.collection('budget_categories').createIndex({ event_id: 1, planned_amount: -1 }),

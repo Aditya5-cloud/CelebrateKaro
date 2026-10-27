@@ -101,13 +101,20 @@ export default function HomePage() {
     return () => unsubscribe();
   }, []);
 
-  // Fetch events from API with real-time tracking
-  const fetchEvents = useCallback(async (silent = false) => {
+  // Fetch events from API with real-time tracking for the active user
+  const fetchEvents = useCallback(async (targetUserId?: string | null, silent = false) => {
     if (!silent) setIsLoading(true);
     setIsSyncing(true);
     setError(null);
     try {
-      const res = await fetch('/api/events');
+      const activeUser = targetUserId !== undefined ? targetUserId : (currentUser?.id ?? getCurrentUser()?.id ?? null);
+      let url = '/api/events';
+      const headers: Record<string, string> = {};
+      if (activeUser) {
+        url += `?userId=${encodeURIComponent(activeUser)}`;
+        headers['x-user-id'] = activeUser;
+      }
+      const res = await fetch(url, { headers });
       const json = await res.json();
       if (!res.ok || !json.success) {
         throw new Error(json.error || 'Failed to load celebrations.');
@@ -122,19 +129,19 @@ export default function HomePage() {
       if (!silent) setIsLoading(false);
       setIsSyncing(false);
     }
-  }, []);
+  }, [currentUser]);
 
   useEffect(() => {
-    fetchEvents();
-  }, [fetchEvents]);
+    fetchEvents(currentUser ? currentUser.id : null);
+  }, [fetchEvents, currentUser]);
 
   // Real-time background sync polling every 5 seconds
   useEffect(() => {
     const timer = setInterval(() => {
-      fetchEvents(true);
+      fetchEvents(currentUser ? currentUser.id : null, true);
     }, 5000);
     return () => clearInterval(timer);
-  }, [fetchEvents]);
+  }, [fetchEvents, currentUser]);
 
   // Filtered events
   const filteredEvents = useMemo(() => {
@@ -159,7 +166,7 @@ export default function HomePage() {
   }, [events]);
 
   const handleEventCreated = () => {
-    fetchEvents();
+    fetchEvents(currentUser?.id);
   };
 
   const handleDeleteConfirm = async (event: { id: number; name: string }) => {
@@ -171,7 +178,7 @@ export default function HomePage() {
         throw new Error(json.error || 'Failed to delete celebration.');
       }
       setEventToDelete(null);
-      fetchEvents();
+      fetchEvents(currentUser?.id);
     } catch (err: unknown) {
       console.error(err);
       alert('Failed to delete event. Please try again.');
@@ -189,12 +196,15 @@ export default function HomePage() {
     setCurrentUser(user);
     setIsAuthModalOpen(false);
     setViewMode('dashboard');
+    fetchEvents(user.id);
   };
 
   const handleLogout = () => {
     logoutUser();
     setCurrentUser(null);
+    setEvents([]);
     setViewMode('landing');
+    fetchEvents(null);
   };
 
   return (
@@ -619,12 +629,18 @@ export default function HomePage() {
                     <CalendarDays className="h-7 w-7 text-[#073330]" />
                   </div>
                   <h4 className="mt-4 text-lg font-bold text-[#073330]">
-                    {activeFilter === 'all'
+                    {currentUser
+                      ? activeFilter === 'all'
+                        ? `Welcome, ${currentUser.name}! No celebrations created yet`
+                        : `No ${activeFilter} celebrations found for your account`
+                      : activeFilter === 'all'
                       ? 'No celebrations created yet'
                       : `No ${activeFilter} celebrations found`}
                   </h4>
                   <p className="mx-auto mt-2 max-w-md text-sm text-slate-600">
-                    Create your celebration to get personalized planning checklists, milestone countdowns, and precision budget tracking.
+                    {currentUser
+                      ? 'Your personal workspace is ready. Plan your celebration to get personalized AI checklists, milestone countdowns, and precision budget tracking.'
+                      : 'Create your celebration to get personalized planning checklists, milestone countdowns, and precision budget tracking.'}
                   </p>
                   <div className="mt-6">
                     <Button
@@ -666,6 +682,7 @@ export default function HomePage() {
         isOpen={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
         onSuccess={handleEventCreated}
+        userId={currentUser?.id}
       />
 
       {/* Delete Event Modal */}

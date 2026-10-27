@@ -9,8 +9,9 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const typeParam = searchParams.get('type');
+    const userIdParam = searchParams.get('userId') || request.headers.get('x-user-id') || undefined;
 
-    let filter: { type?: EventType } | undefined;
+    let filter: { type?: EventType; userId?: string } | undefined;
     if (typeParam) {
       const parsedType = eventTypeEnum.safeParse(typeParam);
       if (!parsedType.success) {
@@ -23,6 +24,9 @@ export async function GET(request: Request) {
         );
       }
       filter = { type: parsedType.data };
+    }
+    if (userIdParam) {
+      filter = { ...filter, userId: userIdParam };
     }
 
     const events = await getEvents(filter);
@@ -70,7 +74,13 @@ export async function POST(request: Request) {
       );
     }
 
-    const newEvent = await createEvent(validationResult.data);
+    const headerUserId = request.headers.get('x-user-id') || undefined;
+    const eventPayload = {
+      ...validationResult.data,
+      user_id: validationResult.data.user_id || headerUserId,
+    };
+
+    const newEvent = await createEvent(eventPayload);
 
     return NextResponse.json(
       {

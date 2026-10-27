@@ -10,6 +10,7 @@ export type EventType = 'wedding' | 'birthday' | 'community' | 'other';
 
 export interface Event {
   id: number;
+  user_id?: string;
   name: string;
   event_type: EventType;
   event_date: string; // ISO 8601 date string (YYYY-MM-DD)
