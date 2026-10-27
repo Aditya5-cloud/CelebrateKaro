@@ -1,11 +1,4 @@
-import path from 'path';
-import fs from 'fs';
-import os from 'os';
-
-const testDbPath = path.join(os.tmpdir(), `test-chat-${Date.now()}-${Math.random().toString(36).slice(2)}.db`);
-process.env.DATABASE_PATH = testDbPath;
-
-import { getDb, closeDb } from '../db';
+import { clearDatabase, closeDb } from '../db';
 import { createEvent } from '../events';
 import { createBudgetCategory } from '../budget';
 import { createMilestone } from '../milestones';
@@ -20,29 +13,10 @@ import {
 describe('Chat Service Layer & Grounding', () => {
   let eventId: number;
 
-  beforeAll(() => {
-    getDb();
-  });
+  beforeEach(async () => {
+    await clearDatabase();
 
-  afterAll(() => {
-    closeDb();
-    try {
-      if (fs.existsSync(testDbPath)) fs.unlinkSync(testDbPath);
-      const wal = `${testDbPath}-wal`;
-      const shm = `${testDbPath}-shm`;
-      if (fs.existsSync(wal)) fs.unlinkSync(wal);
-      if (fs.existsSync(shm)) fs.unlinkSync(shm);
-    } catch {
-      // ignore
-    }
-  });
-
-  beforeEach(() => {
-    const db = getDb();
-    db.prepare('DELETE FROM events').run();
-    db.prepare('DELETE FROM chat_messages').run();
-
-    const event = createEvent({
+    const event = await createEvent({
       name: 'Autumn Harvest Gala',
       event_type: 'community',
       event_date: '2027-10-15',
@@ -53,11 +27,15 @@ describe('Chat Service Layer & Grounding', () => {
     eventId = event.id;
   });
 
-  it('saves and retrieves chat messages in chronological order', () => {
-    saveChatMessage(eventId, 'user', 'Where can I reduce costs?');
-    saveChatMessage(eventId, 'assistant', 'Consider looking at your catering and decor budgets.');
+  afterAll(async () => {
+    await closeDb();
+  });
 
-    const messages = getChatMessages(eventId);
+  it('saves and retrieves chat messages in chronological order', async () => {
+    await saveChatMessage(eventId, 'user', 'Where can I reduce costs?');
+    await saveChatMessage(eventId, 'assistant', 'Consider looking at your catering and decor budgets.');
+
+    const messages = await getChatMessages(eventId);
     expect(messages).toHaveLength(2);
     expect(messages[0].role).toBe('user');
     expect(messages[0].content).toBe('Where can I reduce costs?');
@@ -65,17 +43,17 @@ describe('Chat Service Layer & Grounding', () => {
     expect(messages[1].content).toContain('catering');
   });
 
-  it('clears chat history for an event', () => {
-    saveChatMessage(eventId, 'user', 'Hello');
-    expect(getChatMessages(eventId)).toHaveLength(1);
+  it('clears chat history for an event', async () => {
+    await saveChatMessage(eventId, 'user', 'Hello');
+    expect(await getChatMessages(eventId)).toHaveLength(1);
 
-    clearChatHistory(eventId);
-    expect(getChatMessages(eventId)).toHaveLength(0);
+    await clearChatHistory(eventId);
+    expect(await getChatMessages(eventId)).toHaveLength(0);
   });
 
-  it('builds real-time event context summary with budget, timeline, and vendors', () => {
+  it('builds real-time event context summary with budget, timeline, and vendors', async () => {
     // Add budget category
-    createBudgetCategory(eventId, {
+    await createBudgetCategory(eventId, {
       name: 'venue',
       planned_amount: 5000,
       actual_amount: 4800,
@@ -83,7 +61,7 @@ describe('Chat Service Layer & Grounding', () => {
     });
 
     // Add milestone
-    createMilestone(eventId, {
+    await createMilestone(eventId, {
       title: 'Finalize Sound Permits',
       due_date: '2027-08-01',
       description: '',
@@ -91,14 +69,14 @@ describe('Chat Service Layer & Grounding', () => {
     });
 
     // Add vendor
-    createVendor(eventId, {
+    await createVendor(eventId, {
       name: 'City Tent Rentals',
       category: 'venue',
       status: 'booked',
       price_quote: 2500,
     });
 
-    const summary = buildEventContextSummary(eventId);
+    const summary = await buildEventContextSummary(eventId);
 
     // Verify context grounding
     expect(summary).toContain('Autumn Harvest Gala');

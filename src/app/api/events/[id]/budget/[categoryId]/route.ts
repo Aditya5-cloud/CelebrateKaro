@@ -25,7 +25,7 @@ export async function PATCH(request: Request, context: RouteContext) {
       return NextResponse.json({ success: false, error: 'Invalid ID parameters.' }, { status: 400 });
     }
 
-    const existing = getBudgetCategoryById(parsed.categoryId);
+    const existing = await getBudgetCategoryById(parsed.categoryId);
     if (!existing || existing.event_id !== parsed.eventId) {
       return NextResponse.json({ success: false, error: 'Budget category not found for this event.' }, { status: 404 });
     }
@@ -50,8 +50,8 @@ export async function PATCH(request: Request, context: RouteContext) {
       );
     }
 
-    const updated = updateBudgetCategory(parsed.categoryId, validationResult.data);
-    const summary = getBudgetSummary(parsed.eventId);
+    const updated = await updateBudgetCategory(parsed.categoryId, validationResult.data);
+    const summary = await getBudgetSummary(parsed.eventId);
 
     return NextResponse.json({
       success: true,
@@ -74,17 +74,17 @@ export async function DELETE(_request: Request, context: RouteContext) {
       return NextResponse.json({ success: false, error: 'Invalid ID parameters.' }, { status: 400 });
     }
 
-    const existing = getBudgetCategoryById(parsed.categoryId);
+    const existing = await getBudgetCategoryById(parsed.categoryId);
     if (!existing || existing.event_id !== parsed.eventId) {
       return NextResponse.json({ success: false, error: 'Budget category not found for this event.' }, { status: 404 });
     }
 
-    const deleted = deleteBudgetCategory(parsed.categoryId);
+    const deleted = await deleteBudgetCategory(parsed.categoryId);
     if (!deleted) {
       return NextResponse.json({ success: false, error: 'Failed to delete category.' }, { status: 500 });
     }
 
-    const summary = getBudgetSummary(parsed.eventId);
+    const summary = await getBudgetSummary(parsed.eventId);
 
     return NextResponse.json({
       success: true,

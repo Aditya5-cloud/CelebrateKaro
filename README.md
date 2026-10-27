@@ -8,7 +8,7 @@
 
 ## 🌟 Executive Summary
 
-**Celebration & Event Planner** is a full-stack, accessible, and robust event planning application engineered with **Next.js 16 (App Router)**, **SQLite (`better-sqlite3`)**, **Tailwind CSS v4**, and **Google Gemini (`@google/generative-ai`)**.
+**Celebration & Event Planner** is a full-stack, accessible, and robust event planning application engineered with **Next.js 16 (App Router)**, **MongoDB Atlas (`mongodb`)**, **Tailwind CSS v4**, and **Google Gemini (`@google/generative-ai`)**.
 
 The application solves the fragmentation of event planning by uniting:
 1. **Dynamic Event Lifecycle Management** (Weddings, Birthdays, Community Festivals, Custom Celebrations).
@@ -25,10 +25,10 @@ The application solves the fragmentation of event planning by uniting:
 
 | Criterion | Implementation & Engineering Highlights | Verification Evidence |
 |---|---|---|
-| **A. Code Quality** | Modular layered architecture: Zod validation layer $\rightarrow$ SQLite service layer $\rightarrow$ Next.js REST API route handlers $\rightarrow$ React 19 UI components. Strict TypeScript mode, 0 explicit `any`, zero linter errors. Pure currency arithmetic in integer cents. | `npm run lint`: **0 errors, 0 warnings**<br>`npm run type-check`: **0 errors** |
-| **B. Security** | API keys (`GEMINI_API_KEY`) isolated strictly to server-side route handlers—never exposed in client bundles. `.env.local` strictly gitignored. All database operations execute through parameterized SQLite statements eliminating SQL injection. All user input validated with Zod and sanitized against prompt injection. | Zero secrets in client code; Zod schema enforcement across all endpoints. |
-| **C. Efficiency** | Zero-latency local SQLite database requiring no external database infrastructure. Fast, token-optimized Gemini 3.5 Flash-Lite calls with low temperature (`0.3`–`0.4`) and strict JSON schema output. Optimistic UI updates for immediate user feedback. | `npm run build`: **Turbopack static & dynamic compilation in <3s**. |
-| **D. Testing** | Comprehensive automated testing strategy with Jest, `@testing-library/react`, and `jest-axe`. Unit tests for services, validations, AI fallbacks, and UI component workflows. | `npm test`: **24 test suites, 132 tests passing**<br>>90% coverage on core services; 100% on validations. |
+| **A. Code Quality** | Modular layered architecture: Zod validation layer $\rightarrow$ MongoDB service layer $\rightarrow$ Next.js REST API route handlers $\rightarrow$ React 19 UI components. Strict TypeScript mode, 0 explicit `any`, zero linter errors. Pure currency arithmetic in integer cents. | `npm run lint`: **0 errors, 0 warnings**<br>`npm run type-check`: **0 errors** |
+| **B. Security** | API keys (`GEMINI_API_KEY`) and database credentials (`MONGODB_URI`) isolated strictly to server-side route handlers—never exposed in client bundles. `.env.local` strictly gitignored. All database operations execute through MongoDB collection queries eliminating injection vulnerabilities. All user input validated with Zod and sanitized against prompt injection. | Zero secrets in client code; Zod schema enforcement across all endpoints. |
+| **C. Efficiency** | Connection pooling and Next.js development HMR caching with official native `mongodb` driver. In-memory database fallback for offline tests and sandboxed builds. Fast, token-optimized Gemini 3.5 Flash-Lite calls with low temperature (`0.3`–`0.4`) and strict JSON schema output. Optimistic UI updates for immediate user feedback. | `npm run build`: **Turbopack static & dynamic compilation in <4s**. |
+| **D. Testing** | Comprehensive automated testing strategy with Jest, `@testing-library/react`, and `jest-axe`. Unit tests for services, validations, AI fallbacks, and UI component workflows. | `npm test`: **26 test suites, 143 tests passing**<br>>90% coverage on core services; 100% on validations. |
 | **E. Accessibility** | Built from the ground up with semantic HTML (`section`, `header`, `dialog`, `nav`), keyboard focus trapping, `Escape` key listeners, `aria-modal`, `aria-live` announcements for dynamic updates, and custom accessible checkboxes (`role="checkbox"`). | `jest-axe` automated audit on all interactive components: **0 violations**. |
 | **F. Problem Statement Alignment** | Directly serves weddings, birthdays, and community events with tailored templates, budget categories, milestone roadmaps, vendor RFQs, and personalized AI recommendations. | Fulfills 100% of the challenge requirements with no speculative bloat. |
 
@@ -56,21 +56,22 @@ The application solves the fragmentation of event planning by uniting:
                  ┌─────────────────────────────┴─────────────────────────────┐
                  ▼                                                           ▼
 ┌─────────────────────────────────┐                         ┌─────────────────────────────────┐
-│        SQLite Database          │                         │     Google Gemini 3.5 Flash-Lite│
-│       (`better-sqlite3`)        │                         │     (`@google/generative-ai`)   │
+│     MongoDB Atlas Database      │                         │     Google Gemini 3.5 Flash-Lite│
+│          (`mongodb`)            │                         │     (`@google/generative-ai`)   │
 │  - events                       │                         │                                 │
 │  - budget_categories            │                         │  - Structured JSON checklists   │
 │  - milestones                   │                         │  - Grounded Planning Chat       │
 │  - vendors                      │                         │  - Vendor RFQ Email Drafter     │
 │  - checklist_items              │                         │  (With Domain Fallback Engine)  │
 │  - chat_messages                │                         └─────────────────────────────────┘
+│  - counters (atomic auto-inc)   │
 └─────────────────────────────────┘
 ```
 
-- **Framework:** Next.js 16.4.2 (App Router with Turbopack)
+- **Framework:** Next.js 16.4.2 (App Router)
 - **UI Library:** React 19.3.0
 - **Styling:** Tailwind CSS v4 (`@tailwindcss/postcss`)
-- **Database:** SQLite (`better-sqlite3` v13.0.3)
+- **Database:** MongoDB Atlas via official native driver (`mongodb` v7.7.0) with in-memory test fallback
 - **AI Model:** Google Gemini 3.5 Flash-Lite (`gemini-3.5-flash-lite`, configurable via `GEMINI_MODEL`)
 - **Validation:** Zod v4
 - **Testing:** Jest v30.5.2, `@testing-library/react`, `jest-axe`
@@ -92,20 +93,26 @@ cd e:\promptwar
 npm install
 ```
 
-### 3. Environment Setup (Optional)
-The application includes a **complete domain fallback engine**, meaning **it runs 100% locally even without an API key**.
+### 3. Environment Setup
 
-To enable live Google Gemini 3.5 Flash-Lite generation:
+Copy `.env.local.example` to `.env.local`:
 ```bash
-# Copy sample env file
 cp .env.local.example .env.local
 ```
-Edit `.env.local` and paste your key:
+
+Configure your environment in `.env.local`:
 ```env
-GEMINI_API_KEY=AIzaSy...
-# Optional: GEMINI_MODEL=gemini-3.5-flash-lite
+# MongoDB Atlas Database URI
+# Free M0 cluster from https://www.mongodb.com/cloud/atlas
+MONGODB_URI=mongodb+srv://<username>:<password>@<cluster>.mongodb.net/celebratepro?retryWrites=true&w=majority
+MONGODB_DB_NAME=celebratepro
+
+# Optional: Google Gemini API Key for Live AI Synthesis
+# Get a key at https://aistudio.google.com/app/apikey
+# Note: The app includes a complete offline domain fallback engine if no key is provided.
+GEMINI_API_KEY=your_key_here
+GEMINI_MODEL=gemini-3.5-flash-lite
 ```
-*(Get a free key at [Google AI Studio](https://aistudio.google.com/app/apikey))*
 
 ### 4. Run Development Server
 ```bash
@@ -120,7 +127,7 @@ Open **[http://localhost:3000](http://localhost:3000)** in your browser.
 Every development chunk was verified with automated testing:
 
 ```bash
-# Run all 24 unit and component test suites (132 tests)
+# Run all 26 unit and component test suites (143 tests)
 npm test
 
 # Run tests with code coverage report
@@ -169,7 +176,8 @@ promptwar/
 │   │   ├── chat.ts                         # Chat message storage & live context grounding
 │   │   ├── checklist.ts                    # Checklist persistence & progress metrics
 │   │   ├── currency.ts                     # Integer-cent currency math
-│   │   ├── db.ts                           # SQLite connection & schema migrations
+│   │   ├── db.ts                           # Database re-exports & helpers
+│   │   ├── mongodb.ts                      # MongoDB Atlas connection pooling, schema indexes & sequence counters
 │   │   ├── events.ts                       # Event data access layer
 │   │   ├── formatters.ts                   # Date, countdown & currency formatting
 │   │   ├── gemini.ts                       # Gemini 3.5 Flash-Lite SDK calls & domain fallback engine
@@ -225,7 +233,7 @@ promptwar/
   - *"How is my budget looking and where can I optimize?"*
   - *"What vendors am I still missing for 140 guests?"*
   - *"What are my immediate next timeline milestones?"*
-- Maintains multi-turn conversation history in SQLite.
+- Maintains multi-turn conversation history in MongoDB Atlas.
 
 ### 7. ✉️ GenAI Vendor Email Drafter
 - Generates polished vendor communications for 4 core intents:
@@ -239,7 +247,7 @@ promptwar/
 
 ## 🔒 Security & Privacy Notice
 - No API keys or credentials are baked into client-side bundles or checked into git.
-- SQLite database resides locally (`data/eventplanner.db`).
+- MongoDB Atlas connection credentials (`MONGODB_URI`) are strictly server-side environment variables.
 - Input is strictly validated with Zod on both client and server boundaries.
 - Prompts are sanitized against prompt injection.
 

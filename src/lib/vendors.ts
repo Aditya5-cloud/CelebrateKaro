@@ -1,4 +1,4 @@
-import { getDb, nowIso } from './db';
+import { getDb, getNextSequence, nowIso } from './db';
 import { toCents } from './currency';
 import type { Vendor, VendorStatus, EventType } from '@/types';
 import type { CreateVendorSchemaInput, UpdateVendorSchemaInput } from './validations/vendor';
@@ -14,171 +14,155 @@ export interface VendorStats {
   percentBookedOrPaid: number;
 }
 
-export function getVendors(
+const STATUS_ORDER: Record<VendorStatus, number> = {
+  booked: 1,
+  paid: 2,
+  contacted: 3,
+  considering: 4,
+  cancelled: 5,
+};
+
+export async function getVendors(
   eventId: number,
   filter?: { status?: VendorStatus; category?: string }
-): Vendor[] {
-  const db = getDb();
-  let query = 'SELECT * FROM vendors WHERE event_id = ?';
-  const params: unknown[] = [eventId];
+): Promise<Vendor[]> {
+  const db = await getDb();
+  const query: Record<string, unknown> = { event_id: eventId };
 
   if (filter?.status) {
-    query += ' AND status = ?';
-    params.push(filter.status);
+    query.status = filter.status;
   }
   if (filter?.category) {
-    query += ' AND category = ?';
-    params.push(filter.category);
+    query.category = filter.category;
   }
 
-  query += `
-    ORDER BY 
-      CASE status 
-        WHEN 'booked' THEN 1 
-        WHEN 'paid' THEN 2 
-        WHEN 'contacted' THEN 3 
-        WHEN 'considering' THEN 4 
-        WHEN 'cancelled' THEN 5 
-        ELSE 6 
-      END,
-      name ASC
-  `;
+  const vendors: Vendor[] = await db.collection('vendors').find(query).toArray();
 
-  return db.prepare(query).all(...params) as Vendor[];
+  return vendors.sort((a, b) => {
+    const orderA = STATUS_ORDER[a.status] || 6;
+    const orderB = STATUS_ORDER[b.status] || 6;
+    if (orderA !== orderB) return orderA - orderB;
+    return a.name.localeCompare(b.name);
+  });
 }
 
-export function getVendorById(id: number): Vendor | null {
-  const db = getDb();
-  const row = db.prepare('SELECT * FROM vendors WHERE id = ?').get(id) as Vendor | undefined;
-  return row ?? null;
+export async function getVendorById(id: number): Promise<Vendor | null> {
+  const db = await getDb();
+  const row = await db.collection('vendors').findOne({ id });
+  return (row as Vendor) ?? null;
 }
 
-export function createVendor(
+export async function createVendor(
   eventId: number,
   input: CreateVendorSchemaInput
-): Vendor {
-  const db = getDb();
+): Promise<Vendor> {
+  const db = await getDb();
+  const id = await getNextSequence('vendors');
   const quoteCents = toCents(Number(input.price_quote) || 0);
   const now = nowIso();
 
-  const info = db.prepare(`
-    INSERT INTO vendors (
-      event_id, name, category, status, contact_name, contact_email, contact_phone, price_quote, notes, created_at, updated_at
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `).run(
-    eventId,
-    input.name.trim(),
-    (input.category || 'other').trim(),
-    input.status || 'considering',
-    (input.contact_name ?? '').trim(),
-    (input.contact_email ?? '').trim(),
-    (input.contact_phone ?? '').trim(),
-    quoteCents,
-    (input.notes ?? '').trim(),
-    now,
-    now
-  );
+  const doc: Vendor = {
+    id,
+    event_id: eventId,
+    name: input.name.trim(),
+    category: (input.category || 'other').trim(),
+    status: input.status || 'considering',
+    contact_name: (input.contact_name ?? '').trim(),
+    contact_email: (input.contact_email ?? '').trim(),
+    contact_phone: (input.contact_phone ?? '').trim(),
+    price_quote: quoteCents,
+    notes: (input.notes ?? '').trim(),
+    created_at: now,
+    updated_at: now,
+  };
 
-  const rowId = Number(info.lastInsertRowid);
-  return db.prepare('SELECT * FROM vendors WHERE id = ?').get(rowId) as Vendor;
+  await db.collection('vendors').insertOne(doc);
+  return doc;
 }
 
-export function updateVendor(
+export async function updateVendor(
   id: number,
   input: UpdateVendorSchemaInput
-): Vendor | null {
-  const db = getDb();
-  const existing = getVendorById(id);
+): Promise<Vendor | null> {
+  const db = await getDb();
+  const existing = await getVendorById(id);
   if (!existing) return null;
 
-  const updates: string[] = [];
-  const params: unknown[] = [];
+  const updates: Record<string, unknown> = {};
 
   if (input.name !== undefined) {
-    updates.push('name = ?');
-    params.push(input.name.trim());
+    updates.name = input.name.trim();
   }
   if (input.category !== undefined) {
-    updates.push('category = ?');
-    params.push(input.category.trim());
+    updates.category = input.category.trim();
   }
   if (input.status !== undefined) {
-    updates.push('status = ?');
-    params.push(input.status);
+    updates.status = input.status;
   }
   if (input.contact_name !== undefined) {
-    updates.push('contact_name = ?');
-    params.push(input.contact_name.trim());
+    updates.contact_name = input.contact_name.trim();
   }
   if (input.contact_email !== undefined) {
-    updates.push('contact_email = ?');
-    params.push(input.contact_email.trim());
+    updates.contact_email = input.contact_email.trim();
   }
   if (input.contact_phone !== undefined) {
-    updates.push('contact_phone = ?');
-    params.push(input.contact_phone.trim());
+    updates.contact_phone = input.contact_phone.trim();
   }
   if (input.price_quote !== undefined) {
-    updates.push('price_quote = ?');
-    params.push(toCents(Number(input.price_quote) || 0));
+    updates.price_quote = toCents(Number(input.price_quote) || 0);
   }
   if (input.notes !== undefined) {
-    updates.push('notes = ?');
-    params.push(input.notes.trim());
+    updates.notes = input.notes.trim();
   }
 
-  if (updates.length === 0) return existing;
+  if (Object.keys(updates).length === 0) return existing;
 
-  updates.push('updated_at = ?');
-  params.push(nowIso());
-  params.push(id);
+  updates.updated_at = nowIso();
 
-  db.prepare(`UPDATE vendors SET ${updates.join(', ')} WHERE id = ?`).run(...params);
-
+  await db.collection('vendors').updateOne({ id }, { $set: updates });
   return getVendorById(id);
 }
 
-export function deleteVendor(id: number): boolean {
-  const db = getDb();
-  const result = db.prepare('DELETE FROM vendors WHERE id = ?').run(id);
-  return result.changes > 0;
+export async function deleteVendor(id: number): Promise<boolean> {
+  const db = await getDb();
+  const result = await db.collection('vendors').deleteOne({ id });
+  return Boolean(result && result.deletedCount > 0);
 }
 
-export function getVendorStats(eventId: number): VendorStats {
-  const db = getDb();
+export async function getVendorStats(eventId: number): Promise<VendorStats> {
+  const vendors = await getVendors(eventId);
 
-  const counts = db.prepare(`
-    SELECT
-      COUNT(*) AS total,
-      COALESCE(SUM(CASE WHEN status = 'considering' THEN 1 ELSE 0 END), 0) AS considering,
-      COALESCE(SUM(CASE WHEN status = 'contacted' THEN 1 ELSE 0 END), 0) AS contacted,
-      COALESCE(SUM(CASE WHEN status = 'booked' THEN 1 ELSE 0 END), 0) AS booked,
-      COALESCE(SUM(CASE WHEN status = 'paid' THEN 1 ELSE 0 END), 0) AS paid,
-      COALESCE(SUM(CASE WHEN status = 'cancelled' THEN 1 ELSE 0 END), 0) AS cancelled,
-      COALESCE(SUM(CASE WHEN status != 'cancelled' THEN price_quote ELSE 0 END), 0) AS total_quotes
-    FROM vendors
-    WHERE event_id = ?
-  `).get(eventId) as {
-    total: number;
-    considering: number;
-    contacted: number;
-    booked: number;
-    paid: number;
-    cancelled: number;
-    total_quotes: number;
-  };
+  let considering = 0;
+  let contacted = 0;
+  let booked = 0;
+  let paid = 0;
+  let cancelled = 0;
+  let totalQuotes = 0;
 
-  const bookedOrPaid = counts.booked + counts.paid;
-  const percentBookedOrPaid = counts.total > 0 ? Math.round((bookedOrPaid / counts.total) * 100) : 0;
+  for (const v of vendors) {
+    if (v.status === 'considering') considering++;
+    else if (v.status === 'contacted') contacted++;
+    else if (v.status === 'booked') booked++;
+    else if (v.status === 'paid') paid++;
+    else if (v.status === 'cancelled') cancelled++;
+
+    if (v.status !== 'cancelled') {
+      totalQuotes += v.price_quote || 0;
+    }
+  }
+
+  const total = vendors.length;
+  const bookedOrPaid = booked + paid;
+  const percentBookedOrPaid = total > 0 ? Math.round((bookedOrPaid / total) * 100) : 0;
 
   return {
-    total: counts.total,
-    considering: counts.considering,
-    contacted: counts.contacted,
-    booked: counts.booked,
-    paid: counts.paid,
-    cancelled: counts.cancelled,
-    totalQuotes: counts.total_quotes,
+    total,
+    considering,
+    contacted,
+    booked,
+    paid,
+    cancelled,
+    totalQuotes,
     percentBookedOrPaid,
   };
 }
@@ -186,8 +170,8 @@ export function getVendorStats(eventId: number): VendorStats {
 /**
  * Seed a comprehensive vendor checklist tailored to the event type.
  */
-export function seedVendorTemplate(eventId: number, eventType: EventType): Vendor[] {
-  const db = getDb();
+export async function seedVendorTemplate(eventId: number, eventType: EventType): Promise<Vendor[]> {
+  const db = await getDb();
 
   interface TemplateVendor {
     name: string;
@@ -325,21 +309,30 @@ export function seedVendorTemplate(eventId: number, eventType: EventType): Vendo
   const now = nowIso();
 
   // Clear existing vendors if generating fresh checklist
-  db.prepare('DELETE FROM vendors WHERE event_id = ?').run(eventId);
+  await db.collection('vendors').deleteMany({ event_id: eventId });
 
-  const insertStmt = db.prepare(`
-    INSERT INTO vendors (
-      event_id, name, category, status, contact_name, contact_email, contact_phone, price_quote, notes, created_at, updated_at
-    ) VALUES (?, ?, ?, 'considering', '', '', '', 0, ?, ?, ?)
-  `);
+  const docs: Vendor[] = [];
+  for (const item of list) {
+    const id = await getNextSequence('vendors');
+    docs.push({
+      id,
+      event_id: eventId,
+      name: item.name,
+      category: item.category,
+      status: 'considering',
+      contact_name: '',
+      contact_email: '',
+      contact_phone: '',
+      price_quote: 0,
+      notes: item.notes,
+      created_at: now,
+      updated_at: now,
+    });
+  }
 
-  const insertTransaction = db.transaction(() => {
-    for (const item of list) {
-      insertStmt.run(eventId, item.name, item.category, item.notes, now, now);
-    }
-  });
-
-  insertTransaction();
+  if (docs.length > 0) {
+    await db.collection('vendors').insertMany(docs);
+  }
 
   return getVendors(eventId);
 }

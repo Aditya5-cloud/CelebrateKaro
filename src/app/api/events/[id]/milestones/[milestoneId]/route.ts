@@ -25,7 +25,7 @@ export async function PATCH(request: Request, context: RouteContext) {
       return NextResponse.json({ success: false, error: 'Invalid ID parameters.' }, { status: 400 });
     }
 
-    const existing = getMilestoneById(parsed.milestoneId);
+    const existing = await getMilestoneById(parsed.milestoneId);
     if (!existing || existing.event_id !== parsed.eventId) {
       return NextResponse.json({ success: false, error: 'Milestone not found for this event.' }, { status: 404 });
     }
@@ -50,8 +50,8 @@ export async function PATCH(request: Request, context: RouteContext) {
       );
     }
 
-    const updated = updateMilestone(parsed.milestoneId, validationResult.data);
-    const stats = getMilestoneStats(parsed.eventId);
+    const updated = await updateMilestone(parsed.milestoneId, validationResult.data);
+    const stats = await getMilestoneStats(parsed.eventId);
 
     return NextResponse.json({
       success: true,
@@ -74,17 +74,17 @@ export async function DELETE(_request: Request, context: RouteContext) {
       return NextResponse.json({ success: false, error: 'Invalid ID parameters.' }, { status: 400 });
     }
 
-    const existing = getMilestoneById(parsed.milestoneId);
+    const existing = await getMilestoneById(parsed.milestoneId);
     if (!existing || existing.event_id !== parsed.eventId) {
       return NextResponse.json({ success: false, error: 'Milestone not found for this event.' }, { status: 404 });
     }
 
-    const deleted = deleteMilestone(parsed.milestoneId);
+    const deleted = await deleteMilestone(parsed.milestoneId);
     if (!deleted) {
       return NextResponse.json({ success: false, error: 'Failed to delete milestone.' }, { status: 500 });
     }
 
-    const stats = getMilestoneStats(parsed.eventId);
+    const stats = await getMilestoneStats(parsed.eventId);
 
     return NextResponse.json({
       success: true,

@@ -18,7 +18,7 @@ export async function POST(request: Request, context: RouteContext) {
       return NextResponse.json({ success: false, error: 'Invalid event ID.' }, { status: 400 });
     }
 
-    const event = getEventById(eventId);
+    const event = await getEventById(eventId);
     if (!event) {
       return NextResponse.json({ success: false, error: 'Event not found.' }, { status: 404 });
     }
@@ -50,8 +50,8 @@ export async function POST(request: Request, context: RouteContext) {
     const result = await generatePersonalizedChecklist(event, focus);
 
     // Persist items to database
-    const items = saveGeneratedChecklist(eventId, result.items, replaceExisting);
-    const stats = getChecklistStats(eventId);
+    const items = await saveGeneratedChecklist(eventId, result.items, replaceExisting);
+    const stats = await getChecklistStats(eventId);
 
     return NextResponse.json(
       {

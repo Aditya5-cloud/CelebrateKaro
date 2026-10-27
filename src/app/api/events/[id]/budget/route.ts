@@ -17,13 +17,13 @@ export async function GET(_request: Request, context: RouteContext) {
       return NextResponse.json({ success: false, error: 'Invalid event ID.' }, { status: 400 });
     }
 
-    const event = getEventById(eventId);
+    const event = await getEventById(eventId);
     if (!event) {
       return NextResponse.json({ success: false, error: 'Event not found.' }, { status: 404 });
     }
 
-    const categories = getBudgetCategories(eventId);
-    const summary = getBudgetSummary(eventId);
+    const categories = await getBudgetCategories(eventId);
+    const summary = await getBudgetSummary(eventId);
 
     return NextResponse.json({
       success: true,
@@ -46,7 +46,7 @@ export async function POST(request: Request, context: RouteContext) {
       return NextResponse.json({ success: false, error: 'Invalid event ID.' }, { status: 400 });
     }
 
-    const event = getEventById(eventId);
+    const event = await getEventById(eventId);
     if (!event) {
       return NextResponse.json({ success: false, error: 'Event not found.' }, { status: 404 });
     }
@@ -60,8 +60,8 @@ export async function POST(request: Request, context: RouteContext) {
 
     // Handle template auto-population request
     if (body && typeof body === 'object' && 'action' in body && body.action === 'template') {
-      const generated = seedBudgetTemplate(eventId, event.event_type, event.total_budget);
-      const summary = getBudgetSummary(eventId);
+      const generated = await seedBudgetTemplate(eventId, event.event_type, event.total_budget);
+      const summary = await getBudgetSummary(eventId);
       return NextResponse.json(
         {
           success: true,
@@ -89,8 +89,8 @@ export async function POST(request: Request, context: RouteContext) {
       );
     }
 
-    const newCategory = createBudgetCategory(eventId, validationResult.data);
-    const summary = getBudgetSummary(eventId);
+    const newCategory = await createBudgetCategory(eventId, validationResult.data);
+    const summary = await getBudgetSummary(eventId);
 
     return NextResponse.json(
       {

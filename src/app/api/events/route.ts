@@ -25,7 +25,7 @@ export async function GET(request: Request) {
       filter = { type: parsedType.data };
     }
 
-    const events = getEvents(filter);
+    const events = await getEvents(filter);
     return NextResponse.json({
       success: true,
       data: events,
@@ -70,7 +70,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const newEvent = createEvent(validationResult.data);
+    const newEvent = await createEvent(validationResult.data);
 
     return NextResponse.json(
       {

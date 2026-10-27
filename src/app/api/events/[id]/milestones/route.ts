@@ -17,13 +17,13 @@ export async function GET(_request: Request, context: RouteContext) {
       return NextResponse.json({ success: false, error: 'Invalid event ID.' }, { status: 400 });
     }
 
-    const event = getEventById(eventId);
+    const event = await getEventById(eventId);
     if (!event) {
       return NextResponse.json({ success: false, error: 'Event not found.' }, { status: 404 });
     }
 
-    const milestones = getMilestones(eventId);
-    const stats = getMilestoneStats(eventId);
+    const milestones = await getMilestones(eventId);
+    const stats = await getMilestoneStats(eventId);
 
     return NextResponse.json({
       success: true,
@@ -46,7 +46,7 @@ export async function POST(request: Request, context: RouteContext) {
       return NextResponse.json({ success: false, error: 'Invalid event ID.' }, { status: 400 });
     }
 
-    const event = getEventById(eventId);
+    const event = await getEventById(eventId);
     if (!event) {
       return NextResponse.json({ success: false, error: 'Event not found.' }, { status: 404 });
     }
@@ -60,8 +60,8 @@ export async function POST(request: Request, context: RouteContext) {
 
     // Auto-generate celebration timeline template
     if (body && typeof body === 'object' && 'action' in body && body.action === 'template') {
-      const milestones = seedTimelineTemplate(eventId, event.event_type, event.event_date);
-      const stats = getMilestoneStats(eventId);
+      const milestones = await seedTimelineTemplate(eventId, event.event_type, event.event_date);
+      const stats = await getMilestoneStats(eventId);
       return NextResponse.json(
         {
           success: true,
@@ -89,8 +89,8 @@ export async function POST(request: Request, context: RouteContext) {
       );
     }
 
-    const newMilestone = createMilestone(eventId, validationResult.data);
-    const stats = getMilestoneStats(eventId);
+    const newMilestone = await createMilestone(eventId, validationResult.data);
+    const stats = await getMilestoneStats(eventId);
 
     return NextResponse.json(
       {

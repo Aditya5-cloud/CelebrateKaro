@@ -18,13 +18,13 @@ export async function GET(_request: Request, context: RouteContext) {
       return NextResponse.json({ success: false, error: 'Invalid event ID.' }, { status: 400 });
     }
 
-    const event = getEventById(eventId);
+    const event = await getEventById(eventId);
     if (!event) {
       return NextResponse.json({ success: false, error: 'Event not found.' }, { status: 404 });
     }
 
-    const messages = getChatMessages(eventId, 100);
-    const contextSummary = buildEventContextSummary(eventId);
+    const messages = await getChatMessages(eventId, 100);
+    const contextSummary = await buildEventContextSummary(eventId);
 
     return NextResponse.json({
       success: true,
@@ -47,7 +47,7 @@ export async function POST(request: Request, context: RouteContext) {
       return NextResponse.json({ success: false, error: 'Invalid event ID.' }, { status: 400 });
     }
 
-    const event = getEventById(eventId);
+    const event = await getEventById(eventId);
     if (!event) {
       return NextResponse.json({ success: false, error: 'Event not found.' }, { status: 404 });
     }
@@ -75,11 +75,11 @@ export async function POST(request: Request, context: RouteContext) {
     const userText = validationResult.data.message;
 
     // 1. Save user message to database
-    const userMessage = saveChatMessage(eventId, 'user', userText);
+    const userMessage = await saveChatMessage(eventId, 'user', userText);
 
     // 2. Fetch history and build live event context
-    const history = getChatMessages(eventId, 20);
-    const eventContextSummary = buildEventContextSummary(eventId);
+    const history = await getChatMessages(eventId, 20);
+    const eventContextSummary = await buildEventContextSummary(eventId);
 
     // 3. Generate response with Gemini (or grounded assistant)
     const aiResult = await generateChatResponse(
@@ -90,7 +90,7 @@ export async function POST(request: Request, context: RouteContext) {
     );
 
     // 4. Save assistant response to database
-    const assistantMessage = saveChatMessage(eventId, 'assistant', aiResult.response);
+    const assistantMessage = await saveChatMessage(eventId, 'assistant', aiResult.response);
 
     return NextResponse.json(
       {
@@ -118,12 +118,12 @@ export async function DELETE(_request: Request, context: RouteContext) {
       return NextResponse.json({ success: false, error: 'Invalid event ID.' }, { status: 400 });
     }
 
-    const event = getEventById(eventId);
+    const event = await getEventById(eventId);
     if (!event) {
       return NextResponse.json({ success: false, error: 'Event not found.' }, { status: 404 });
     }
 
-    clearChatHistory(eventId);
+    await clearChatHistory(eventId);
 
     return NextResponse.json({
       success: true,

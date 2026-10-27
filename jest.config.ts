@@ -16,6 +16,7 @@ const config: Config = {
   // Module path aliases matching tsconfig
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
+    '^bson$': '<rootDir>/node_modules/bson/lib/bson.cjs',
   },
 
   // Test file patterns

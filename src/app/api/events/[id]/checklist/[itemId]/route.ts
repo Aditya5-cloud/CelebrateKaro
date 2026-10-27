@@ -25,7 +25,7 @@ export async function PATCH(request: Request, context: RouteContext) {
       return NextResponse.json({ success: false, error: 'Invalid ID parameters.' }, { status: 400 });
     }
 
-    const existing = getChecklistItemById(parsed.itemId);
+    const existing = await getChecklistItemById(parsed.itemId);
     if (!existing || existing.event_id !== parsed.eventId) {
       return NextResponse.json({ success: false, error: 'Checklist item not found for this event.' }, { status: 404 });
     }
@@ -50,8 +50,8 @@ export async function PATCH(request: Request, context: RouteContext) {
       );
     }
 
-    const updated = updateChecklistItem(parsed.itemId, validationResult.data);
-    const stats = getChecklistStats(parsed.eventId);
+    const updated = await updateChecklistItem(parsed.itemId, validationResult.data);
+    const stats = await getChecklistStats(parsed.eventId);
 
     return NextResponse.json({
       success: true,
@@ -74,17 +74,17 @@ export async function DELETE(_request: Request, context: RouteContext) {
       return NextResponse.json({ success: false, error: 'Invalid ID parameters.' }, { status: 400 });
     }
 
-    const existing = getChecklistItemById(parsed.itemId);
+    const existing = await getChecklistItemById(parsed.itemId);
     if (!existing || existing.event_id !== parsed.eventId) {
       return NextResponse.json({ success: false, error: 'Checklist item not found for this event.' }, { status: 404 });
     }
 
-    const deleted = deleteChecklistItem(parsed.itemId);
+    const deleted = await deleteChecklistItem(parsed.itemId);
     if (!deleted) {
       return NextResponse.json({ success: false, error: 'Failed to delete checklist item.' }, { status: 500 });
     }
 
-    const stats = getChecklistStats(parsed.eventId);
+    const stats = await getChecklistStats(parsed.eventId);
 
     return NextResponse.json({
       success: true,

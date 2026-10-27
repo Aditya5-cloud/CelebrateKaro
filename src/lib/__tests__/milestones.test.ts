@@ -1,11 +1,4 @@
-import path from 'path';
-import fs from 'fs';
-import os from 'os';
-
-const testDbPath = path.join(os.tmpdir(), `test-milestones-${Date.now()}-${Math.random().toString(36).slice(2)}.db`);
-process.env.DATABASE_PATH = testDbPath;
-
-import { getDb, closeDb } from '../db';
+import { clearDatabase, closeDb } from '../db';
 import { createEvent } from '../events';
 import {
   getMilestones,
@@ -20,29 +13,10 @@ import {
 describe('Milestones Service Layer', () => {
   let eventId: number;
 
-  beforeAll(() => {
-    getDb();
-  });
+  beforeEach(async () => {
+    await clearDatabase();
 
-  afterAll(() => {
-    closeDb();
-    try {
-      if (fs.existsSync(testDbPath)) fs.unlinkSync(testDbPath);
-      const wal = `${testDbPath}-wal`;
-      const shm = `${testDbPath}-shm`;
-      if (fs.existsSync(wal)) fs.unlinkSync(wal);
-      if (fs.existsSync(shm)) fs.unlinkSync(shm);
-    } catch {
-      // ignore
-    }
-  });
-
-  beforeEach(() => {
-    const db = getDb();
-    db.prepare('DELETE FROM events').run();
-    db.prepare('DELETE FROM milestones').run();
-
-    const event = createEvent({
+    const event = await createEvent({
       name: 'Autumn Harvest Community Gala',
       event_type: 'community',
       event_date: '2027-10-20',
@@ -53,8 +27,12 @@ describe('Milestones Service Layer', () => {
     eventId = event.id;
   });
 
-  it('creates and retrieves milestones with boolean completed status', () => {
-    const created = createMilestone(eventId, {
+  afterAll(async () => {
+    await closeDb();
+  });
+
+  it('creates and retrieves milestones with boolean completed status', async () => {
+    const created = await createMilestone(eventId, {
       title: 'Obtain Park Permit',
       due_date: '2027-08-15',
       description: 'Submit application to parks department',
@@ -66,24 +44,24 @@ describe('Milestones Service Layer', () => {
     expect(created.due_date).toBe('2027-08-15');
     expect(created.completed).toBe(false);
 
-    const fetched = getMilestoneById(created.id);
+    const fetched = await getMilestoneById(created.id);
     expect(fetched).not.toBeNull();
     expect(fetched?.title).toBe('Obtain Park Permit');
     expect(fetched?.completed).toBe(false);
 
-    const list = getMilestones(eventId);
+    const list = await getMilestones(eventId);
     expect(list).toHaveLength(1);
   });
 
-  it('updates milestone fields and toggles completed state', () => {
-    const created = createMilestone(eventId, {
+  it('updates milestone fields and toggles completed state', async () => {
+    const created = await createMilestone(eventId, {
       title: 'Book Live Band',
       due_date: '2027-09-01',
       description: '',
       completed: false,
     });
 
-    const updated = updateMilestone(created.id, {
+    const updated = await updateMilestone(created.id, {
       completed: true,
       title: 'Book The Groove Collective (Confirmed)',
     });
@@ -93,21 +71,21 @@ describe('Milestones Service Layer', () => {
     expect(updated?.title).toBe('Book The Groove Collective (Confirmed)');
   });
 
-  it('deletes a milestone', () => {
-    const created = createMilestone(eventId, {
+  it('deletes a milestone', async () => {
+    const created = await createMilestone(eventId, {
       title: 'Temporary Task',
       due_date: '2027-07-01',
       description: '',
       completed: false,
     });
 
-    expect(deleteMilestone(created.id)).toBe(true);
-    expect(getMilestoneById(created.id)).toBeNull();
+    expect(await deleteMilestone(created.id)).toBe(true);
+    expect(await getMilestoneById(created.id)).toBeNull();
   });
 
-  it('calculates completion statistics and flags overdue items', () => {
+  it('calculates completion statistics and flags overdue items', async () => {
     // 1 completed task
-    createMilestone(eventId, {
+    await createMilestone(eventId, {
       title: 'Completed Task',
       due_date: '2027-01-01',
       description: '',
@@ -115,7 +93,7 @@ describe('Milestones Service Layer', () => {
     });
 
     // 1 future pending task
-    createMilestone(eventId, {
+    await createMilestone(eventId, {
       title: 'Future Pending Task',
       due_date: '2027-10-01',
       description: '',
@@ -123,14 +101,14 @@ describe('Milestones Service Layer', () => {
     });
 
     // 1 overdue pending task (due date in 2020)
-    createMilestone(eventId, {
+    await createMilestone(eventId, {
       title: 'Overdue Task',
       due_date: '2020-01-01',
       description: '',
       completed: false,
     });
 
-    const stats = getMilestoneStats(eventId);
+    const stats = await getMilestoneStats(eventId);
     expect(stats.total).toBe(3);
     expect(stats.completed).toBe(1);
     expect(stats.pending).toBe(2);
@@ -138,8 +116,8 @@ describe('Milestones Service Layer', () => {
     expect(stats.percentCompleted).toBe(33); // 1/3 = 33%
   });
 
-  it('seeds standard chronological timeline roadmap tailored to event', () => {
-    const seeded = seedTimelineTemplate(eventId, 'community', '2027-10-20');
+  it('seeds standard chronological timeline roadmap tailored to event', async () => {
+    const seeded = await seedTimelineTemplate(eventId, 'community', '2027-10-20');
     expect(seeded.length).toBeGreaterThanOrEqual(5);
 
     // Verify chronological ordering
@@ -147,7 +125,7 @@ describe('Milestones Service Layer', () => {
       expect(seeded[i].due_date <= seeded[i + 1].due_date).toBe(true);
     }
 
-    const stats = getMilestoneStats(eventId);
+    const stats = await getMilestoneStats(eventId);
     expect(stats.total).toBe(seeded.length);
     expect(stats.completed).toBe(0);
   });

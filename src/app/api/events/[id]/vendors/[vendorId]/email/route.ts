@@ -20,12 +20,12 @@ export async function POST(request: Request, context: RouteContext) {
       return NextResponse.json({ success: false, error: 'Invalid ID parameters.' }, { status: 400 });
     }
 
-    const event = getEventById(eventId);
+    const event = await getEventById(eventId);
     if (!event) {
       return NextResponse.json({ success: false, error: 'Event not found.' }, { status: 404 });
     }
 
-    const vendor = getVendorById(vendorId);
+    const vendor = await getVendorById(vendorId);
     if (!vendor || vendor.event_id !== event.id) {
       return NextResponse.json({ success: false, error: 'Vendor not found for this event.' }, { status: 404 });
     }

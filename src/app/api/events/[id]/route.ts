@@ -27,7 +27,7 @@ export async function GET(_request: Request, context: RouteContext) {
       );
     }
 
-    const event = getEventById(id);
+    const event = await getEventById(id);
     if (!event) {
       return NextResponse.json(
         { success: false, error: 'Event not found.' },
@@ -82,7 +82,7 @@ export async function PATCH(request: Request, context: RouteContext) {
       );
     }
 
-    const updated = updateEvent(id, validationResult.data);
+    const updated = await updateEvent(id, validationResult.data);
     if (!updated) {
       return NextResponse.json(
         { success: false, error: 'Event not found.' },
@@ -114,7 +114,7 @@ export async function DELETE(_request: Request, context: RouteContext) {
       );
     }
 
-    const deleted = deleteEvent(id);
+    const deleted = await deleteEvent(id);
     if (!deleted) {
       return NextResponse.json(
         { success: false, error: 'Event not found or already deleted.' },

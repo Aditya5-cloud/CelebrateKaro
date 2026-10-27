@@ -25,7 +25,7 @@ export async function PATCH(request: Request, context: RouteContext) {
       return NextResponse.json({ success: false, error: 'Invalid ID parameters.' }, { status: 400 });
     }
 
-    const existing = getVendorById(parsed.vendorId);
+    const existing = await getVendorById(parsed.vendorId);
     if (!existing || existing.event_id !== parsed.eventId) {
       return NextResponse.json({ success: false, error: 'Vendor not found for this event.' }, { status: 404 });
     }
@@ -50,8 +50,8 @@ export async function PATCH(request: Request, context: RouteContext) {
       );
     }
 
-    const updated = updateVendor(parsed.vendorId, validationResult.data);
-    const stats = getVendorStats(parsed.eventId);
+    const updated = await updateVendor(parsed.vendorId, validationResult.data);
+    const stats = await getVendorStats(parsed.eventId);
 
     return NextResponse.json({
       success: true,
@@ -74,17 +74,17 @@ export async function DELETE(_request: Request, context: RouteContext) {
       return NextResponse.json({ success: false, error: 'Invalid ID parameters.' }, { status: 400 });
     }
 
-    const existing = getVendorById(parsed.vendorId);
+    const existing = await getVendorById(parsed.vendorId);
     if (!existing || existing.event_id !== parsed.eventId) {
       return NextResponse.json({ success: false, error: 'Vendor not found for this event.' }, { status: 404 });
     }
 
-    const deleted = deleteVendor(parsed.vendorId);
+    const deleted = await deleteVendor(parsed.vendorId);
     if (!deleted) {
       return NextResponse.json({ success: false, error: 'Failed to delete vendor.' }, { status: 500 });
     }
 
-    const stats = getVendorStats(parsed.eventId);
+    const stats = await getVendorStats(parsed.eventId);
 
     return NextResponse.json({
       success: true,

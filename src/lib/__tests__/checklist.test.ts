@@ -1,11 +1,4 @@
-import path from 'path';
-import fs from 'fs';
-import os from 'os';
-
-const testDbPath = path.join(os.tmpdir(), `test-checklist-${Date.now()}-${Math.random().toString(36).slice(2)}.db`);
-process.env.DATABASE_PATH = testDbPath;
-
-import { getDb, closeDb } from '../db';
+import { clearDatabase, closeDb } from '../db';
 import { createEvent } from '../events';
 import {
   getChecklistItems,
@@ -20,29 +13,10 @@ import {
 describe('Checklist Service Layer', () => {
   let eventId: number;
 
-  beforeAll(() => {
-    getDb();
-  });
+  beforeEach(async () => {
+    await clearDatabase();
 
-  afterAll(() => {
-    closeDb();
-    try {
-      if (fs.existsSync(testDbPath)) fs.unlinkSync(testDbPath);
-      const wal = `${testDbPath}-wal`;
-      const shm = `${testDbPath}-shm`;
-      if (fs.existsSync(wal)) fs.unlinkSync(wal);
-      if (fs.existsSync(shm)) fs.unlinkSync(shm);
-    } catch {
-      // ignore
-    }
-  });
-
-  beforeEach(() => {
-    const db = getDb();
-    db.prepare('DELETE FROM events').run();
-    db.prepare('DELETE FROM checklist_items').run();
-
-    const event = createEvent({
+    const event = await createEvent({
       name: 'Maya 30th Birthday Bash',
       event_type: 'birthday',
       event_date: '2027-11-20',
@@ -53,8 +27,12 @@ describe('Checklist Service Layer', () => {
     eventId = event.id;
   });
 
-  it('creates and retrieves checklist items', () => {
-    const item = createChecklistItem(eventId, {
+  afterAll(async () => {
+    await closeDb();
+  });
+
+  it('creates and retrieves checklist items', async () => {
+    const item = await createChecklistItem(eventId, {
       task: 'Rent retro arcade machines',
       category: 'entertainment',
       completed: false,
@@ -67,22 +45,22 @@ describe('Checklist Service Layer', () => {
     expect(item.completed).toBe(false);
     expect(item.ai_generated).toBe(false);
 
-    const fetched = getChecklistItemById(item.id);
+    const fetched = await getChecklistItemById(item.id);
     expect(fetched).not.toBeNull();
     expect(fetched?.task).toBe('Rent retro arcade machines');
 
-    const list = getChecklistItems(eventId);
+    const list = await getChecklistItems(eventId);
     expect(list).toHaveLength(1);
   });
 
-  it('updates task completion status and content', () => {
-    const item = createChecklistItem(eventId, {
+  it('updates task completion status and content', async () => {
+    const item = await createChecklistItem(eventId, {
       task: 'Order 80s themed cake',
       category: 'catering',
       completed: false,
     });
 
-    const updated = updateChecklistItem(item.id, {
+    const updated = await updateChecklistItem(item.id, {
       completed: true,
       task: 'Order 80s Pac-Man themed cake (Ordered from Sugar Bakery)',
     });
@@ -92,43 +70,43 @@ describe('Checklist Service Layer', () => {
     expect(updated?.task).toContain('Pac-Man');
   });
 
-  it('deletes a checklist item', () => {
-    const item = createChecklistItem(eventId, {
+  it('deletes a checklist item', async () => {
+    const item = await createChecklistItem(eventId, {
       task: 'Temporary item',
       category: 'general',
     });
 
-    expect(deleteChecklistItem(item.id)).toBe(true);
-    expect(getChecklistItemById(item.id)).toBeNull();
+    expect(await deleteChecklistItem(item.id)).toBe(true);
+    expect(await getChecklistItemById(item.id)).toBeNull();
   });
 
-  it('calculates comprehensive completion and AI metrics', () => {
-    createChecklistItem(eventId, {
+  it('calculates comprehensive completion and AI metrics', async () => {
+    await createChecklistItem(eventId, {
       task: 'Task 1 (Manual, Done)',
       category: 'general',
       completed: true,
       ai_generated: false,
     });
-    createChecklistItem(eventId, {
+    await createChecklistItem(eventId, {
       task: 'Task 2 (AI, Done)',
       category: 'catering',
       completed: true,
       ai_generated: true,
     });
-    createChecklistItem(eventId, {
+    await createChecklistItem(eventId, {
       task: 'Task 3 (AI, Pending)',
       category: 'decor',
       completed: false,
       ai_generated: true,
     });
-    createChecklistItem(eventId, {
+    await createChecklistItem(eventId, {
       task: 'Task 4 (Manual, Pending)',
       category: 'music',
       completed: false,
       ai_generated: false,
     });
 
-    const stats = getChecklistStats(eventId);
+    const stats = await getChecklistStats(eventId);
     expect(stats.total).toBe(4);
     expect(stats.completed).toBe(2);
     expect(stats.pending).toBe(2);
@@ -136,28 +114,28 @@ describe('Checklist Service Layer', () => {
     expect(stats.percentCompleted).toBe(50); // 2/4 = 50%
   });
 
-  it('saves batch AI-generated checklist items with append and replace options', () => {
+  it('saves batch AI-generated checklist items with append and replace options', async () => {
     // Initial batch
     const initialTasks = [
       { task: 'Initial Task A', category: 'venue', sort_order: 1 },
       { task: 'Initial Task B', category: 'music', sort_order: 2 },
     ];
-    saveGeneratedChecklist(eventId, initialTasks, false);
-    expect(getChecklistItems(eventId)).toHaveLength(2);
+    await saveGeneratedChecklist(eventId, initialTasks, false);
+    expect(await getChecklistItems(eventId)).toHaveLength(2);
 
     // Append new batch
     const additionalTasks = [
       { task: 'Additional Task C', category: 'catering', sort_order: 1 },
     ];
-    saveGeneratedChecklist(eventId, additionalTasks, false);
-    expect(getChecklistItems(eventId)).toHaveLength(3);
+    await saveGeneratedChecklist(eventId, additionalTasks, false);
+    expect(await getChecklistItems(eventId)).toHaveLength(3);
 
     // Replace with fresh checklist
     const freshTasks = [
       { task: 'Fresh AI Task 1', category: 'general', sort_order: 1 },
       { task: 'Fresh AI Task 2', category: 'decor', sort_order: 2 },
     ];
-    const replaced = saveGeneratedChecklist(eventId, freshTasks, true);
+    const replaced = await saveGeneratedChecklist(eventId, freshTasks, true);
     expect(replaced).toHaveLength(2);
     expect(replaced[0].task).toBe('Fresh AI Task 1');
   });

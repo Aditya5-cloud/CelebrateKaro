@@ -17,7 +17,7 @@ export async function GET(request: Request, context: RouteContext) {
       return NextResponse.json({ success: false, error: 'Invalid event ID.' }, { status: 400 });
     }
 
-    const event = getEventById(eventId);
+    const event = await getEventById(eventId);
     if (!event) {
       return NextResponse.json({ success: false, error: 'Event not found.' }, { status: 404 });
     }
@@ -27,11 +27,11 @@ export async function GET(request: Request, context: RouteContext) {
     const completedParam = searchParams.get('completed');
     const completedFilter = completedParam !== null ? completedParam === 'true' : undefined;
 
-    const items = getChecklistItems(eventId, {
+    const items = await getChecklistItems(eventId, {
       category: categoryParam,
       completed: completedFilter,
     });
-    const stats = getChecklistStats(eventId);
+    const stats = await getChecklistStats(eventId);
 
     return NextResponse.json({
       success: true,
@@ -54,7 +54,7 @@ export async function POST(request: Request, context: RouteContext) {
       return NextResponse.json({ success: false, error: 'Invalid event ID.' }, { status: 400 });
     }
 
-    const event = getEventById(eventId);
+    const event = await getEventById(eventId);
     if (!event) {
       return NextResponse.json({ success: false, error: 'Event not found.' }, { status: 404 });
     }
@@ -79,8 +79,8 @@ export async function POST(request: Request, context: RouteContext) {
       );
     }
 
-    const item = createChecklistItem(eventId, validationResult.data);
-    const stats = getChecklistStats(eventId);
+    const item = await createChecklistItem(eventId, validationResult.data);
+    const stats = await getChecklistStats(eventId);
 
     return NextResponse.json(
       {

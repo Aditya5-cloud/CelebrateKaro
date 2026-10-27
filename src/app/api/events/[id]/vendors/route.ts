@@ -18,7 +18,7 @@ export async function GET(request: Request, context: RouteContext) {
       return NextResponse.json({ success: false, error: 'Invalid event ID.' }, { status: 400 });
     }
 
-    const event = getEventById(eventId);
+    const event = await getEventById(eventId);
     if (!event) {
       return NextResponse.json({ success: false, error: 'Event not found.' }, { status: 404 });
     }
@@ -35,8 +35,8 @@ export async function GET(request: Request, context: RouteContext) {
       }
     }
 
-    const vendors = getVendors(eventId, { status: statusFilter, category: categoryParam });
-    const stats = getVendorStats(eventId);
+    const vendors = await getVendors(eventId, { status: statusFilter, category: categoryParam });
+    const stats = await getVendorStats(eventId);
 
     return NextResponse.json({
       success: true,
@@ -59,7 +59,7 @@ export async function POST(request: Request, context: RouteContext) {
       return NextResponse.json({ success: false, error: 'Invalid event ID.' }, { status: 400 });
     }
 
-    const event = getEventById(eventId);
+    const event = await getEventById(eventId);
     if (!event) {
       return NextResponse.json({ success: false, error: 'Event not found.' }, { status: 404 });
     }
@@ -73,8 +73,8 @@ export async function POST(request: Request, context: RouteContext) {
 
     // Auto-generate celebration vendor checklist
     if (body && typeof body === 'object' && 'action' in body && body.action === 'template') {
-      const vendors = seedVendorTemplate(eventId, event.event_type);
-      const stats = getVendorStats(eventId);
+      const vendors = await seedVendorTemplate(eventId, event.event_type);
+      const stats = await getVendorStats(eventId);
       return NextResponse.json(
         {
           success: true,
@@ -102,8 +102,8 @@ export async function POST(request: Request, context: RouteContext) {
       );
     }
 
-    const newVendor = createVendor(eventId, validationResult.data);
-    const stats = getVendorStats(eventId);
+    const newVendor = await createVendor(eventId, validationResult.data);
+    const stats = await getVendorStats(eventId);
 
     return NextResponse.json(
       {

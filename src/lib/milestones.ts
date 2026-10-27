@@ -1,4 +1,4 @@
-import { getDb, nowIso } from './db';
+import { getDb, getNextSequence, nowIso } from './db';
 import type { Milestone, EventType } from '@/types';
 import type { CreateMilestoneSchemaInput, UpdateMilestoneSchemaInput } from './validations/milestone';
 
@@ -10,132 +10,110 @@ export interface MilestoneStats {
   percentCompleted: number;
 }
 
-interface RawMilestoneRow {
-  id: number;
-  event_id: number;
-  title: string;
-  description: string;
-  due_date: string;
-  completed: number;
-  created_at: string;
-  updated_at: string;
+export async function getMilestones(eventId: number): Promise<Milestone[]> {
+  const db = await getDb();
+  const rows = await db
+    .collection('milestones')
+    .find({ event_id: eventId })
+    .sort({ due_date: 1, created_at: 1 })
+    .toArray();
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return rows.map((row: any) => ({
+    id: row.id,
+    event_id: row.event_id,
+    title: row.title,
+    description: row.description || '',
+    due_date: row.due_date,
+    completed: Boolean(row.completed),
+    created_at: row.created_at,
+    updated_at: row.updated_at,
+  }));
 }
 
-function mapRowToMilestone(row: RawMilestoneRow): Milestone {
+export async function getMilestoneById(id: number): Promise<Milestone | null> {
+  const db = await getDb();
+  const row = await db.collection('milestones').findOne({ id });
+  if (!row) return null;
   return {
-    ...row,
+    id: row.id,
+    event_id: row.event_id,
+    title: row.title,
+    description: row.description || '',
+    due_date: row.due_date,
     completed: Boolean(row.completed),
+    created_at: row.created_at,
+    updated_at: row.updated_at,
   };
 }
 
-export function getMilestones(eventId: number): Milestone[] {
-  const db = getDb();
-  const rows = db
-    .prepare('SELECT * FROM milestones WHERE event_id = ? ORDER BY due_date ASC, created_at ASC')
-    .all(eventId) as RawMilestoneRow[];
-
-  return rows.map(mapRowToMilestone);
-}
-
-export function getMilestoneById(id: number): Milestone | null {
-  const db = getDb();
-  const row = db.prepare('SELECT * FROM milestones WHERE id = ?').get(id) as RawMilestoneRow | undefined;
-  return row ? mapRowToMilestone(row) : null;
-}
-
-export function createMilestone(
+export async function createMilestone(
   eventId: number,
   input: CreateMilestoneSchemaInput
-): Milestone {
-  const db = getDb();
+): Promise<Milestone> {
+  const db = await getDb();
+  const id = await getNextSequence('milestones');
   const now = nowIso();
-  const completedInt = input.completed ? 1 : 0;
 
-  const info = db.prepare(`
-    INSERT INTO milestones (event_id, title, description, due_date, completed, created_at, updated_at)
-    VALUES (?, ?, ?, ?, ?, ?, ?)
-  `).run(
-    eventId,
-    input.title.trim(),
-    (input.description ?? '').trim(),
-    input.due_date,
-    completedInt,
-    now,
-    now
-  );
+  const doc: Milestone = {
+    id,
+    event_id: eventId,
+    title: input.title.trim(),
+    description: (input.description ?? '').trim(),
+    due_date: input.due_date,
+    completed: Boolean(input.completed),
+    created_at: now,
+    updated_at: now,
+  };
 
-  const rowId = Number(info.lastInsertRowid);
-  const created = db.prepare('SELECT * FROM milestones WHERE id = ?').get(rowId) as RawMilestoneRow;
-  return mapRowToMilestone(created);
+  await db.collection('milestones').insertOne(doc);
+  return doc;
 }
 
-export function updateMilestone(
+export async function updateMilestone(
   id: number,
   input: UpdateMilestoneSchemaInput
-): Milestone | null {
-  const db = getDb();
-  const existing = getMilestoneById(id);
+): Promise<Milestone | null> {
+  const db = await getDb();
+  const existing = await getMilestoneById(id);
   if (!existing) return null;
 
-  const updates: string[] = [];
-  const params: unknown[] = [];
+  const updates: Record<string, unknown> = {};
 
   if (input.title !== undefined) {
-    updates.push('title = ?');
-    params.push(input.title.trim());
+    updates.title = input.title.trim();
   }
   if (input.description !== undefined) {
-    updates.push('description = ?');
-    params.push(input.description.trim());
+    updates.description = input.description.trim();
   }
   if (input.due_date !== undefined) {
-    updates.push('due_date = ?');
-    params.push(input.due_date);
+    updates.due_date = input.due_date;
   }
   if (input.completed !== undefined) {
-    updates.push('completed = ?');
-    params.push(input.completed ? 1 : 0);
+    updates.completed = Boolean(input.completed);
   }
 
-  if (updates.length === 0) return existing;
+  if (Object.keys(updates).length === 0) return existing;
 
-  updates.push('updated_at = ?');
-  params.push(nowIso());
-  params.push(id);
+  updates.updated_at = nowIso();
 
-  db.prepare(`UPDATE milestones SET ${updates.join(', ')} WHERE id = ?`).run(...params);
-
+  await db.collection('milestones').updateOne({ id }, { $set: updates });
   return getMilestoneById(id);
 }
 
-export function deleteMilestone(id: number): boolean {
-  const db = getDb();
-  const result = db.prepare('DELETE FROM milestones WHERE id = ?').run(id);
-  return result.changes > 0;
+export async function deleteMilestone(id: number): Promise<boolean> {
+  const db = await getDb();
+  const result = await db.collection('milestones').deleteOne({ id });
+  return Boolean(result && result.deletedCount > 0);
 }
 
-export function getMilestoneStats(eventId: number): MilestoneStats {
-  const db = getDb();
+export async function getMilestoneStats(eventId: number): Promise<MilestoneStats> {
+  const milestones = await getMilestones(eventId);
   const todayStr = new Date().toISOString().split('T')[0];
 
-  const total = (
-    db.prepare('SELECT COUNT(*) as count FROM milestones WHERE event_id = ?').get(eventId) as { count: number }
-  ).count;
-
-  const completed = (
-    db.prepare('SELECT COUNT(*) as count FROM milestones WHERE event_id = ? AND completed = 1').get(eventId) as {
-      count: number;
-    }
-  ).count;
-
-  const overdue = (
-    db
-      .prepare(
-        'SELECT COUNT(*) as count FROM milestones WHERE event_id = ? AND completed = 0 AND due_date < ?'
-      )
-      .get(eventId, todayStr) as { count: number }
-  ).count;
-
+  const total = milestones.length;
+  const completed = milestones.filter((m) => m.completed).length;
+  const overdue = milestones.filter((m) => !m.completed && m.due_date < todayStr).length;
   const pending = total - completed;
   const percentCompleted = total > 0 ? Math.round((completed / total) * 100) : 0;
 
@@ -150,7 +128,6 @@ export function getMilestoneStats(eventId: number): MilestoneStats {
 
 /**
  * Helper to compute an ISO YYYY-MM-DD date by subtracting days from target date.
- * If subtracted date is before today, clamps to today plus reasonable offset.
  */
 function offsetDate(targetDateStr: string, daysBefore: number): string {
   const [year, month, day] = targetDateStr.split('-').map(Number);
@@ -163,12 +140,12 @@ function offsetDate(targetDateStr: string, daysBefore: number): string {
 /**
  * Seed an intelligent celebration timeline tailored to event type.
  */
-export function seedTimelineTemplate(
+export async function seedTimelineTemplate(
   eventId: number,
   eventType: EventType,
   eventDateStr: string
-): Milestone[] {
-  const db = getDb();
+): Promise<Milestone[]> {
+  const db = await getDb();
 
   interface TemplateMilestone {
     title: string;
@@ -301,21 +278,27 @@ export function seedTimelineTemplate(
   const now = nowIso();
 
   // Clear existing milestones if generating fresh template
-  db.prepare('DELETE FROM milestones WHERE event_id = ?').run(eventId);
+  await db.collection('milestones').deleteMany({ event_id: eventId });
 
-  const insertStmt = db.prepare(`
-    INSERT INTO milestones (event_id, title, description, due_date, completed, created_at, updated_at)
-    VALUES (?, ?, ?, ?, ?, ?, ?)
-  `);
+  const docs: Milestone[] = [];
+  for (const item of list) {
+    const calculatedDate = offsetDate(eventDateStr, item.daysBefore);
+    const id = await getNextSequence('milestones');
+    docs.push({
+      id,
+      event_id: eventId,
+      title: item.title,
+      description: item.description,
+      due_date: calculatedDate,
+      completed: false,
+      created_at: now,
+      updated_at: now,
+    });
+  }
 
-  const insertTransaction = db.transaction(() => {
-    for (const item of list) {
-      const calculatedDate = offsetDate(eventDateStr, item.daysBefore);
-      insertStmt.run(eventId, item.title, item.description, calculatedDate, 0, now, now);
-    }
-  });
-
-  insertTransaction();
+  if (docs.length > 0) {
+    await db.collection('milestones').insertMany(docs);
+  }
 
   return getMilestones(eventId);
 }

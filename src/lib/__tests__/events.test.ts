@@ -1,40 +1,17 @@
-import path from 'path';
-import fs from 'fs';
-import os from 'os';
-
-// Setup isolated test database before importing db or events
-const testDbPath = path.join(os.tmpdir(), `test-events-${Date.now()}-${Math.random().toString(36).slice(2)}.db`);
-process.env.DATABASE_PATH = testDbPath;
-
-import { getDb, closeDb } from '../db';
+import { getDb, clearDatabase, closeDb } from '../db';
 import { getEvents, getEventById, createEvent, updateEvent, deleteEvent } from '../events';
 
 describe('Events Service Layer', () => {
-  beforeAll(() => {
-    // initialize db schema
-    getDb();
+  beforeEach(async () => {
+    await clearDatabase();
   });
 
-  afterAll(() => {
-    closeDb();
-    try {
-      if (fs.existsSync(testDbPath)) fs.unlinkSync(testDbPath);
-      const walPath = `${testDbPath}-wal`;
-      const shmPath = `${testDbPath}-shm`;
-      if (fs.existsSync(walPath)) fs.unlinkSync(walPath);
-      if (fs.existsSync(shmPath)) fs.unlinkSync(shmPath);
-    } catch {
-      // ignore test cleanup errors
-    }
+  afterAll(async () => {
+    await closeDb();
   });
 
-  beforeEach(() => {
-    const db = getDb();
-    db.prepare('DELETE FROM events').run();
-  });
-
-  it('creates an event with budget in cents and retrieves it', () => {
-    const created = createEvent({
+  it('creates an event with budget in cents and retrieves it', async () => {
+    const created = await createEvent({
       name: 'Maya & Liam Wedding',
       event_type: 'wedding',
       event_date: '2027-09-18',
@@ -48,7 +25,7 @@ describe('Events Service Layer', () => {
     expect(created.event_type).toBe('wedding');
     expect(created.total_budget).toBe(2500000); // 25,000 * 100 cents
 
-    const fetched = getEventById(created.id);
+    const fetched = await getEventById(created.id);
     expect(fetched).not.toBeNull();
     expect(fetched?.name).toBe('Maya & Liam Wedding');
     expect(fetched?.guest_count).toBe(140);
@@ -56,8 +33,8 @@ describe('Events Service Layer', () => {
     expect(fetched?.vendors_count).toBe(0);
   });
 
-  it('lists events and respects type filtering', () => {
-    createEvent({
+  it('lists events and respects type filtering', async () => {
+    await createEvent({
       name: 'Wedding 1',
       event_type: 'wedding',
       event_date: '2027-06-01',
@@ -66,7 +43,7 @@ describe('Events Service Layer', () => {
       description: '',
     });
 
-    createEvent({
+    await createEvent({
       name: 'Birthday Bash',
       event_type: 'birthday',
       event_date: '2027-04-10',
@@ -75,7 +52,7 @@ describe('Events Service Layer', () => {
       description: '',
     });
 
-    createEvent({
+    await createEvent({
       name: 'Community Clean-up Day',
       event_type: 'community',
       event_date: '2027-05-15',
@@ -84,24 +61,24 @@ describe('Events Service Layer', () => {
       description: '',
     });
 
-    const allEvents = getEvents();
+    const allEvents = await getEvents();
     expect(allEvents).toHaveLength(3);
     // Ordered by event_date ASC: Birthday (April), Community (May), Wedding (June)
     expect(allEvents[0].event_type).toBe('birthday');
     expect(allEvents[1].event_type).toBe('community');
     expect(allEvents[2].event_type).toBe('wedding');
 
-    const weddingsOnly = getEvents({ type: 'wedding' });
+    const weddingsOnly = await getEvents({ type: 'wedding' });
     expect(weddingsOnly).toHaveLength(1);
     expect(weddingsOnly[0].name).toBe('Wedding 1');
 
-    const birthdaysOnly = getEvents({ type: 'birthday' });
+    const birthdaysOnly = await getEvents({ type: 'birthday' });
     expect(birthdaysOnly).toHaveLength(1);
     expect(birthdaysOnly[0].name).toBe('Birthday Bash');
   });
 
-  it('updates an event and preserves non-updated fields', () => {
-    const created = createEvent({
+  it('updates an event and preserves non-updated fields', async () => {
+    const created = await createEvent({
       name: 'Original Event',
       event_type: 'other',
       event_date: '2027-08-01',
@@ -110,7 +87,7 @@ describe('Events Service Layer', () => {
       description: 'Original note',
     });
 
-    const updated = updateEvent(created.id, {
+    const updated = await updateEvent(created.id, {
       name: 'Updated Event Title',
       total_budget: 7500,
     });
@@ -123,13 +100,13 @@ describe('Events Service Layer', () => {
     expect(updated?.description).toBe('Original note');
   });
 
-  it('returns null when updating non-existent event', () => {
-    const updated = updateEvent(99999, { name: 'Ghost' });
+  it('returns null when updating non-existent event', async () => {
+    const updated = await updateEvent(99999, { name: 'Ghost' });
     expect(updated).toBeNull();
   });
 
-  it('deletes an event and cascades to related records', () => {
-    const created = createEvent({
+  it('deletes an event and cascades to related records', async () => {
+    const created = await createEvent({
       name: 'Event to Delete',
       event_type: 'birthday',
       event_date: '2027-11-11',
@@ -138,28 +115,39 @@ describe('Events Service Layer', () => {
       description: '',
     });
 
-    const db = getDb();
-    // Add a child milestone to verify foreign key cascade
-    db.prepare('INSERT INTO milestones (event_id, title, due_date) VALUES (?, ?, ?)').run(
-      created.id,
-      'Order cake',
-      '2027-11-01'
-    );
+    const db = await getDb();
+    // Add child milestone and vendor to verify cascading delete in MongoDB
+    await db.collection('milestones').insertOne({
+      id: 1,
+      event_id: created.id,
+      title: 'Order cake',
+      due_date: '2027-11-01',
+      completed: false,
+    });
+    await db.collection('vendors').insertOne({
+      id: 1,
+      event_id: created.id,
+      name: 'Cake Baker',
+      category: 'bakery',
+      status: 'considering',
+      price_quote: 10000,
+    });
 
-    const deleted = deleteEvent(created.id);
+    const deleted = await deleteEvent(created.id);
     expect(deleted).toBe(true);
 
-    expect(getEventById(created.id)).toBeNull();
+    expect(await getEventById(created.id)).toBeNull();
 
-    // Verify milestone was cascaded
-    const remainingMilestones = db
-      .prepare('SELECT * FROM milestones WHERE event_id = ?')
-      .all(created.id);
+    // Verify milestones and vendors were cascaded
+    const remainingMilestones = await db.collection('milestones').find({ event_id: created.id }).toArray();
     expect(remainingMilestones).toHaveLength(0);
+
+    const remainingVendors = await db.collection('vendors').find({ event_id: created.id }).toArray();
+    expect(remainingVendors).toHaveLength(0);
   });
 
-  it('returns false when deleting a non-existent event', () => {
-    const result = deleteEvent(88888);
+  it('returns false when deleting a non-existent event', async () => {
+    const result = await deleteEvent(88888);
     expect(result).toBe(false);
   });
 });

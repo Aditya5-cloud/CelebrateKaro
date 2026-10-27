@@ -1,11 +1,4 @@
-import path from 'path';
-import fs from 'fs';
-import os from 'os';
-
-const testDbPath = path.join(os.tmpdir(), `test-vendors-${Date.now()}-${Math.random().toString(36).slice(2)}.db`);
-process.env.DATABASE_PATH = testDbPath;
-
-import { getDb, closeDb } from '../db';
+import { clearDatabase, closeDb } from '../db';
 import { createEvent } from '../events';
 import {
   getVendors,
@@ -20,29 +13,10 @@ import {
 describe('Vendors Service Layer', () => {
   let eventId: number;
 
-  beforeAll(() => {
-    getDb();
-  });
+  beforeEach(async () => {
+    await clearDatabase();
 
-  afterAll(() => {
-    closeDb();
-    try {
-      if (fs.existsSync(testDbPath)) fs.unlinkSync(testDbPath);
-      const wal = `${testDbPath}-wal`;
-      const shm = `${testDbPath}-shm`;
-      if (fs.existsSync(wal)) fs.unlinkSync(wal);
-      if (fs.existsSync(shm)) fs.unlinkSync(shm);
-    } catch {
-      // ignore
-    }
-  });
-
-  beforeEach(() => {
-    const db = getDb();
-    db.prepare('DELETE FROM events').run();
-    db.prepare('DELETE FROM vendors').run();
-
-    const event = createEvent({
+    const event = await createEvent({
       name: 'Sarah & Alex Summer Wedding',
       event_type: 'wedding',
       event_date: '2027-06-18',
@@ -53,8 +27,12 @@ describe('Vendors Service Layer', () => {
     eventId = event.id;
   });
 
-  it('creates and retrieves vendors with price quotes in cents', () => {
-    const created = createVendor(eventId, {
+  afterAll(async () => {
+    await closeDb();
+  });
+
+  it('creates and retrieves vendors with price quotes in cents', async () => {
+    const created = await createVendor(eventId, {
       name: 'Bloom & Petal Florals',
       category: 'florist',
       status: 'considering',
@@ -74,55 +52,55 @@ describe('Vendors Service Layer', () => {
     expect(created.contact_phone).toBe('555-0192');
     expect(created.price_quote).toBe(245050); // in integer cents
 
-    const fetched = getVendorById(created.id);
+    const fetched = await getVendorById(created.id);
     expect(fetched).not.toBeNull();
     expect(fetched?.name).toBe('Bloom & Petal Florals');
     expect(fetched?.price_quote).toBe(245050);
 
-    const list = getVendors(eventId);
+    const list = await getVendors(eventId);
     expect(list).toHaveLength(1);
   });
 
-  it('filters vendors by status and category', () => {
-    createVendor(eventId, {
+  it('filters vendors by status and category', async () => {
+    await createVendor(eventId, {
       name: 'Grand Ballroom Plaza',
       category: 'venue',
       status: 'booked',
       price_quote: 8000,
     });
-    createVendor(eventId, {
+    await createVendor(eventId, {
       name: 'Sunset Manor Garden',
       category: 'venue',
       status: 'considering',
       price_quote: 6500,
     });
-    createVendor(eventId, {
+    await createVendor(eventId, {
       name: 'DJ Pulse Sound',
       category: 'music',
       status: 'contacted',
       price_quote: 1200,
     });
 
-    const venueVendors = getVendors(eventId, { category: 'venue' });
+    const venueVendors = await getVendors(eventId, { category: 'venue' });
     expect(venueVendors).toHaveLength(2);
 
-    const bookedVendors = getVendors(eventId, { status: 'booked' });
+    const bookedVendors = await getVendors(eventId, { status: 'booked' });
     expect(bookedVendors).toHaveLength(1);
     expect(bookedVendors[0].name).toBe('Grand Ballroom Plaza');
 
-    const musicConsidering = getVendors(eventId, { category: 'music', status: 'considering' });
+    const musicConsidering = await getVendors(eventId, { category: 'music', status: 'considering' });
     expect(musicConsidering).toHaveLength(0);
   });
 
-  it('updates vendor information and status', () => {
-    const vendor = createVendor(eventId, {
+  it('updates vendor information and status', async () => {
+    const vendor = await createVendor(eventId, {
       name: 'Gourmet Catering Co',
       category: 'catering',
       status: 'contacted',
       price_quote: 5000,
     });
 
-    const updated = updateVendor(vendor.id, {
+    const updated = await updateVendor(vendor.id, {
       status: 'booked',
       price_quote: 4800,
       notes: 'Signed contract with 10% seasonal discount.',
@@ -134,50 +112,50 @@ describe('Vendors Service Layer', () => {
     expect(updated?.notes).toContain('Signed contract');
   });
 
-  it('deletes a vendor', () => {
-    const vendor = createVendor(eventId, {
+  it('deletes a vendor', async () => {
+    const vendor = await createVendor(eventId, {
       name: 'Sample Vendor',
       category: 'other',
       status: 'considering',
     });
 
-    expect(deleteVendor(vendor.id)).toBe(true);
-    expect(getVendorById(vendor.id)).toBeNull();
+    expect(await deleteVendor(vendor.id)).toBe(true);
+    expect(await getVendorById(vendor.id)).toBeNull();
   });
 
-  it('computes accurate vendor statistics including financial totals', () => {
-    createVendor(eventId, {
+  it('computes accurate vendor statistics including financial totals', async () => {
+    await createVendor(eventId, {
       name: 'Venue Plaza',
       category: 'venue',
       status: 'booked',
       price_quote: 10000,
     });
-    createVendor(eventId, {
+    await createVendor(eventId, {
       name: 'Live Band',
       category: 'music',
       status: 'paid',
       price_quote: 2500,
     });
-    createVendor(eventId, {
+    await createVendor(eventId, {
       name: 'Baker Dreams',
       category: 'bakery',
       status: 'contacted',
       price_quote: 800,
     });
-    createVendor(eventId, {
+    await createVendor(eventId, {
       name: 'Ice Sculpture Co',
       category: 'decoration',
       status: 'considering',
       price_quote: 500,
     });
-    createVendor(eventId, {
+    await createVendor(eventId, {
       name: 'Cancelled Service',
       category: 'other',
       status: 'cancelled',
       price_quote: 1000, // should not be counted in active quotes
     });
 
-    const stats = getVendorStats(eventId);
+    const stats = await getVendorStats(eventId);
     expect(stats.total).toBe(5);
     expect(stats.booked).toBe(1);
     expect(stats.paid).toBe(1);
@@ -192,8 +170,8 @@ describe('Vendors Service Layer', () => {
     expect(stats.percentBookedOrPaid).toBe(40);
   });
 
-  it('seeds standard vendor checklist tailored to wedding event', () => {
-    const seeded = seedVendorTemplate(eventId, 'wedding');
+  it('seeds standard vendor checklist tailored to wedding event', async () => {
+    const seeded = await seedVendorTemplate(eventId, 'wedding');
     expect(seeded.length).toBeGreaterThanOrEqual(6);
 
     const categories = seeded.map((v) => v.category);
@@ -202,7 +180,7 @@ describe('Vendors Service Layer', () => {
     expect(categories).toContain('photography');
     expect(categories).toContain('music');
 
-    const stats = getVendorStats(eventId);
+    const stats = await getVendorStats(eventId);
     expect(stats.total).toBe(seeded.length);
     expect(stats.considering).toBe(seeded.length);
   });
