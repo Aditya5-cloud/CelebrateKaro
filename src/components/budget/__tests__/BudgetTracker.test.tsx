@@ -77,10 +77,10 @@ describe('BudgetTracker Component', () => {
       expect(screen.getByText('Catering & Beverages')).toBeInTheDocument();
     });
 
-    expect(screen.getByText('$25,000')).toBeInTheDocument();
-    expect(screen.getByText('$15,000')).toBeInTheDocument();
-    expect(screen.getByText('$11,500')).toBeInTheDocument();
-    expect(screen.getByText('$13,500')).toBeInTheDocument();
+    expect(screen.getByText('₹25,000')).toBeInTheDocument();
+    expect(screen.getByText('₹15,000')).toBeInTheDocument();
+    expect(screen.getByText('₹11,500')).toBeInTheDocument();
+    expect(screen.getByText('₹13,500')).toBeInTheDocument();
   });
 
   it('renders table headers with semantic attributes', async () => {

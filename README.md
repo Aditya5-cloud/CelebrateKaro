@@ -26,7 +26,7 @@
 | **A. Code Quality** | Modular layered architecture: Zod validation layer $\rightarrow$ MongoDB service layer $\rightarrow$ Next.js REST API route handlers $\rightarrow$ React 19 UI components. Strict TypeScript mode, 0 explicit `any`, zero linter errors. Pure currency arithmetic in integer cents. | `npm run lint`: **0 errors, 0 warnings**<br>`npm run type-check`: **0 errors** |
 | **B. Security** | API keys (`GEMINI_API_KEY`) and database credentials (`MONGODB_URI`) isolated strictly to server-side route handlers—never exposed in client bundles. `.env.local` strictly gitignored. All database operations execute through MongoDB collection queries eliminating injection vulnerabilities. All user input validated with Zod and sanitized against prompt injection. | Zero secrets in client code; Zod schema enforcement across all endpoints. |
 | **C. Efficiency** | Connection pooling and Next.js development HMR caching with official native `mongodb` driver. In-memory database fallback for offline tests and sandboxed builds. Fast, token-optimized Gemini 3.5 Flash-Lite calls with low temperature (`0.3`–`0.4`) and strict JSON schema output. Optimistic UI updates for immediate user feedback. | `npm run build`: **Turbopack static & dynamic compilation in <4s**. |
-| **D. Testing** | Comprehensive automated testing strategy with Jest, `@testing-library/react`, and `jest-axe`. Unit tests for services, validations, AI fallbacks, and UI component workflows. | `npm test`: **26 test suites, 143 tests passing**<br>>90% coverage on core services; 100% on validations. |
+| **D. Testing** | Comprehensive automated testing strategy with Jest, `@testing-library/react`, and `jest-axe`. Unit tests for services, validations, AI fallbacks, and UI component workflows. | `npm test`: **27 test suites, 151 tests passing (100% pass rate)**<br>>90% coverage on core services; 100% on validations. |
 | **E. Accessibility** | Built from the ground up with semantic HTML (`section`, `header`, `dialog`, `nav`), keyboard focus trapping, `Escape` key listeners, `aria-modal`, `aria-live` announcements for dynamic updates, and custom accessible checkboxes (`role="checkbox"`). | `jest-axe` automated audit on all interactive components: **0 violations**. |
 | **F. Problem Statement Alignment** | Directly serves weddings, birthdays, and community events with tailored templates, budget categories, milestone roadmaps, vendor RFQs, and personalized AI recommendations. | Fulfills 100% of the challenge requirements with no speculative bloat. |
 
@@ -125,7 +125,7 @@ Open **[http://localhost:3000](http://localhost:3000)** in your browser.
 Every development chunk was verified with automated testing:
 
 ```bash
-# Run all 26 unit and component test suites (143 tests)
+# Run all 27 unit and component test suites (151 tests)
 npm test
 
 # Run tests with code coverage report
@@ -149,39 +149,48 @@ npm run build
 promptwar/
 ├── src/
 │   ├── app/
-│   │   ├── api/events/                     # REST API route handlers
-│   │   │   ├── route.ts                    # Event list & creation
-│   │   │   ├── [id]/
-│   │   │   │   ├── route.ts                # Event detail, update & delete
-│   │   │   │   ├── budget/                 # Budget categories & templates
-│   │   │   │   ├── milestones/             # Timeline milestones & roadmaps
-│   │   │   │   ├── vendors/                # Vendor directory & email drafter
-│   │   │   │   ├── checklist/              # Checklist CRUD & AI generation
-│   │   │   │   └── chat/                   # Grounded AI planning assistant
-│   │   ├── events/[id]/page.tsx            # Event detail multi-tab dashboard
-│   │   ├── page.tsx                        # Main dashboard & event list
+│   │   ├── api/
+│   │   │   ├── auth/                       # Production authentication (login, register, me)
+│   │   │   │   ├── login/route.ts
+│   │   │   │   ├── register/route.ts
+│   │   │   │   └── me/route.ts
+│   │   │   └── events/                     # REST API route handlers
+│   │   │       ├── route.ts                # Event list & creation
+│   │   │       └── [id]/
+│   │   │           ├── route.ts            # Event detail, update & delete
+│   │   │           ├── budget/             # Budget categories & templates
+│   │   │           ├── milestones/         # Timeline milestones & roadmaps
+│   │   │           ├── vendors/            # Vendor directory & email drafter
+│   │   │           ├── checklist/          # Checklist CRUD & AI generation
+│   │   │           └── chat/               # Grounded AI planning assistant (with 5-question limit)
+│   │   ├── events/[id]/page.tsx            # Event detail multi-tab dashboard & mobile concierge bubble
+│   │   ├── page.tsx                        # Main dashboard, real-time timeline filters & event list
 │   │   └── layout.tsx                      # Root HTML layout & fonts
 │   ├── components/
+│   │   ├── auth/                           # Production auth modal (sign-in & register)
 │   │   ├── budget/                         # Budget tracker, categories modal, progress bar
-│   │   ├── chat/                           # Real-time AI chat assistant
+│   │   ├── chat/                           # Real-time AI chat assistant (5-question limit indicator)
 │   │   ├── checklist/                      # AI checklist tracker & custom task creator
 │   │   ├── events/                         # Event cards, form modal, delete modal
+│   │   ├── landing/                        # Landing page hero, showcase, pillars, outro & footer
 │   │   ├── timeline/                       # Milestone timeline & roadmap modal
-│   │   ├── ui/                             # Event type badges
+│   │   ├── ui/                             # Event type badges & core buttons
 │   │   └── vendors/                        # Vendor cards, vendor modal, email drafter modal
 │   ├── lib/
+│   │   ├── auth.ts                         # Client & server auth sessions
 │   │   ├── budget.ts                       # Budget calculations & templates
-│   │   ├── chat.ts                         # Chat message storage & live context grounding
+│   │   ├── chat.ts                         # Chat message storage, context grounding & 5-question limit
 │   │   ├── checklist.ts                    # Checklist persistence & progress metrics
-│   │   ├── currency.ts                     # Integer-cent currency math
+│   │   ├── currency.ts                     # Integer-cent currency math (INR ₹)
 │   │   ├── db.ts                           # Database re-exports & helpers
 │   │   ├── mongodb.ts                      # MongoDB Atlas connection pooling, schema indexes & sequence counters
-│   │   ├── events.ts                       # Event data access layer
-│   │   ├── formatters.ts                   # Date, countdown & currency formatting
+│   │   ├── events.ts                       # Event data access layer & real-time demo seed generation
+│   │   ├── formatters.ts                   # Date, countdown, celebratory status & currency formatting
 │   │   ├── gemini.ts                       # Gemini 3.5 Flash-Lite SDK calls & domain fallback engine
-│   │   ├── milestones.ts                   # Timeline sorting & milestone templates
+│   │   ├── milestones.ts                   # Real-time timeline scaling & milestone templates
+│   │   ├── users.ts                        # User repository & password hashing
 │   │   ├── vendors.ts                      # Vendor directory & status tracking
-│   │   └── validations/                    # Zod schemas for events, budget, timeline, etc.
+│   │   └── validations/                    # Zod schemas for events, budget, timeline, chat, etc.
 │   └── types/
 │       └── index.ts                        # Shared TypeScript interfaces & types
 ├── .env.local.example                      # Sample environment variables
@@ -196,10 +205,11 @@ promptwar/
 
 ## 🎯 Feature Walkthrough
 
-### 1. Event Dashboard & CRUD
-- Create new events specifying **Celebration Type** (Wedding, Birthday, Community, Other), **Date**, **Guest Headcount**, **Target Budget**, and **Vision Description**.
-- Overview metrics cards displaying Total Events, Combined Budget, and Total Guests.
-- Responsive search bar and type filtering pills.
+### 1. Event Dashboard & Real-Time Filtering
+- Create new events specifying **Celebration Type** (Wedding, Birthday, Community, Other), **Date** (`min={today}` boundary prevents past dates on new events), **Guest Headcount**, **Target Budget (INR ₹)**, and **Vision Description**.
+- Overview metrics cards displaying Total Events, Upcoming vs. Celebrated breakdown, Combined Budget, and Total Guests.
+- **Real-Time Timeline Filters:** One-click filter pills (**All**, **⏳ Upcoming**, and **🎉 Celebrated**) cleanly isolate active celebration planning from concluded archives.
+- **Concluded Celebration Experience:** Past celebrations feature a celebratory badge (`🎉 Celebrated`), preserved records, and a 1-click *"Reschedule / Next Edition"* workflow.
 
 ### 2. Budget Tracker
 - Visual progress bar showing percentage of budget spent vs. target.
@@ -210,7 +220,8 @@ promptwar/
   - **Community:** Venue & Rentals (30%), Audio/Staging (25%), Food/Refreshments (20%), Permits & Security (15%), Marketing (10%).
 
 ### 3. Timeline & Milestone Tracker
-- Chronological task list with dynamic countdowns (*"In 45 days"*, *"Tomorrow"*, *"Today!"*, *"12 days ago"*).
+- Chronological milestone list with dynamic countdowns (*"In 45 days"*, *"Tomorrow"*, *"Today!"*, *"Celebrated (12d ago)"*).
+- **Intelligent Real-Time Scaling:** Auto-generated timeline roadmaps dynamically scale milestone lead times within the remaining window between today and target celebration date, ensuring no milestone is scheduled into the past for upcoming celebrations.
 - Automatic overdue badge alerting users to missed target deadlines.
 - Pre-populated milestone roadmaps tailored to the event type.
 
@@ -226,7 +237,10 @@ promptwar/
 - Interactive completion checkboxes with persistent database storage.
 
 ### 6. 🤖 GenAI Grounded Planning Assistant Chat
-- Context-aware conversation grounded in real-time event numbers and vendor statuses.
+- Context-aware conversation grounded in real-time celebration numbers, budget envelopes, vendor statuses, and timeline roadmaps.
+- **Fair-Use 5-Question Limit Per User:** Enforces a strict limit of 5 questions per user across server API (`403` cap) and database tracking. Includes a live in-chat remaining counter (`"{n} of 5 questions left"`), and automatically disables inputs when the cap is reached.
+- **Mobile-First Bottom-Right Floating Concierge Bubble:** In mobile responsive views (`< md`), the concierge operates as a floating thumb-reach widget (`fixed bottom-6 right-5`, 56px touch target), featuring an icon-only interface (`Bot` / `X`) that toggles seamlessly to and from the active tab.
+- **Post-Celebration Wrap-Up Mode:** When a celebration's date is in the past, the AI concierge shifts from pre-event logistics to post-celebration tasks: drafting guest Thank-You notes, writing vendor reviews and tips, reconciling final expenditures, and preserving celebration scrapbooks.
 - Can answer complex planning questions:
   - *"How is my budget looking and where can I optimize?"*
   - *"What vendors am I still missing for 140 guests?"*
@@ -254,4 +268,3 @@ promptwar/
 ## 📜 Challenge Submission Details
 - **Competition:** PromptWar Virtual Challenge
 - **Selected Track:** Challenge 5 — Celebration & Event Planner
-- **Developed By:** Antigravity Autonomous Agent Pair Programmer

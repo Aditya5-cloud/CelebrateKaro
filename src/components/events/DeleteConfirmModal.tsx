@@ -43,7 +43,7 @@ export function DeleteConfirmModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-zinc-950/60 backdrop-blur-sm animate-in fade-in duration-150"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#2A0E1C]/65 backdrop-blur-xs animate-in fade-in duration-150"
       onClick={(e) => {
         if (e.target === e.currentTarget && !isDeleting) onClose();
       }}
@@ -53,19 +53,19 @@ export function DeleteConfirmModal({
         aria-modal="true"
         aria-labelledby="delete-dialog-title"
         aria-describedby="delete-dialog-desc"
-        className="w-full max-w-md rounded-3xl bg-white p-6 sm:p-7 shadow-2xl border border-[#073330]/15 animate-in zoom-in-95 duration-150"
+        className="w-full max-w-md rounded-none bg-[#FFF3C7] p-6 sm:p-7 shadow-2xl border-2 border-[#F7418F] animate-in zoom-in-95 duration-150"
       >
         <div className="flex items-center gap-3.5 text-rose-600">
-          <div className="rounded-2xl bg-rose-100/80 p-3 ring-4 ring-rose-50">
-            <Trash2 className="h-5 w-5" />
+          <div className="rounded-none bg-white p-3 border border-rose-300">
+            <Trash2 className="h-5 w-5 text-rose-600" />
           </div>
-          <h2 id="delete-dialog-title" className="text-lg font-bold tracking-tight text-[#073330]">
+          <h2 id="delete-dialog-title" className="text-lg font-bold tracking-tight text-[#2A0E1C] font-headline">
             Delete Celebration?
           </h2>
         </div>
 
-        <p id="delete-dialog-desc" className="mt-3.5 text-sm leading-relaxed text-slate-600">
-          Are you sure you want to delete <span className="font-semibold text-[#073330]">&ldquo;{event.name}&rdquo;</span>?
+        <p id="delete-dialog-desc" className="mt-3.5 text-sm leading-relaxed text-[#2A0E1C]/80">
+          Are you sure you want to delete <span className="font-bold text-[#F7418F]">&ldquo;{event.name}&rdquo;</span>?
           This will permanently remove all associated budget items, milestones, vendor checklists, and assistant conversations. This action cannot be undone.
         </p>
 
@@ -76,7 +76,7 @@ export function DeleteConfirmModal({
             variant="outline"
             onClick={onClose}
             disabled={isDeleting}
-            className="border-[#073330]/20 text-[#073330] hover:bg-[#073330]/5"
+            className="border-[#2A0E1C]/30 text-[#2A0E1C] hover:bg-[#FEC7B4]/40"
           >
             Keep Event
           </Button>

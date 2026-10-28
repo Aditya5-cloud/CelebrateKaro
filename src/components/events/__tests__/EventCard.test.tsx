@@ -37,7 +37,7 @@ describe('EventCard Component', () => {
 
     expect(screen.getByText('Sophia & Lucas Wedding')).toBeInTheDocument();
     expect(screen.getByText('Wedding')).toBeInTheDocument();
-    expect(screen.getByText('$35,000')).toBeInTheDocument();
+    expect(screen.getByText('₹35,000')).toBeInTheDocument();
     expect(screen.getByText('150 expected')).toBeInTheDocument();
     expect(screen.getByText(/An elegant coastal celebration/)).toBeInTheDocument();
     expect(screen.getByText('6/12 tasks')).toBeInTheDocument();

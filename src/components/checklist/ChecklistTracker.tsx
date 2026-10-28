@@ -10,14 +10,14 @@ interface ChecklistTrackerProps {
 }
 
 const CATEGORY_COLORS: Record<string, string> = {
-  venue: 'bg-indigo-50 text-indigo-700 border-indigo-200',
-  catering: 'bg-emerald-50 text-emerald-700 border-emerald-200',
-  decor: 'bg-pink-50 text-pink-700 border-pink-200',
-  music: 'bg-purple-50 text-purple-700 border-purple-200',
-  'guest-list': 'bg-blue-50 text-blue-700 border-blue-200',
-  permits: 'bg-amber-50 text-amber-700 border-amber-200',
-  logistics: 'bg-teal-50 text-teal-700 border-teal-200',
-  general: 'bg-slate-100 text-slate-700 border-slate-200',
+  venue: 'bg-[#FFF3C7] text-[#2A0E1C] border-[#FEC7B4]',
+  catering: 'bg-[#FEC7B4]/50 text-[#2A0E1C] border-[#FEC7B4]',
+  decor: 'bg-[#FC819E]/20 text-[#2A0E1C] border-[#FC819E]',
+  music: 'bg-[#FFF3C7] text-[#F7418F] border-[#FEC7B4]',
+  'guest-list': 'bg-[#FEC7B4]/40 text-[#2A0E1C] border-[#FC819E]',
+  permits: 'bg-[#FFF3C7] text-[#2A0E1C] border-[#FEC7B4]',
+  logistics: 'bg-[#FEC7B4]/60 text-[#2A0E1C] border-[#FEC7B4]',
+  general: 'bg-[#FFF3C7]/40 text-[#2A0E1C] border-[#FEC7B4]',
 };
 
 const POPULAR_FOCUS_TAGS = [
@@ -229,10 +229,10 @@ export function ChecklistTracker({ event, onChecklistUpdated }: ChecklistTracker
         <div
           role="status"
           aria-live="polite"
-          className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm font-medium rounded-xl flex items-center justify-between shadow-xs animate-in fade-in"
+          className="p-3 bg-[#FFF3C7] border border-[#FEC7B4] text-[#2A0E1C] text-sm font-medium rounded-none flex items-center justify-between shadow-xs animate-in fade-in"
         >
           <div className="flex items-center space-x-2">
-            <svg className="w-5 h-5 text-emerald-600 shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+            <svg className="w-5 h-5 text-[#F7418F] shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
               <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
             </svg>
             <span>{notification}</span>
@@ -240,7 +240,7 @@ export function ChecklistTracker({ event, onChecklistUpdated }: ChecklistTracker
           <button
             type="button"
             onClick={() => setNotification(null)}
-            className="text-emerald-700 hover:text-emerald-900 text-xs font-semibold px-2 py-1"
+            className="text-[#F7418F] hover:text-[#2A0E1C] text-xs font-bold px-2 py-1 cursor-pointer"
           >
             Dismiss
           </button>
@@ -248,45 +248,45 @@ export function ChecklistTracker({ event, onChecklistUpdated }: ChecklistTracker
       )}
 
       {/* AI Generator Control Panel */}
-      <div className="rounded-3xl border border-[#073330]/20 bg-[#073330] p-6 sm:p-8 text-white shadow-xl overflow-hidden relative">
+      <div className="rounded-none border-2 border-[#2A0E1C] bg-[#2A0E1C] p-5 sm:p-8 text-white shadow-xl overflow-hidden relative">
         {/* Subtle decorative glow */}
-        <div className="absolute -right-12 -top-12 w-64 h-64 bg-[#00e599]/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -right-12 -top-12 w-64 h-64 bg-[#F7418F]/15 rounded-none blur-3xl pointer-events-none" />
 
-        <div className="relative z-10 space-y-5">
+        <div className="relative z-10 space-y-4 sm:space-y-5">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center space-x-2.5">
-              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#00e599] text-[#073330] font-black text-base shadow-sm">
+              <span className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-none bg-[#F7418F] text-white font-black text-sm sm:text-base shadow-sm shrink-0">
                 ✨
               </span>
               <div>
-                <h3 className="text-xl font-black tracking-tight text-white">
+                <h3 className="text-lg sm:text-xl font-black tracking-tight text-[#FFF3C7]">
                   GenAI Personalized Checklist Generator
                 </h3>
-                <p className="text-xs text-white/70 mt-0.5">
+                <p className="text-[11px] sm:text-xs text-[#FFF3C7]/80 mt-0.5">
                   Generates customized planning tasks tailored to your {event.event_type} celebration, guest scale, and budget.
                 </p>
               </div>
             </div>
-            <span className="text-[11px] font-bold px-3 py-1 rounded-full bg-white/10 border border-white/20 text-[#00e599]">
+            <span className="text-[10px] sm:text-[11px] font-bold px-2.5 py-1 rounded-none bg-[#FFF3C7]/15 border border-[#FFF3C7]/30 text-[#FFF3C7]">
               Personalized Celebration Roadmap
             </span>
           </div>
 
           {/* Quick Focus Tags */}
           <div>
-            <label className="block text-xs font-bold text-white/80 uppercase tracking-wider mb-2">
+            <label className="block text-[11px] sm:text-xs font-bold text-[#FFF3C7]/90 uppercase tracking-wider mb-2">
               Select or customize planning focus:
             </label>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-1.5 sm:gap-2">
               {POPULAR_FOCUS_TAGS.map((tag) => (
                 <button
                   key={tag}
                   type="button"
                   onClick={() => setCustomFocus(tag)}
-                  className={`px-3 py-1.5 text-xs font-bold rounded-xl transition-all border cursor-pointer ${
+                  className={`px-2.5 sm:px-3 py-1 sm:py-1.5 text-[11px] sm:text-xs font-bold rounded-none transition-all border cursor-pointer ${
                     customFocus === tag
-                      ? 'bg-[#00e599] text-[#073330] border-[#00e599] shadow-xs'
-                      : 'bg-white/10 text-white hover:bg-white/15 border-white/15'
+                      ? 'bg-[#F7418F] text-white border-[#F7418F] shadow-xs'
+                      : 'bg-white/10 text-[#FFF3C7] hover:bg-white/20 border-white/20'
                   }`}
                 >
                   {tag}
@@ -296,24 +296,24 @@ export function ChecklistTracker({ event, onChecklistUpdated }: ChecklistTracker
           </div>
 
           {/* Custom Focus Prompt Input & Action */}
-          <div className="flex flex-col sm:flex-row gap-3">
+          <div className="flex flex-col sm:flex-row gap-2.5 sm:gap-3">
             <input
               type="text"
               value={customFocus}
               onChange={(e) => setCustomFocus(e.target.value)}
               placeholder="e.g., Focus on outdoor tent setup, dietary food trucks, live acoustic music..."
               aria-label="Custom planning focus prompt"
-              className="flex-1 px-4 py-2.5 text-sm rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-hidden focus:ring-2 focus:ring-[#00e599] focus:bg-white/15 transition-all"
+              className="flex-1 px-3.5 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm rounded-none bg-white/10 border border-[#FEC7B4]/40 text-white placeholder-white/50 focus:outline-hidden focus:ring-2 focus:ring-[#F7418F] focus:bg-white/15 transition-all"
             />
             <button
               type="button"
               onClick={handleGenerateAI}
               disabled={isGenerating}
-              className="px-6 py-2.5 text-sm font-bold rounded-xl bg-[#00e599] hover:bg-[#1cf3a6] text-[#073330] shadow-md transition-all flex items-center justify-center space-x-2 shrink-0 disabled:opacity-50 cursor-pointer"
+              className="px-5 sm:px-6 py-2 sm:py-2.5 text-xs sm:text-sm font-bold rounded-none bg-[#F7418F] hover:bg-[#FC819E] text-white shadow-md transition-all flex items-center justify-center space-x-2 shrink-0 disabled:opacity-50 cursor-pointer w-full sm:w-auto"
             >
               {isGenerating ? (
                 <>
-                  <svg className="w-4 h-4 animate-spin text-[#073330]" fill="none" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 animate-spin text-white" fill="none" viewBox="0 0 24 24">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
                   </svg>
@@ -328,19 +328,19 @@ export function ChecklistTracker({ event, onChecklistUpdated }: ChecklistTracker
           </div>
 
           {/* Options & Generation Notice */}
-          <div className="flex flex-wrap items-center justify-between text-xs text-white/70 gap-2 pt-1 border-t border-white/10">
+          <div className="flex flex-wrap items-center justify-between text-xs text-[#FFF3C7]/80 gap-2 pt-1 border-t border-white/15">
             <label className="flex items-center space-x-2 cursor-pointer select-none">
               <input
                 type="checkbox"
                 checked={replaceExisting}
                 onChange={(e) => setReplaceExisting(e.target.checked)}
-                className="rounded-sm border-white/30 text-[#00e599] focus:ring-[#00e599] h-4 w-4 bg-white/10"
+                className="rounded-none border-[#FEC7B4]/50 text-[#F7418F] focus:ring-[#F7418F] h-4 w-4 bg-white/10"
               />
-              <span>Replace existing checklist items with fresh AI generation</span>
+              <span className="text-[11px] sm:text-xs">Replace existing checklist items with fresh AI generation</span>
             </label>
 
             {generationNotice && (
-              <span className="text-[#00e599] font-bold animate-in fade-in">
+              <span className="text-[#FEC7B4] font-bold animate-in fade-in text-xs">
                 {generationNotice}
               </span>
             )}
@@ -349,63 +349,63 @@ export function ChecklistTracker({ event, onChecklistUpdated }: ChecklistTracker
       </div>
 
       {/* Progress & Summary Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         {/* Total Tasks */}
-        <div className="bg-white p-5 rounded-2xl border border-[#073330]/10 shadow-xs">
-          <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Tasks</p>
-          <p className="text-3xl font-black text-[#073330] mt-2">{stats ? stats.total : 0}</p>
-          <p className="text-xs text-slate-400 mt-1">Checklist items</p>
+        <div className="bg-white p-3.5 sm:p-5 rounded-none border border-[#FEC7B4] shadow-xs">
+          <p className="text-[11px] sm:text-xs font-bold text-[#2A0E1C]/70 uppercase tracking-wider">Total Tasks</p>
+          <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#2A0E1C] mt-1 sm:mt-2">{stats ? stats.total : 0}</p>
+          <p className="text-[11px] sm:text-xs text-[#2A0E1C]/60 mt-0.5 sm:mt-1">Checklist items</p>
         </div>
 
         {/* Completed */}
-        <div className="bg-white p-5 rounded-2xl border border-[#073330]/10 shadow-xs">
-          <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Completed</p>
-          <p className="text-3xl font-black text-emerald-700 mt-2">{stats ? stats.completed : 0}</p>
-          <div className="mt-2 w-full bg-[#073330]/10 rounded-full h-1.5 overflow-hidden">
+        <div className="bg-white p-3.5 sm:p-5 rounded-none border border-[#FEC7B4] shadow-xs">
+          <p className="text-[11px] sm:text-xs font-bold text-[#2A0E1C]/70 uppercase tracking-wider">Completed</p>
+          <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#F7418F] mt-1 sm:mt-2">{stats ? stats.completed : 0}</p>
+          <div className="mt-1.5 sm:mt-2 w-full bg-[#FEC7B4]/40 rounded-none h-1.5 sm:h-2 overflow-hidden">
             <div
-              className="bg-[#00e599] h-full rounded-full transition-all duration-300"
+              className="bg-[#F7418F] h-full rounded-none transition-all duration-300"
               style={{ width: `${stats ? stats.percentCompleted : 0}%` }}
             />
           </div>
-          <p className="text-xs text-emerald-700 mt-1 font-bold">
+          <p className="text-[11px] sm:text-xs text-[#F7418F] mt-1 font-bold">
             {stats ? `${stats.percentCompleted}% completed` : '0%'}
           </p>
         </div>
 
         {/* AI-Generated */}
-        <div className="bg-white p-5 rounded-2xl border border-[#073330]/10 shadow-xs">
-          <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">AI Suggestions</p>
-          <p className="text-3xl font-black text-[#073330] mt-2">
+        <div className="bg-white p-3.5 sm:p-5 rounded-none border border-[#FEC7B4] shadow-xs">
+          <p className="text-[11px] sm:text-xs font-bold text-[#2A0E1C]/70 uppercase tracking-wider">AI Suggestions</p>
+          <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#2A0E1C] mt-1 sm:mt-2">
             {stats ? stats.aiGeneratedCount : 0}
           </p>
-          <p className="text-xs text-slate-500 mt-1 font-medium">Personalized ideas</p>
+          <p className="text-[11px] sm:text-xs text-[#2A0E1C]/60 mt-0.5 sm:mt-1 font-medium">Personalized ideas</p>
         </div>
 
         {/* Active Pending */}
-        <div className="bg-white p-5 rounded-2xl border border-[#073330]/10 shadow-xs">
-          <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Active Pending</p>
-          <p className="text-3xl font-black text-[#073330] mt-2">{stats ? stats.pending : 0}</p>
-          <p className="text-xs text-slate-500 mt-1">Awaiting completion</p>
+        <div className="bg-white p-3.5 sm:p-5 rounded-none border border-[#FEC7B4] shadow-xs">
+          <p className="text-[11px] sm:text-xs font-bold text-[#2A0E1C]/70 uppercase tracking-wider">Active Pending</p>
+          <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#2A0E1C] mt-1 sm:mt-2">{stats ? stats.pending : 0}</p>
+          <p className="text-[11px] sm:text-xs text-[#2A0E1C]/60 mt-0.5 sm:mt-1">Awaiting completion</p>
         </div>
       </div>
 
       {/* Manual Task Add Bar */}
-      <form onSubmit={handleManualAdd} className="bg-white p-4 rounded-2xl border border-[#073330]/10 shadow-xs">
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+      <form onSubmit={handleManualAdd} className="bg-white p-3.5 sm:p-4 rounded-none border border-[#FEC7B4] shadow-xs">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3">
           <input
             type="text"
             value={newTaskText}
             onChange={(e) => setNewTaskText(e.target.value)}
             placeholder="+ Add a custom task (e.g., Pick up party favors on Friday)..."
             aria-label="Add custom task"
-            className="flex-1 px-3.5 py-2 text-sm rounded-xl border border-[#073330]/20 focus:outline-hidden focus:ring-2 focus:ring-[#073330] text-[#073330] bg-white"
+            className="flex-1 px-3.5 py-2 text-xs sm:text-sm rounded-none border border-[#FEC7B4] focus:outline-hidden focus:ring-2 focus:ring-[#F7418F] text-[#2A0E1C] placeholder-[#2A0E1C]/40 bg-white"
           />
           <div className="flex items-center space-x-2">
             <select
               value={newTaskCategory}
               onChange={(e) => setNewTaskCategory(e.target.value)}
               aria-label="Task category"
-              className="text-xs py-2 px-3 rounded-xl border border-[#073330]/20 bg-white text-[#073330] hover:border-[#073330]/40 focus:outline-hidden focus:ring-2 focus:ring-[#073330]"
+              className="text-xs py-2 px-3 rounded-none border border-[#FEC7B4] bg-white text-[#2A0E1C] hover:border-[#FC819E] focus:outline-hidden focus:ring-2 focus:ring-[#F7418F] flex-1 sm:flex-none"
             >
               <option value="general">General</option>
               <option value="venue">Venue</option>
@@ -419,7 +419,7 @@ export function ChecklistTracker({ event, onChecklistUpdated }: ChecklistTracker
             <button
               type="submit"
               disabled={isAddingTask}
-              className="px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl bg-slate-900 hover:bg-slate-800 text-white transition-colors focus:outline-hidden focus:ring-2 focus:ring-slate-900 shrink-0 disabled:opacity-50"
+              className="px-4 py-2 text-xs sm:text-sm font-bold rounded-none bg-[#2A0E1C] hover:bg-[#2A0E1C]/85 text-[#FFF3C7] transition-colors focus:outline-hidden focus:ring-2 focus:ring-[#F7418F] shrink-0 disabled:opacity-50 cursor-pointer"
             >
               Add Task
             </button>
@@ -429,17 +429,17 @@ export function ChecklistTracker({ event, onChecklistUpdated }: ChecklistTracker
       </form>
 
       {/* Checklist Filter Bar */}
-      <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs space-y-3">
+      <div className="bg-white p-3.5 sm:p-4 rounded-none border border-[#FEC7B4] shadow-xs space-y-3">
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
           {/* Status Tabs */}
-          <div className="flex flex-wrap gap-1.5">
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
             <button
               type="button"
               onClick={() => setFilter('all')}
-              className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors ${
+              className={`px-3 py-1.5 text-xs font-bold rounded-none whitespace-nowrap transition-colors shrink-0 cursor-pointer ${
                 filter === 'all'
-                  ? 'bg-slate-900 text-white shadow-xs'
-                  : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                  ? 'bg-[#F7418F] text-white shadow-xs'
+                  : 'bg-[#FFF3C7]/40 text-[#2A0E1C]/80 hover:bg-[#FFF3C7] border border-[#FEC7B4]/60'
               }`}
             >
               All ({items.length})
@@ -447,10 +447,10 @@ export function ChecklistTracker({ event, onChecklistUpdated }: ChecklistTracker
             <button
               type="button"
               onClick={() => setFilter('pending')}
-              className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors ${
+              className={`px-3 py-1.5 text-xs font-bold rounded-none whitespace-nowrap transition-colors shrink-0 cursor-pointer ${
                 filter === 'pending'
-                  ? 'bg-amber-600 text-white shadow-xs'
-                  : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                  ? 'bg-[#F7418F] text-white shadow-xs'
+                  : 'bg-[#FFF3C7]/40 text-[#2A0E1C]/80 hover:bg-[#FFF3C7] border border-[#FEC7B4]/60'
               }`}
             >
               Active ({stats ? stats.pending : 0})
@@ -458,10 +458,10 @@ export function ChecklistTracker({ event, onChecklistUpdated }: ChecklistTracker
             <button
               type="button"
               onClick={() => setFilter('completed')}
-              className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors ${
+              className={`px-3 py-1.5 text-xs font-bold rounded-none whitespace-nowrap transition-colors shrink-0 cursor-pointer ${
                 filter === 'completed'
-                  ? 'bg-emerald-600 text-white shadow-xs'
-                  : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                  ? 'bg-[#F7418F] text-white shadow-xs'
+                  : 'bg-[#FFF3C7]/40 text-[#2A0E1C]/80 hover:bg-[#FFF3C7] border border-[#FEC7B4]/60'
               }`}
             >
               Completed ({stats ? stats.completed : 0})
@@ -469,10 +469,10 @@ export function ChecklistTracker({ event, onChecklistUpdated }: ChecklistTracker
             <button
               type="button"
               onClick={() => setFilter('ai')}
-              className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors ${
+              className={`px-3 py-1.5 text-xs font-bold rounded-none whitespace-nowrap transition-colors shrink-0 cursor-pointer ${
                 filter === 'ai'
-                  ? 'bg-indigo-600 text-white shadow-xs'
-                  : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                  ? 'bg-[#F7418F] text-white shadow-xs'
+                  : 'bg-[#FFF3C7]/40 text-[#2A0E1C]/80 hover:bg-[#FFF3C7] border border-[#FEC7B4]/60'
               }`}
             >
               ✨ AI Ideas ({stats ? stats.aiGeneratedCount : 0})
@@ -480,21 +480,21 @@ export function ChecklistTracker({ event, onChecklistUpdated }: ChecklistTracker
           </div>
 
           {/* Search & Category Filter */}
-          <div className="flex items-center space-x-2">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search tasks..."
               aria-label="Search checklist tasks"
-              className="px-3 py-1.5 text-xs rounded-lg border border-slate-200 bg-slate-50 focus:bg-white focus:outline-hidden focus:ring-2 focus:ring-indigo-500"
+              className="px-3 py-1.5 text-xs rounded-none border border-[#FEC7B4] bg-white text-[#2A0E1C] placeholder-[#2A0E1C]/40 focus:outline-hidden focus:ring-2 focus:ring-[#F7418F]"
             />
             {availableCategories.length > 0 && (
               <select
                 value={categoryFilter}
                 onChange={(e) => setCategoryFilter(e.target.value)}
                 aria-label="Filter by category"
-                className="text-xs py-1.5 px-2.5 rounded-lg border border-slate-200 bg-white text-slate-700 hover:border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-indigo-500"
+                className="text-xs py-1.5 px-2.5 rounded-none border border-[#FEC7B4] bg-white text-[#2A0E1C] hover:border-[#FC819E] focus:outline-hidden focus:ring-2 focus:ring-[#F7418F]"
               >
                 <option value="all">All Categories</option>
                 {availableCategories.map((cat) => (
@@ -510,30 +510,30 @@ export function ChecklistTracker({ event, onChecklistUpdated }: ChecklistTracker
 
       {/* Task Items List */}
       {isLoading ? (
-        <div className="p-12 text-center text-slate-500 bg-white rounded-2xl border border-slate-200/80">
-          <div className="inline-block w-8 h-8 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mb-3" />
+        <div className="p-12 text-center text-[#2A0E1C]/70 bg-white rounded-none border border-[#FEC7B4]">
+          <div className="inline-block w-8 h-8 border-4 border-[#F7418F] border-t-transparent rounded-full animate-spin mb-3" />
           <p className="text-sm font-medium">Loading planning checklist...</p>
         </div>
       ) : error ? (
-        <div role="alert" className="p-6 bg-rose-50 border border-rose-200 rounded-2xl text-rose-800 text-center">
+        <div role="alert" className="p-6 bg-[#FEC7B4]/30 border border-[#FC819E] rounded-none text-[#2A0E1C] text-center">
           <p className="font-semibold text-sm">{error}</p>
           <button
             type="button"
             onClick={fetchChecklist}
-            className="mt-3 px-4 py-1.5 text-xs font-medium text-white bg-rose-600 hover:bg-rose-700 rounded-lg transition-colors"
+            className="mt-3 px-4 py-1.5 text-xs font-semibold text-white bg-[#F7418F] hover:bg-[#FC819E] rounded-none transition-colors"
           >
             Retry
           </button>
         </div>
       ) : filteredItems.length === 0 ? (
-        <div className="p-12 text-center bg-white rounded-2xl border border-dashed border-slate-300">
-          <div className="w-12 h-12 mx-auto rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600 mb-3 text-xl">
+        <div className="p-12 text-center bg-white rounded-none border border-dashed border-[#FEC7B4]">
+          <div className="w-12 h-12 mx-auto rounded-none bg-[#FFF3C7] border border-[#FEC7B4] flex items-center justify-center text-[#F7418F] mb-3 text-xl">
             ✨
           </div>
-          <h3 className="text-base font-bold text-slate-900">
+          <h3 className="text-base font-bold text-[#2A0E1C]">
             {items.length === 0 ? 'No Checklist Tasks Yet' : 'No Tasks Match Your Filters'}
           </h3>
-          <p className="text-xs text-slate-500 max-w-sm mx-auto mt-1 mb-5">
+          <p className="text-xs text-[#2A0E1C]/70 max-w-sm mx-auto mt-1 mb-5">
             {items.length === 0
               ? 'Click "Generate Checklist" above to create a tailored planning roadmap for your event.'
               : 'Try clearing your search query or switching filters.'}
@@ -543,7 +543,7 @@ export function ChecklistTracker({ event, onChecklistUpdated }: ChecklistTracker
               type="button"
               onClick={handleGenerateAI}
               disabled={isGenerating}
-              className="px-5 py-2.5 text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl shadow-xs transition-colors"
+              className="px-5 py-2.5 text-xs font-bold text-white bg-[#F7418F] hover:bg-[#FC819E] rounded-none shadow-xs transition-colors cursor-pointer"
             >
               ✨ Generate Initial AI Checklist
             </button>
@@ -557,10 +557,10 @@ export function ChecklistTracker({ event, onChecklistUpdated }: ChecklistTracker
             return (
               <li
                 key={item.id}
-                className={`p-4 rounded-2xl border transition-all flex items-start sm:items-center justify-between gap-3 ${
+                className={`p-4 rounded-none border transition-all flex items-start sm:items-center justify-between gap-3 ${
                   item.completed
-                    ? 'bg-slate-50/70 border-slate-200/60 opacity-80'
-                    : 'bg-white border-slate-200/80 shadow-xs hover:border-slate-300'
+                    ? 'bg-[#FFF3C7]/20 border-[#FEC7B4]/60 opacity-75'
+                    : 'bg-white border-[#FEC7B4] shadow-xs hover:border-[#FC819E]'
                 }`}
               >
                 {/* Left: Checkbox & Task */}
@@ -571,10 +571,10 @@ export function ChecklistTracker({ event, onChecklistUpdated }: ChecklistTracker
                     aria-checked={item.completed}
                     aria-label={`Mark task as ${item.completed ? 'incomplete' : 'complete'}: ${item.task}`}
                     onClick={() => handleToggleComplete(item)}
-                    className={`mt-0.5 sm:mt-0 w-5 h-5 rounded-md border flex items-center justify-center transition-colors shrink-0 focus:outline-hidden focus:ring-2 focus:ring-indigo-500 ${
+                    className={`mt-0.5 sm:mt-0 w-5 h-5 rounded-none border flex items-center justify-center transition-colors shrink-0 focus:outline-hidden focus:ring-2 focus:ring-[#F7418F] cursor-pointer ${
                       item.completed
-                        ? 'bg-emerald-600 border-emerald-600 text-white'
-                        : 'border-slate-300 hover:border-slate-400 bg-white'
+                        ? 'bg-[#F7418F] border-[#F7418F] text-white'
+                        : 'border-[#FEC7B4] hover:border-[#F7418F] bg-white'
                     }`}
                   >
                     {item.completed && (
@@ -586,8 +586,8 @@ export function ChecklistTracker({ event, onChecklistUpdated }: ChecklistTracker
 
                   <div className="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-2.5 flex-1 min-w-0">
                     <span
-                      className={`text-sm tracking-tight text-slate-800 ${
-                        item.completed ? 'line-through text-slate-400' : 'font-medium'
+                      className={`text-sm tracking-tight text-[#2A0E1C] ${
+                        item.completed ? 'line-through text-[#2A0E1C]/40' : 'font-medium'
                       }`}
                     >
                       {item.task}
@@ -595,12 +595,12 @@ export function ChecklistTracker({ event, onChecklistUpdated }: ChecklistTracker
 
                     <div className="flex items-center space-x-1.5 shrink-0">
                       <span
-                        className={`text-[10px] font-semibold tracking-wider uppercase px-2 py-0.5 rounded-md border ${catClass}`}
+                        className={`text-[10px] font-bold tracking-wider uppercase px-2 py-0.5 rounded-none border ${catClass}`}
                       >
                         {item.category}
                       </span>
                       {item.ai_generated && (
-                        <span className="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-indigo-50 text-indigo-700 border border-indigo-200">
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-none bg-[#FFF3C7] text-[#F7418F] border border-[#FEC7B4]">
                           ✨ AI Idea
                         </span>
                       )}
@@ -613,7 +613,7 @@ export function ChecklistTracker({ event, onChecklistUpdated }: ChecklistTracker
                   type="button"
                   onClick={() => handleDeleteItem(item)}
                   aria-label={`Delete task: ${item.task}`}
-                  className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors shrink-0"
+                  className="p-1.5 text-[#2A0E1C]/40 hover:text-rose-600 hover:bg-[#FEC7B4]/40 rounded-none transition-colors shrink-0 cursor-pointer"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />

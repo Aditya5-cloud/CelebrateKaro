@@ -28,7 +28,7 @@ export const createEventSchema = z.object({
   total_budget: z.coerce
     .number()
     .min(0, 'Total budget cannot be negative')
-    .max(100000000, 'Total budget cannot exceed $100,000,000'),
+    .max(100000000, 'Total budget cannot exceed ₹100,000,000'),
   description: z
     .string()
     .trim()

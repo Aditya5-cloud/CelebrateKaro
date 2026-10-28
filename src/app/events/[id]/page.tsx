@@ -9,13 +9,14 @@ import {
   Trash2,
   LayoutDashboard,
   Sparkles,
-  DollarSign,
+  IndianRupee,
   Calendar,
   Users,
   Bot,
   ArrowRight,
   Clock,
   CheckCircle2,
+  X,
 } from 'lucide-react';
 import type { EventWithStats } from '@/lib/events';
 import { EventTypeBadge } from '@/components/ui/Badge';
@@ -30,6 +31,7 @@ import { VendorTracker } from '@/components/vendors/VendorTracker';
 import { ChecklistTracker } from '@/components/checklist/ChecklistTracker';
 import { ChatAssistant } from '@/components/chat/ChatAssistant';
 import { InspoFooter } from '@/components/landing/InspoFooter';
+import { getCurrentUser } from '@/lib/auth';
 
 export default function EventDetailPage({
   params,
@@ -47,12 +49,29 @@ export default function EventDetailPage({
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [activeTab, setActiveTab] = useState<'overview' | 'checklist' | 'budget' | 'timeline' | 'vendors' | 'assistant'>('overview');
+  const [previousTab, setPreviousTab] = useState<'overview' | 'checklist' | 'budget' | 'timeline' | 'vendors'>('overview');
+
+  // Check URL query parameters for direct tab navigation (e.g. ?tab=assistant)
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      const tabParam = urlParams.get('tab');
+      if (tabParam === 'assistant') {
+        setActiveTab('assistant');
+      }
+    }
+  }, []);
 
   const fetchEvent = useCallback(async () => {
     setIsLoading(true);
     setError(null);
     try {
-      const res = await fetch(`/api/events/${rawId}`);
+      const user = typeof window !== 'undefined' ? getCurrentUser() : null;
+      const headers: Record<string, string> = {};
+      if (user?.id) {
+        headers['x-user-id'] = user.id;
+      }
+      const res = await fetch(`/api/events/${rawId}`, { headers });
       const json = await res.json();
       if (!res.ok || !json.success) {
         throw new Error(json.error || 'Event could not be found.');
@@ -74,7 +93,12 @@ export default function EventDetailPage({
     if (!event) return;
     setIsDeleting(true);
     try {
-      const res = await fetch(`/api/events/${event.id}`, { method: 'DELETE' });
+      const user = typeof window !== 'undefined' ? getCurrentUser() : null;
+      const headers: Record<string, string> = {};
+      if (user?.id) {
+        headers['x-user-id'] = user.id;
+      }
+      const res = await fetch(`/api/events/${event.id}`, { method: 'DELETE', headers });
       const json = await res.json();
       if (!res.ok || !json.success) {
         throw new Error(json.error || 'Failed to delete event.');
@@ -90,23 +114,23 @@ export default function EventDetailPage({
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#f2f5f3] p-8 flex flex-col items-center justify-center">
-        <div className="h-9 w-9 animate-spin rounded-full border-3 border-[#073330] border-t-transparent" />
-        <p className="mt-4 text-sm font-semibold text-[#073330]">Loading celebration details...</p>
+      <div className="min-h-screen bg-[#FFF3C7] p-8 flex flex-col items-center justify-center">
+        <div className="h-9 w-9 animate-spin rounded-none border-4 border-[#F7418F] border-t-transparent" />
+        <p className="mt-4 text-sm font-bold text-[#2A0E1C]">Loading celebration details...</p>
       </div>
     );
   }
 
   if (error || !event) {
     return (
-      <div className="min-h-screen bg-[#f2f5f3] p-8 flex flex-col items-center justify-center">
-        <div className="max-w-md text-center rounded-3xl bg-white p-8 shadow-sm border border-[#073330]/10">
-          <p className="text-rose-600 font-bold">{error || 'Event not found.'}</p>
+      <div className="min-h-screen bg-[#FFF3C7] p-8 flex flex-col items-center justify-center">
+        <div className="w-full max-w-md rounded-none border border-[#FEC7B4] bg-white p-8 text-center shadow-xs">
+          <p className="font-bold text-red-700">{error || 'Event not found.'}</p>
           <Link
             href="/?view=dashboard"
-            className="mt-4 inline-flex items-center gap-2 rounded-xl bg-[#073330] px-4 py-2 text-sm font-bold text-white hover:bg-[#09423e] transition-colors"
+            className="mt-4 inline-flex items-center gap-2 text-sm font-bold text-white bg-[#F7418F] hover:bg-[#e02b78] px-4 py-2 rounded-none transition-colors"
           >
-            <ArrowLeft className="h-4 w-4" />
+            <ArrowLeft className="w-4 h-4" />
             Back to Dashboard
           </Link>
         </div>
@@ -117,61 +141,61 @@ export default function EventDetailPage({
   const relativeDate = getRelativeDays(event.event_date);
 
   const tabs = [
-    { id: 'overview', label: 'Overview & Summary', icon: LayoutDashboard, color: 'text-amber-500', badge: undefined },
-    { id: 'checklist', label: 'AI Tayaari Checklist', icon: Sparkles, color: 'text-amber-600', badge: undefined },
-    { id: 'budget', label: 'Kifayati Budget', icon: DollarSign, color: 'text-emerald-600', badge: formatCurrency(event.total_budget) },
-    { id: 'timeline', label: 'Muhurat & Timeline', icon: Calendar, color: 'text-blue-500', badge: `${event.milestones_count}` },
-    { id: 'vendors', label: 'Halwai & Vendors', icon: Users, color: 'text-purple-500', badge: `${event.vendors_count}` },
-    { id: 'assistant', label: 'AI Planning Concierge', icon: Bot, color: 'text-teal-600', badge: undefined },
+    { id: 'overview', label: 'Overview & Summary', icon: LayoutDashboard, color: 'text-[#F7418F]', badge: undefined },
+    { id: 'checklist', label: 'AI Checklist', icon: Sparkles, color: 'text-[#F7418F]', badge: undefined },
+    { id: 'budget', label: 'Budget Tracker', icon: IndianRupee, color: 'text-[#F7418F]', badge: formatCurrency(event.total_budget) },
+    { id: 'timeline', label: 'Milestones & Timeline', icon: Calendar, color: 'text-[#FC819E]', badge: `${event.milestones_count}` },
+    { id: 'vendors', label: 'Vendor Directory', icon: Users, color: 'text-[#F7418F]', badge: `${event.vendors_count}` },
+    { id: 'assistant', label: 'AI Planning Concierge', icon: Bot, color: 'text-[#FC819E]', badge: undefined },
   ] as const;
 
   const tabConfig = {
     overview: {
       title: 'Celebration Overview',
-      subtitle: `Key metrics, budget breakdown, and tayaari progress for ${event.name}.`,
+      subtitle: `Key metrics, budget breakdown, and planning progress for ${event.name}.`,
       icon: LayoutDashboard,
-      iconColor: 'text-amber-700',
-      iconBg: 'bg-amber-100',
+      iconColor: 'text-white',
+      iconBg: 'bg-[#F7418F]',
       badge: relativeDate.label,
     },
     checklist: {
-      title: 'AI Tayaari Checklist & Roadmap',
+      title: 'AI Checklist & Roadmap',
       subtitle: 'Tailored celebration milestone checklist, rituals, and ceremony progress.',
       icon: Sparkles,
-      iconColor: 'text-amber-700',
-      iconBg: 'bg-amber-100',
+      iconColor: 'text-white',
+      iconBg: 'bg-[#F7418F]',
       badge: undefined,
     },
     budget: {
-      title: 'Kifayati Budget Tracker',
+      title: 'Budget Tracker',
       subtitle: `Allocation envelopes and expense tracking for your ${formatCurrency(event.total_budget)} target.`,
-      icon: DollarSign,
-      iconColor: 'text-emerald-700',
-      iconBg: 'bg-emerald-100',
+      icon: IndianRupee,
+      iconColor: 'text-white',
+      iconBg: 'bg-[#F7418F]',
       badge: formatCurrency(event.total_budget),
     },
     timeline: {
-      title: 'Muhurat & Timeline',
+      title: 'Milestones & Timeline',
       subtitle: `${event.milestones_count} celebration milestones scheduled for ${formatDate(event.event_date)}.`,
       icon: Calendar,
-      iconColor: 'text-blue-700',
-      iconBg: 'bg-blue-100',
+      iconColor: 'text-white',
+      iconBg: 'bg-[#F7418F]',
       badge: `${event.milestones_completed}/${event.milestones_count} Done`,
     },
     vendors: {
-      title: 'Halwai & Vendor Directory',
-      subtitle: `Catering, mandap, decor, and entertainment directory (${event.vendors_count} booked).`,
+      title: 'Vendor Directory',
+      subtitle: `Catering, decor, venue, and entertainment directory (${event.vendors_count} booked).`,
       icon: Users,
-      iconColor: 'text-purple-700',
-      iconBg: 'bg-purple-100',
+      iconColor: 'text-white',
+      iconBg: 'bg-[#F7418F]',
       badge: `${event.vendors_count} Vendors`,
     },
     assistant: {
       title: 'AI Planning Concierge',
-      subtitle: `Personalized Indian celebration advice tailored to your ${event.event_type} celebration.`,
+      subtitle: `Personalized celebration advice tailored to your ${event.event_type} event.`,
       icon: Bot,
-      iconColor: 'text-[#1E1B4B]',
-      iconBg: 'bg-amber-400',
+      iconColor: 'text-white',
+      iconBg: 'bg-[#F7418F]',
       badge: 'Live',
     },
   }[activeTab];
@@ -179,75 +203,145 @@ export default function EventDetailPage({
   const CurrentTabIcon = tabConfig.icon;
 
   return (
-    <div className="min-h-screen bg-[#FAF6EF] text-[#1E1B4B] flex flex-col justify-between">
+    <div className="min-h-screen bg-[#FFF3C7] text-[#2A0E1C] flex flex-col justify-between">
       {/* Top Header bar */}
-      <header className="border-b border-amber-500/20 bg-[#1E1B4B] text-white sticky top-0 z-20 shadow-md">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 py-3.5">
-          <div className="flex items-center gap-4">
+      <header className="border-b-2 border-[#FEC7B4] bg-[#FFF3C7] text-[#2A0E1C] sticky top-0 z-20 shadow-xs">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-3 sm:px-6 lg:px-8 py-2.5 sm:py-3">
+          <div className="flex items-center gap-3 sm:gap-4">
             <Link
               href="/?view=dashboard"
-              className="inline-flex items-center gap-2 text-sm font-bold text-amber-200 hover:text-white transition-colors group cursor-pointer font-body"
+              className="inline-flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-bold text-[#2A0E1C] hover:text-[#F7418F] transition-colors group cursor-pointer"
             >
               <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-0.5" />
-              <span>Back to Dashboard</span>
+              <span className="hidden sm:inline">Back to Dashboard</span>
+              <span className="sm:hidden">Dashboard</span>
             </Link>
           </div>
 
-          <div className="flex items-center gap-3">
-            <Link href="/" className="hidden sm:flex items-center gap-2 group">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <Link href="/" className="flex items-center gap-1.5 sm:gap-2 group">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/icon.png"
                 alt="CelebrateKaro Logo"
-                className="h-7 w-7 rounded-lg object-contain shadow-xs border border-amber-400/30 group-hover:scale-105 transition-transform"
+                className="h-6 w-6 sm:h-7 sm:w-7 rounded-none object-contain shadow-xs border border-[#F7418F] group-hover:scale-105 transition-transform"
               />
-              <span className="text-sm font-bold text-white font-headline">
+              <span className="text-xs sm:text-sm font-bold text-[#2A0E1C] font-headline">
                 CelebrateKaro
               </span>
             </Link>
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-xs font-semibold text-slate-200 font-body">
-              <span className="w-2 h-2 rounded-full bg-amber-400" />
-              <span className="truncate max-w-[200px] sm:max-w-xs">{event.name}</span>
+            {/* Event Name Pill: Shown on sm+ desktop; hidden on mobile to eliminate duplicate title above the mobile banner */}
+            <span className="hidden sm:inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-none bg-white border border-[#FEC7B4] text-[11px] sm:text-xs font-semibold text-[#2A0E1C]">
+              <span className="w-2 h-2 rounded-none bg-[#F7418F] shrink-0" />
+              <span className="truncate max-w-[130px] sm:max-w-xs">{event.name}</span>
             </span>
           </div>
         </div>
       </header>
 
+      {/* ─── MOBILE EVENT HEADER & TAB BAR (< md screens) ─── */}
+      <div className="md:hidden bg-white border-b border-[#FEC7B4] shadow-xs">
+        {/* Compact Event Banner */}
+        <div className="px-3.5 py-2.5 bg-[#FFF3C7]/40 border-b border-[#FEC7B4]/60 flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 truncate">
+            <EventTypeBadge type={event.event_type} />
+            <span className="text-xs font-bold text-[#2A0E1C] truncate">{event.name}</span>
+          </div>
+          <div className="flex items-center gap-1.5 shrink-0">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setIsEditModalOpen(true)}
+              className="h-7 px-2 text-[11px] font-bold border-[#FEC7B4] text-[#2A0E1C] rounded-none"
+            >
+              <Edit3 className="h-3 w-3 mr-1" />
+              <span>Edit</span>
+            </Button>
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={() => setIsDeleteModalOpen(true)}
+              className="h-7 px-2 text-[11px] font-bold bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-300 rounded-none shadow-none"
+            >
+              <Trash2 className="h-3 w-3" />
+            </Button>
+          </div>
+        </div>
+
+        {/* Horizontal scrollable navigation tabs for mobile (AI Concierge is placed on bottom-right corner instead) */}
+        <nav aria-label="Event Sections Mobile" className="flex items-center gap-1 overflow-x-auto p-2 scrollbar-none">
+          {tabs
+            .filter((tab) => tab.id !== 'assistant')
+            .map((tab) => {
+              const active = activeTab === tab.id;
+              const Icon = tab.icon;
+              return (
+                <button
+                  key={tab.id}
+                  type="button"
+                  onClick={() => {
+                    setActiveTab(tab.id as typeof activeTab);
+                    setPreviousTab(tab.id as typeof previousTab);
+                  }}
+                  aria-pressed={active}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-none text-xs font-bold whitespace-nowrap transition-colors shrink-0 cursor-pointer ${
+                    active
+                      ? 'bg-[#F7418F] text-white shadow-xs'
+                      : 'bg-[#FFF3C7]/50 text-[#2A0E1C] hover:bg-[#FEC7B4]/40 border border-[#FEC7B4]/60'
+                  }`}
+                >
+                  <Icon className={`h-3.5 w-3.5 shrink-0 ${active ? 'text-white' : tab.color}`} />
+                  <span>{tab.label}</span>
+                  {tab.badge && (
+                    <span
+                      className={`ml-0.5 px-1.5 py-0.2 rounded-none text-[9px] font-bold ${
+                        active ? 'bg-white text-[#F7418F]' : 'bg-white text-[#2A0E1C] border border-[#FEC7B4]'
+                      }`}
+                    >
+                      {tab.badge}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+        </nav>
+      </div>
+
       {/* ─── SIDEBAR + MAIN CONTENT AREA ─── */}
       <div className="flex-1 flex flex-col md:flex-row">
-        {/* ─── LEFT SIDEBAR ─── */}
+        {/* ─── DESKTOP LEFT SIDEBAR (Unchanged on md and lg, straight square corners) ─── */}
         <aside
           aria-label="Event Sidebar"
-          className="w-full md:w-64 lg:w-72 bg-white border-r border-amber-900/10 p-5 sm:p-6 flex flex-col justify-between shrink-0 shadow-xs"
+          className="hidden md:flex md:w-64 lg:w-72 bg-white border-r border-[#FEC7B4] p-5 sm:p-6 flex-col justify-between shrink-0 shadow-xs"
         >
           <div className="space-y-6">
             {/* Event Profile Card */}
-            <div className="p-4 rounded-2xl bg-[#161233] text-white shadow-sm space-y-3 border border-amber-500/30">
+            <div className="p-4 rounded-none bg-[#2A0E1C] text-white shadow-xs space-y-3 border-2 border-[#F7418F]">
               <div className="flex items-center justify-between gap-2">
                 <EventTypeBadge type={event.event_type} />
                 <span
-                  className={`text-[10px] font-bold px-2 py-0.5 rounded-full inline-flex items-center gap-1 border ${
+                  className={`text-[10px] font-bold px-2 py-0.5 rounded-none inline-flex items-center gap-1 border ${
                     relativeDate.isPast
                       ? 'bg-slate-800 text-slate-300 border-slate-700'
-                      : 'bg-amber-400/20 text-amber-300 border-amber-400/40'
+                      : 'bg-[#F7418F] text-white border-[#F7418F]'
                   }`}
                 >
-                  <Clock className="w-3 h-3 text-amber-400" />
+                  <Clock className="w-3 h-3 text-white" />
                   {relativeDate.label}
                 </span>
               </div>
               <div>
-                <h2 className="text-sm font-black truncate leading-tight text-white" title={event.name}>
+                <h2 className="text-sm font-bold truncate leading-tight text-white" title={event.name}>
                   {event.name}
                 </h2>
-                <p className="text-xs text-amber-200 font-medium leading-tight mt-1 flex items-center gap-1.5">
-                  <Calendar className="w-3 h-3 text-amber-400" />
+                <p className="text-xs text-[#FEC7B4] font-medium leading-tight mt-1 flex items-center gap-1.5">
+                  <Calendar className="w-3 h-3 text-[#FC819E]" />
                   {formatDate(event.event_date)}
                 </p>
               </div>
-              <div className="pt-2.5 border-t border-white/10 flex items-center justify-between text-[11px] text-amber-200 font-medium">
+              <div className="pt-2.5 border-t border-white/10 flex items-center justify-between text-[11px] text-[#FEC7B4] font-medium">
                 <span>Budget</span>
-                <span className="text-amber-400 font-bold">
+                <span className="text-[#FC819E] font-bold">
                   {formatCurrency(event.total_budget)}
                 </span>
               </div>
@@ -255,7 +349,7 @@ export default function EventDetailPage({
 
             {/* Vertical Navigation Tabs */}
             <div className="space-y-1">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-stone-500 px-3 block mb-2">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-[#2A0E1C]/60 px-3 block mb-2">
                 Event Sections
               </span>
               <nav aria-label="Event sections" className="space-y-1">
@@ -266,22 +360,25 @@ export default function EventDetailPage({
                     <button
                       key={tab.id}
                       type="button"
-                      onClick={() => setActiveTab(tab.id as typeof activeTab)}
+                      onClick={() => {
+                        setActiveTab(tab.id as typeof activeTab);
+                        if (tab.id !== 'assistant') setPreviousTab(tab.id as typeof previousTab);
+                      }}
                       aria-pressed={active}
-                      className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                      className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-none text-xs font-bold transition-all cursor-pointer ${
                         active
-                          ? 'bg-[#1E1B4B] text-white shadow-xs'
-                          : 'text-stone-700 hover:bg-amber-50 hover:text-[#1E1B4B]'
+                          ? 'bg-[#F7418F] text-white shadow-xs'
+                          : 'text-[#2A0E1C] hover:bg-[#FEC7B4]/40'
                       }`}
                     >
                       <div className="flex items-center gap-2.5 truncate">
-                        <Icon className={`h-4 w-4 shrink-0 ${active ? 'text-amber-400' : tab.color}`} />
+                        <Icon className={`h-4 w-4 shrink-0 ${active ? 'text-white' : tab.color}`} />
                         <span className="truncate">{tab.label}</span>
                       </div>
                       {tab.badge && (
                         <span
-                          className={`px-2 py-0.5 rounded-full text-[10px] font-bold shrink-0 ${
-                            active ? 'bg-amber-400 text-[#1E1B4B]' : 'bg-stone-100 text-stone-600'
+                          className={`px-2 py-0.5 rounded-none text-[10px] font-bold shrink-0 ${
+                            active ? 'bg-white text-[#F7418F]' : 'bg-[#FFF3C7] text-[#2A0E1C] border border-[#FEC7B4]'
                           }`}
                         >
                           {tab.badge}
@@ -295,134 +392,207 @@ export default function EventDetailPage({
           </div>
 
           {/* Sidebar Bottom Back Link */}
-          <div className="pt-6 mt-6 border-t border-stone-200">
+          <div className="pt-6 mt-6 border-t border-[#FEC7B4]">
             <Link
               href="/?view=dashboard"
-              className="text-xs font-bold text-stone-600 hover:text-[#1E1B4B] flex items-center gap-1.5 cursor-pointer"
+              className="text-xs font-bold text-[#2A0E1C] hover:text-[#F7418F] flex items-center gap-1.5 cursor-pointer"
             >
-              <ArrowLeft className="w-3.5 h-3.5 text-[#1E1B4B]" />
+              <ArrowLeft className="w-3.5 h-3.5 text-[#F7418F]" />
               <span>Back to Dashboard</span>
             </Link>
           </div>
         </aside>
 
         {/* ─── MAIN CONTENT PANE ─── */}
-        <main className="flex-1 p-6 sm:p-8 lg:p-10 space-y-6 overflow-y-auto max-w-7xl">
-          {/* Top Bar: Displays Active Section with Quick Actions */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-amber-900/10 pb-4">
-            <div className="flex items-center gap-3">
-              <div className={`w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 ${tabConfig.iconBg}`}>
-                <CurrentTabIcon className={`w-5 h-5 ${tabConfig.iconColor}`} />
+        <main className={`flex-1 overflow-y-auto max-w-7xl ${activeTab === 'assistant' ? 'p-2.5 sm:p-5 lg:p-6 space-y-0' : 'p-4 sm:p-8 lg:p-10 space-y-6'}`}>
+          {/* Mobile-only header when inside AI Concierge chat */}
+          {activeTab === 'assistant' && (
+            <div className="md:hidden flex items-center justify-between px-3.5 py-2.5 bg-white border border-[#FEC7B4] mb-3 shadow-xs">
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 rounded-none bg-[#F7418F] text-white flex items-center justify-center shrink-0">
+                  <Bot className="w-3.5 h-3.5" />
+                </div>
+                <span className="text-xs font-bold text-[#2A0E1C]">AI Concierge</span>
               </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#1E1B4B] font-headline">
-                    {tabConfig.title}
-                  </h1>
-                  {tabConfig.badge && (
-                    <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-[#1E1B4B] border border-amber-300 font-body">
-                      {tabConfig.badge}
-                    </span>
+              <button
+                type="button"
+                onClick={() => setActiveTab(previousTab)}
+                className="text-xs font-bold text-[#F7418F] hover:bg-[#FEC7B4]/30 px-2.5 py-1 rounded-none border border-[#FC819E] flex items-center gap-1 cursor-pointer transition-colors"
+              >
+                ← Back to {tabs.find((t) => t.id === previousTab)?.label.split(' ')[0] || 'Overview'}
+              </button>
+            </div>
+          )}
+
+          {/* Top Bar: Displays Active Section with Quick Actions (hidden for AI Concierge to show chat immediately) */}
+          {activeTab !== 'assistant' && (
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 border-b border-[#FEC7B4] pb-3 sm:pb-4">
+              <div className="flex items-center gap-2.5 sm:gap-3">
+                <div className={`w-9 h-9 sm:w-10 sm:h-10 rounded-none flex items-center justify-center shrink-0 ${tabConfig.iconBg}`}>
+                  <CurrentTabIcon className={`w-4 h-4 sm:w-5 sm:h-5 ${tabConfig.iconColor}`} />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h1 className="text-xl sm:text-3xl font-bold tracking-tight text-[#2A0E1C] font-headline">
+                      {tabConfig.title}
+                    </h1>
+                    {tabConfig.badge && (
+                      <span className="px-2 py-0.5 rounded-none text-[11px] sm:text-xs font-bold bg-[#FEC7B4] text-[#F7418F] border border-[#FC819E]">
+                        {tabConfig.badge}
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-[11px] sm:text-xs text-[#2A0E1C]/75 font-medium mt-0.5 line-clamp-1 sm:line-clamp-none">
+                    {tabConfig.subtitle}
+                  </p>
+                </div>
+              </div>
+
+              {/* Quick Action Buttons (hidden on mobile since shown in mobile header) */}
+              <div className="hidden sm:flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setIsEditModalOpen(true)}
+                  className="gap-1.5 text-xs font-bold border-[#FEC7B4] text-[#2A0E1C] hover:bg-[#FEC7B4]/50 rounded-none cursor-pointer"
+                >
+                  <Edit3 className="h-3.5 w-3.5" />
+                  <span>Edit Details</span>
+                </Button>
+
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={() => setIsDeleteModalOpen(true)}
+                  className="gap-1.5 text-xs font-bold bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-300 rounded-none shadow-none cursor-pointer"
+                >
+                  <Trash2 className="h-3.5 w-3.5" />
+                  <span>Delete</span>
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {/* ─── PAST CELEBRATION WRAP-UP BANNER ─── */}
+          {relativeDate.isPast && (
+            <section
+              aria-label="Celebration Concluded Wrap-Up"
+              className="rounded-none border-2 border-emerald-400/80 bg-gradient-to-r from-emerald-50/90 via-[#FFF3C7]/80 to-white p-4 sm:p-5 shadow-xs mb-6 relative overflow-hidden"
+            >
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="flex items-start sm:items-center gap-3">
+                  <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-none bg-emerald-600 text-white flex items-center justify-center font-bold text-lg shrink-0 shadow-xs">
+                    🎉
+                  </div>
+                  <div>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <h2 className="text-base sm:text-lg font-bold text-[#2A0E1C] font-headline">
+                        Celebration Successfully Concluded!
+                      </h2>
+                      <span className="text-[11px] font-bold px-2 py-0.5 rounded-none bg-emerald-100 text-emerald-900 border border-emerald-300">
+                        {relativeDate.label}
+                      </span>
+                    </div>
+                    <p className="text-xs sm:text-sm text-[#2A0E1C]/80 mt-1 max-w-2xl leading-relaxed">
+                      Held on <strong>{formatDate(event.event_date)}</strong>. All budget expenditures ({formatCurrency(event.total_budget)} target), vendor connections ({event.vendors_count} booked), and timeline milestones are safely preserved in your archive.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-2 shrink-0">
+                  <Button
+                    variant="default"
+                    size="sm"
+                    onClick={() => setIsEditModalOpen(true)}
+                    className="rounded-none font-bold text-xs bg-[#F7418F] hover:bg-[#e02b78] text-white cursor-pointer shadow-xs border border-[#F7418F] flex items-center gap-1.5"
+                  >
+                    <Calendar className="w-3.5 h-3.5" />
+                    <span>Reschedule / Next Edition</span>
+                  </Button>
+                  {activeTab !== 'assistant' && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setActiveTab('assistant')}
+                      className="rounded-none font-bold text-xs border-[#FEC7B4] text-[#2A0E1C] hover:bg-white cursor-pointer flex items-center gap-1.5"
+                    >
+                      <Bot className="w-3.5 h-3.5 text-[#F7418F]" />
+                      <span>Wrap-Up Concierge</span>
+                    </Button>
                   )}
                 </div>
-                <p className="text-xs text-stone-500 font-medium mt-0.5 font-body">
-                  {tabConfig.subtitle}
-                </p>
               </div>
-            </div>
+            </section>
+          )}
 
-            {/* Quick Action Buttons */}
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setIsEditModalOpen(true)}
-                className="gap-1.5 text-xs font-bold border-stone-300 text-[#1E1B4B] hover:bg-amber-50 rounded-xl cursor-pointer"
-              >
-                <Edit3 className="h-3.5 w-3.5" />
-                <span>Edit Details</span>
-              </Button>
-
-              <Button
-                variant="destructive"
-                size="sm"
-                onClick={() => setIsDeleteModalOpen(true)}
-                className="gap-1.5 text-xs font-bold bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200 rounded-xl shadow-none cursor-pointer"
-              >
-                <Trash2 className="h-3.5 w-3.5" />
-                <span>Delete</span>
-              </Button>
-            </div>
-          </div>
-
-          {/* Active Section Content (Shows right away without scrolling past huge banners) */}
+          {/* Active Section Content */}
           {activeTab === 'overview' && (
             <div className="space-y-6">
               {/* Event Overview Hero Card */}
               <section
                 aria-labelledby="event-hero-title"
-                className="rounded-3xl border border-[#073330]/10 bg-white p-6 sm:p-8 shadow-xs relative overflow-hidden"
+                className="rounded-none border border-[#FEC7B4] bg-white p-4 sm:p-8 shadow-xs relative overflow-hidden"
               >
                 <div className="flex flex-wrap items-center gap-2">
                   <EventTypeBadge type={event.event_type} />
                   <span
-                    className={`text-xs font-bold px-2.5 py-0.5 rounded-full inline-flex items-center gap-1 border ${
+                    className={`text-xs font-bold px-2.5 py-0.5 rounded-none inline-flex items-center gap-1 border ${
                       relativeDate.isPast
                         ? 'bg-slate-100 text-slate-600 border-slate-200'
-                        : 'bg-[#dcfce7] text-[#073330] border-[#bbf7d0]'
+                        : 'bg-[#FEC7B4] text-[#F7418F] border-[#FC819E]'
                     }`}
                   >
-                    <Clock className="w-3 h-3 text-[#073330]" />
+                    <Clock className="w-3 h-3 text-[#F7418F]" />
                     {relativeDate.label}
                   </span>
                 </div>
 
-                <h2 id="event-hero-title" className="mt-3 text-2xl sm:text-3xl font-black tracking-tight text-[#073330]">
+                <h2 id="event-hero-title" className="mt-3 text-2xl sm:text-3xl font-bold tracking-tight text-[#2A0E1C] font-headline">
                   {event.name}
                 </h2>
 
                 {event.description && (
-                  <p className="mt-2 text-sm sm:text-base text-slate-600 max-w-3xl leading-relaxed font-medium">
+                  <p className="mt-2 text-xs sm:text-base text-[#2A0E1C]/80 max-w-3xl leading-relaxed font-normal">
                     {event.description}
                   </p>
                 )}
 
                 {/* Metrics Row */}
-                <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-3.5 border-t border-slate-100 pt-6">
-                  <div className="p-3.5 rounded-2xl bg-[#f2f5f3] border border-[#073330]/10">
-                    <span className="text-xs font-semibold text-slate-600 flex items-center gap-1.5">
-                      <Calendar className="w-3.5 h-3.5 text-[#073330]" />
-                      Celebration Date
+                <div className="mt-5 sm:mt-6 grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3.5 border-t border-[#FEC7B4] pt-5 sm:pt-6">
+                  <div className="p-3 sm:p-3.5 rounded-none bg-[#FFF3C7]/50 border border-[#FEC7B4]">
+                    <span className="text-[11px] sm:text-xs font-bold text-[#2A0E1C]/70 flex items-center gap-1.5">
+                      <Calendar className="w-3.5 h-3.5 text-[#F7418F]" />
+                      Date
                     </span>
-                    <p className="mt-1 text-sm sm:text-base font-bold text-[#073330]">
+                    <p className="mt-1 text-xs sm:text-base font-bold text-[#2A0E1C] truncate" title={formatDate(event.event_date)}>
                       {formatDate(event.event_date)}
                     </p>
                   </div>
-                  <div className="p-3.5 rounded-2xl bg-[#f2f5f3] border border-[#073330]/10">
-                    <span className="text-xs font-semibold text-slate-600 flex items-center gap-1.5">
-                      <DollarSign className="w-3.5 h-3.5 text-emerald-700" />
-                      Target Budget
+                  <div className="p-3 sm:p-3.5 rounded-none bg-[#FFF3C7]/50 border border-[#FEC7B4]">
+                    <span className="text-[11px] sm:text-xs font-bold text-[#2A0E1C]/70 flex items-center gap-1.5">
+                      <IndianRupee className="w-3.5 h-3.5 text-[#F7418F]" />
+                      Budget
                     </span>
-                    <p className="mt-1 text-sm sm:text-base font-bold text-[#073330]">
+                    <p className="mt-1 text-xs sm:text-base font-bold text-[#2A0E1C] truncate" title={formatCurrency(event.total_budget)}>
                       {formatCurrency(event.total_budget)}
                     </p>
                   </div>
-                  <div className="p-3.5 rounded-2xl bg-[#f2f5f3] border border-[#073330]/10">
-                    <span className="text-xs font-semibold text-slate-600 flex items-center gap-1.5">
-                      <Users className="w-3.5 h-3.5 text-blue-700" />
-                      Expected Guests
+                  <div className="p-3 sm:p-3.5 rounded-none bg-[#FFF3C7]/50 border border-[#FEC7B4]">
+                    <span className="text-[11px] sm:text-xs font-bold text-[#2A0E1C]/70 flex items-center gap-1.5">
+                      <Users className="w-3.5 h-3.5 text-[#FC819E]" />
+                      Guests
                     </span>
-                    <p className="mt-1 text-sm sm:text-base font-bold text-[#073330]">
-                      {event.guest_count.toLocaleString()} attendees
+                    <p className="mt-1 text-xs sm:text-base font-bold text-[#2A0E1C]">
+                      {event.guest_count.toLocaleString()}
                     </p>
                   </div>
-                  <div className="p-3.5 rounded-2xl bg-[#f2f5f3] border border-[#073330]/10">
-                    <span className="text-xs font-semibold text-slate-600 flex items-center gap-1.5">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700" />
-                      Planning Status
+                  <div className="p-3 sm:p-3.5 rounded-none bg-[#FFF3C7]/50 border border-[#FEC7B4]">
+                    <span className="text-[11px] sm:text-xs font-bold text-[#2A0E1C]/70 flex items-center gap-1.5">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-[#F7418F]" />
+                      Status
                     </span>
-                    <p className="mt-1 text-sm sm:text-base font-bold text-[#073330]">
-                      {relativeDate.isPast ? 'Completed' : 'Active Planning'}
+                    <p className="mt-1 text-xs sm:text-base font-bold text-[#2A0E1C] truncate">
+                      {relativeDate.isPast ? 'Completed' : 'Active'}
                     </p>
                   </div>
                 </div>
@@ -431,20 +601,20 @@ export default function EventDetailPage({
               {/* The 3 High-Contrast Overview Cards */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {/* Budget Status Card */}
-                <Card className="rounded-3xl border border-[#073330]/10 bg-white shadow-xs hover:shadow-md transition-shadow">
+                <Card className="rounded-none border border-[#FEC7B4] bg-white shadow-xs hover:border-[#F7418F] transition-all">
                   <CardHeader className="pb-3">
-                    <CardTitle className="text-base font-black flex items-center gap-2.5 text-[#073330]">
-                      <div className="w-9 h-9 rounded-xl bg-emerald-100 flex items-center justify-center text-emerald-800">
-                        <DollarSign className="w-4 h-4 text-emerald-700" />
+                    <CardTitle className="text-base font-bold flex items-center gap-2.5 text-[#2A0E1C]">
+                      <div className="w-9 h-9 rounded-none bg-[#FEC7B4] flex items-center justify-center text-[#F7418F]">
+                        <IndianRupee className="w-4 h-4 text-[#F7418F]" />
                       </div>
                       <span>Budget Status</span>
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-2xl font-black tracking-tight text-[#073330]">
+                    <p className="text-2xl font-bold tracking-tight text-[#2A0E1C]">
                       {formatCurrency(event.total_budget)}
                     </p>
-                    <p className="mt-1 text-xs text-slate-600 font-medium">
+                    <p className="mt-1 text-xs text-[#2A0E1C]/75 font-medium">
                       {event.total_planned_budget > 0
                         ? `${formatCurrency(event.total_planned_budget)} planned across categories`
                         : 'No category breakdown configured yet.'}
@@ -452,90 +622,90 @@ export default function EventDetailPage({
                     <button
                       type="button"
                       onClick={() => setActiveTab('budget')}
-                      className="mt-4 inline-flex items-center gap-1.5 text-xs font-bold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 px-3 py-1.5 rounded-xl cursor-pointer transition-colors"
+                      className="mt-4 inline-flex items-center gap-1.5 text-xs font-bold text-[#F7418F] bg-[#FEC7B4]/40 hover:bg-[#FEC7B4] px-3 py-1.5 rounded-none cursor-pointer transition-colors border border-[#FC819E]"
                     >
                       <span>Manage Budget Categories</span>
-                      <ArrowRight className="w-3.5 h-3.5 text-emerald-700" />
+                      <ArrowRight className="w-3.5 h-3.5 text-[#F7418F]" />
                     </button>
                   </CardContent>
                 </Card>
 
                 {/* Timeline & Deadlines Card */}
-                <Card className="rounded-3xl border border-[#073330]/10 bg-white shadow-xs hover:shadow-md transition-shadow">
+                <Card className="rounded-none border border-[#FEC7B4] bg-white shadow-xs hover:border-[#F7418F] transition-all">
                   <CardHeader className="pb-3">
-                    <CardTitle className="text-base font-black flex items-center gap-2.5 text-[#073330]">
-                      <div className="w-9 h-9 rounded-xl bg-amber-100 flex items-center justify-center text-amber-800">
-                        <Calendar className="w-4 h-4 text-amber-700" />
+                    <CardTitle className="text-base font-bold flex items-center gap-2.5 text-[#2A0E1C]">
+                      <div className="w-9 h-9 rounded-none bg-[#FEC7B4] flex items-center justify-center text-[#F7418F]">
+                        <Calendar className="w-4 h-4 text-[#F7418F]" />
                       </div>
-                      <span>Timeline & Deadlines</span>
+                      <span>Timeline &amp; Deadlines</span>
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-2xl font-black tracking-tight text-[#073330]">
+                    <p className="text-2xl font-bold tracking-tight text-[#2A0E1C]">
                       {event.milestones_count} Milestones
                     </p>
-                    <p className="mt-1 text-xs text-slate-600 font-medium">
+                    <p className="mt-1 text-xs text-[#2A0E1C]/75 font-medium">
                       {event.milestones_completed} completed so far
                     </p>
                     <button
                       type="button"
                       onClick={() => setActiveTab('timeline')}
-                      className="mt-4 inline-flex items-center gap-1.5 text-xs font-bold text-amber-800 bg-amber-50 hover:bg-amber-100 px-3 py-1.5 rounded-xl cursor-pointer transition-colors"
+                      className="mt-4 inline-flex items-center gap-1.5 text-xs font-bold text-[#F7418F] bg-[#FEC7B4]/40 hover:bg-[#FEC7B4] px-3 py-1.5 rounded-none cursor-pointer transition-colors border border-[#FC819E]"
                     >
                       <span>View Timeline Milestones</span>
-                      <ArrowRight className="w-3.5 h-3.5 text-amber-700" />
+                      <ArrowRight className="w-3.5 h-3.5 text-[#F7418F]" />
                     </button>
                   </CardContent>
                 </Card>
 
                 {/* Vendor Checklist Card */}
-                <Card className="rounded-3xl border border-[#073330]/10 bg-white shadow-xs hover:shadow-md transition-shadow">
+                <Card className="rounded-none border border-[#FEC7B4] bg-white shadow-xs hover:border-[#F7418F] transition-all">
                   <CardHeader className="pb-3">
-                    <CardTitle className="text-base font-black flex items-center gap-2.5 text-[#073330]">
-                      <div className="w-9 h-9 rounded-xl bg-blue-100 flex items-center justify-center text-blue-800">
-                        <Users className="w-4 h-4 text-blue-700" />
+                    <CardTitle className="text-base font-bold flex items-center gap-2.5 text-[#2A0E1C]">
+                      <div className="w-9 h-9 rounded-none bg-[#FEC7B4] flex items-center justify-center text-[#F7418F]">
+                        <Users className="w-4 h-4 text-[#F7418F]" />
                       </div>
-                      <span>Vendor Checklist</span>
+                      <span>Vendor Directory</span>
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-2xl font-black tracking-tight text-[#073330]">
+                    <p className="text-2xl font-bold tracking-tight text-[#2A0E1C]">
                       {event.vendors_count} Vendors
                     </p>
-                    <p className="mt-1 text-xs text-slate-600 font-medium">
+                    <p className="mt-1 text-xs text-[#2A0E1C]/75 font-medium">
                       Track inquiries, quotes, and booked contracts
                     </p>
                     <button
                       type="button"
                       onClick={() => setActiveTab('vendors')}
-                      className="mt-4 inline-flex items-center gap-1.5 text-xs font-bold text-blue-800 bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-xl cursor-pointer transition-colors"
+                      className="mt-4 inline-flex items-center gap-1.5 text-xs font-bold text-[#F7418F] bg-[#FEC7B4]/40 hover:bg-[#FEC7B4] px-3 py-1.5 rounded-none cursor-pointer transition-colors border border-[#FC819E]"
                     >
                       <span>Open Vendor Checklist</span>
-                      <ArrowRight className="w-3.5 h-3.5 text-blue-700" />
+                      <ArrowRight className="w-3.5 h-3.5 text-[#F7418F]" />
                     </button>
                   </CardContent>
                 </Card>
               </div>
 
               {/* AI Assistant Callout */}
-              <div className="rounded-3xl border border-[#073330]/20 bg-[#073330] p-6 sm:p-8 text-white shadow-md">
+              <div className="rounded-none border-2 border-[#F7418F] bg-[#2A0E1C] p-6 sm:p-8 text-white shadow-xs">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5">
                   <div className="max-w-2xl">
-                    <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-xs font-bold text-[#00e599]">
-                      <Sparkles className="w-3.5 h-3.5 text-[#00e599]" />
+                    <span className="inline-flex items-center gap-1.5 rounded-none bg-[#F7418F] px-3 py-1 text-xs font-bold text-white">
+                      <Sparkles className="w-3.5 h-3.5 text-white" />
                       AI Planning Concierge
                     </span>
-                    <h3 className="mt-3 text-xl font-bold tracking-tight text-white">
+                    <h3 className="mt-3 text-xl font-bold tracking-tight text-white font-headline">
                       Generate personalized recommendations for {event.name}
                     </h3>
-                    <p className="mt-1.5 text-sm text-slate-300 leading-relaxed">
+                    <p className="mt-1.5 text-sm text-[#FEC7B4] leading-relaxed">
                       The AI Assistant will tailor recommendations to your {event.event_type} celebration with {event.guest_count} guests and a {formatCurrency(event.total_budget)} budget.
                     </p>
                   </div>
                   <Button
                     onClick={() => setActiveTab('assistant')}
-                    variant="mint"
-                    className="gap-2 text-[#073330] font-bold shadow-sm shrink-0 cursor-pointer"
+                    variant="default"
+                    className="gap-2 bg-[#F7418F] hover:bg-[#e02b78] text-white font-bold rounded-none shadow-xs shrink-0 cursor-pointer border border-[#F7418F]"
                   >
                     <Bot className="w-4 h-4" />
                     <span>Open AI Chat Assistant</span>
@@ -582,6 +752,36 @@ export default function EventDetailPage({
         onConfirm={handleDeleteConfirm}
         isDeleting={isDeleting}
       />
+
+      {/* ─── MOBILE-ONLY FLOATING AI CONCIERGE BUBBLE (Bottom-Right Corner) ─── */}
+      <div className="fixed bottom-6 right-5 z-40 md:hidden pointer-events-auto">
+        <button
+          type="button"
+          onClick={() => {
+            if (activeTab === 'assistant') {
+              setActiveTab(previousTab);
+            } else {
+              setPreviousTab(activeTab);
+              setActiveTab('assistant');
+            }
+          }}
+          aria-label={activeTab === 'assistant' ? 'Close AI Assistant Concierge' : 'Open AI Planning Concierge'}
+          className={`h-14 w-14 rounded-full flex items-center justify-center shadow-[0_4px_20px_rgba(247,65,143,0.5)] border-2 border-white transition-all duration-200 cursor-pointer active:scale-95 ${
+            activeTab === 'assistant'
+              ? 'bg-[#2A0E1C] text-white hover:bg-[#3d1428]'
+              : 'bg-[#F7418F] hover:bg-[#e02b78] text-white'
+          }`}
+        >
+          {activeTab === 'assistant' ? (
+            <X className="w-6 h-6 text-white" />
+          ) : (
+            <div className="relative flex items-center justify-center">
+              <Bot className="w-7 h-7 text-white" />
+              <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-[#FFF3C7] border-2 border-[#F7418F]" />
+            </div>
+          )}
+        </button>
+      </div>
 
       <InspoFooter />
     </div>

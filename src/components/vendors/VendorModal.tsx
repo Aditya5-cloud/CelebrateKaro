@@ -116,8 +116,8 @@ export function VendorModal({
       const parsed = parseFloat(priceQuote);
       if (isNaN(parsed) || parsed < 0) {
         errs.priceQuote = 'Price quote must be a positive number.';
-      } else if (parsed > 1000000) {
-        errs.priceQuote = 'Price quote cannot exceed $1,000,000.';
+      } else if (parsed > 100000000) {
+        errs.priceQuote = 'Price quote cannot exceed ₹100,000,000.';
       }
     }
 
@@ -177,7 +177,7 @@ export function VendorModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs overflow-y-auto"
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-xs overflow-y-auto"
       role="dialog"
       aria-modal="true"
       aria-labelledby="vendor-modal-title"
@@ -185,14 +185,14 @@ export function VendorModal({
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden my-8">
+      <div className="relative w-full max-w-lg bg-white rounded-none shadow-2xl border-2 border-[#2A0E1C] overflow-hidden my-auto sm:my-8 max-h-[92vh] flex flex-col">
         {/* Header */}
-        <div className="px-6 py-5 bg-gradient-to-r from-slate-900 to-indigo-950 text-white flex items-center justify-between">
+        <div className="px-5 py-3.5 sm:px-6 sm:py-4 bg-[#FFF3C7] border-b border-[#FEC7B4] text-[#2A0E1C] flex items-center justify-between shrink-0">
           <div>
-            <h2 id="vendor-modal-title" className="text-xl font-bold tracking-tight">
+            <h2 id="vendor-modal-title" className="text-lg sm:text-xl font-bold tracking-tight text-[#2A0E1C] font-headline">
               {isEdit ? 'Edit Vendor Details' : 'Add Event Vendor'}
             </h2>
-            <p className="text-xs text-indigo-200 mt-0.5">
+            <p className="text-xs text-[#2A0E1C]/70 mt-0.5">
               Track vendor proposals, bookings, contact information, and prices.
             </p>
           </div>
@@ -200,7 +200,7 @@ export function VendorModal({
             type="button"
             onClick={onClose}
             aria-label="Close dialog"
-            className="p-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-white/10 transition-colors focus:outline-hidden focus:ring-2 focus:ring-white"
+            className="p-1.5 rounded-none text-[#2A0E1C]/60 hover:text-[#2A0E1C] hover:bg-[#FEC7B4]/40 transition-colors focus:outline-hidden cursor-pointer"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -209,12 +209,12 @@ export function VendorModal({
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-4" noValidate>
+        <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-3.5 sm:space-y-4 overflow-y-auto" noValidate>
           {serverError && (
             <div
               role="alert"
               aria-live="polite"
-              className="p-3 text-sm text-rose-800 bg-rose-50 border border-rose-200 rounded-lg flex items-center space-x-2"
+              className="p-3 text-sm text-rose-800 bg-rose-50 border border-rose-200 rounded-none flex items-center space-x-2"
             >
               <svg className="w-4 h-4 shrink-0 text-rose-600" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                 <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
@@ -225,8 +225,8 @@ export function VendorModal({
 
           {/* Vendor Name */}
           <div>
-            <label htmlFor="vendor-name-input" className="block text-sm font-semibold text-slate-800 mb-1">
-              Vendor / Business Name <span className="text-rose-500">*</span>
+            <label htmlFor="vendor-name-input" className="block text-sm font-bold text-[#2A0E1C] mb-1">
+              Vendor / Business Name <span className="text-[#F7418F]">*</span>
             </label>
             <input
               id="vendor-name-input"
@@ -237,12 +237,12 @@ export function VendorModal({
               placeholder="e.g., Grand Ballroom Plaza, DJ Spark, Sunset Florals"
               aria-invalid={!!errors.name}
               aria-describedby={errors.name ? 'vendor-name-error' : undefined}
-              className={`w-full px-3.5 py-2.5 rounded-xl border text-sm text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-indigo-500 transition-colors ${
-                errors.name ? 'border-rose-400 bg-rose-50/30' : 'border-slate-300 hover:border-slate-400'
+              className={`w-full px-3.5 py-2.5 rounded-none border text-sm text-[#2A0E1C] bg-white focus:outline-hidden focus:border-[#F7418F] focus:ring-1 focus:ring-[#F7418F] transition-colors ${
+                errors.name ? 'border-rose-400 bg-rose-50/30' : 'border-[#FEC7B4]'
               }`}
             />
             {errors.name && (
-              <p id="vendor-name-error" className="mt-1 text-xs text-rose-600 font-medium">
+              <p id="vendor-name-error" className="mt-1 text-xs text-rose-600 font-bold">
                 {errors.name}
               </p>
             )}
@@ -251,14 +251,14 @@ export function VendorModal({
           {/* Category & Status */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label htmlFor="vendor-category-select" className="block text-sm font-semibold text-slate-800 mb-1">
+              <label htmlFor="vendor-category-select" className="block text-sm font-bold text-[#2A0E1C] mb-1">
                 Category
               </label>
               <select
                 id="vendor-category-select"
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-900 bg-white hover:border-slate-400 focus:outline-hidden focus:ring-2 focus:ring-indigo-500 transition-colors"
+                className="w-full px-3.5 py-2.5 rounded-none border border-[#FEC7B4] text-sm text-[#2A0E1C] bg-white focus:outline-hidden focus:border-[#F7418F] focus:ring-1 focus:ring-[#F7418F] transition-colors"
               >
                 {CATEGORIES.map((cat) => (
                   <option key={cat.value} value={cat.value}>
@@ -269,14 +269,14 @@ export function VendorModal({
             </div>
 
             <div>
-              <label htmlFor="vendor-status-select" className="block text-sm font-semibold text-slate-800 mb-1">
+              <label htmlFor="vendor-status-select" className="block text-sm font-bold text-[#2A0E1C] mb-1">
                 Booking Status
               </label>
               <select
                 id="vendor-status-select"
                 value={status}
                 onChange={(e) => setStatus(e.target.value as VendorStatus)}
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-900 bg-white hover:border-slate-400 focus:outline-hidden focus:ring-2 focus:ring-indigo-500 transition-colors"
+                className="w-full px-3.5 py-2.5 rounded-none border border-[#FEC7B4] text-sm text-[#2A0E1C] bg-white focus:outline-hidden focus:border-[#F7418F] focus:ring-1 focus:ring-[#F7418F] transition-colors"
               >
                 {STATUSES.map((st) => (
                   <option key={st.value} value={st.value}>
@@ -289,31 +289,31 @@ export function VendorModal({
 
           {/* Price Quote */}
           <div>
-            <label htmlFor="vendor-price-input" className="block text-sm font-semibold text-slate-800 mb-1">
-              Price Quote / Estimate ($)
+            <label htmlFor="vendor-price-input" className="block text-sm font-bold text-[#2A0E1C] mb-1">
+              Price Quote / Estimate (₹)
             </label>
             <div className="relative">
-              <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 text-sm">
-                $
+              <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#2A0E1C]/60 text-sm font-bold">
+                ₹
               </span>
               <input
                 id="vendor-price-input"
                 type="number"
                 step="0.01"
                 min="0"
-                max="1000000"
+                max="100000000"
                 value={priceQuote}
                 onChange={(e) => setPriceQuote(e.target.value)}
                 placeholder="0.00"
                 aria-invalid={!!errors.priceQuote}
                 aria-describedby={errors.priceQuote ? 'vendor-price-error' : undefined}
-                className={`w-full pl-8 pr-3.5 py-2.5 rounded-xl border text-sm text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-indigo-500 transition-colors ${
-                  errors.priceQuote ? 'border-rose-400 bg-rose-50/30' : 'border-slate-300 hover:border-slate-400'
+                className={`w-full pl-8 pr-3.5 py-2.5 rounded-none border text-sm text-[#2A0E1C] bg-white focus:outline-hidden focus:border-[#F7418F] focus:ring-1 focus:ring-[#F7418F] transition-colors ${
+                  errors.priceQuote ? 'border-rose-400 bg-rose-50/30' : 'border-[#FEC7B4]'
                 }`}
               />
             </div>
             {errors.priceQuote && (
-              <p id="vendor-price-error" className="mt-1 text-xs text-rose-600 font-medium">
+              <p id="vendor-price-error" className="mt-1 text-xs text-rose-600 font-bold">
                 {errors.priceQuote}
               </p>
             )}
@@ -322,7 +322,7 @@ export function VendorModal({
           {/* Contact Person & Email */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label htmlFor="vendor-contact-name-input" className="block text-sm font-semibold text-slate-800 mb-1">
+              <label htmlFor="vendor-contact-name-input" className="block text-sm font-bold text-[#2A0E1C] mb-1">
                 Contact Person
               </label>
               <input
@@ -331,12 +331,12 @@ export function VendorModal({
                 value={contactName}
                 onChange={(e) => setContactName(e.target.value)}
                 placeholder="e.g., Jennifer Lawrence"
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-900 hover:border-slate-400 focus:outline-hidden focus:ring-2 focus:ring-indigo-500 transition-colors"
+                className="w-full px-3.5 py-2.5 rounded-none border border-[#FEC7B4] text-sm text-[#2A0E1C] bg-white focus:outline-hidden focus:border-[#F7418F] focus:ring-1 focus:ring-[#F7418F] transition-colors"
               />
             </div>
 
             <div>
-              <label htmlFor="vendor-contact-email-input" className="block text-sm font-semibold text-slate-800 mb-1">
+              <label htmlFor="vendor-contact-email-input" className="block text-sm font-bold text-[#2A0E1C] mb-1">
                 Contact Email
               </label>
               <input
@@ -347,12 +347,12 @@ export function VendorModal({
                 placeholder="vendor@company.com"
                 aria-invalid={!!errors.contactEmail}
                 aria-describedby={errors.contactEmail ? 'vendor-email-error' : undefined}
-                className={`w-full px-3.5 py-2.5 rounded-xl border text-sm text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-indigo-500 transition-colors ${
-                  errors.contactEmail ? 'border-rose-400 bg-rose-50/30' : 'border-slate-300 hover:border-slate-400'
+                className={`w-full px-3.5 py-2.5 rounded-none border text-sm text-[#2A0E1C] bg-white focus:outline-hidden focus:border-[#F7418F] focus:ring-1 focus:ring-[#F7418F] transition-colors ${
+                  errors.contactEmail ? 'border-rose-400 bg-rose-50/30' : 'border-[#FEC7B4]'
                 }`}
               />
               {errors.contactEmail && (
-                <p id="vendor-email-error" className="mt-1 text-xs text-rose-600 font-medium">
+                <p id="vendor-email-error" className="mt-1 text-xs text-rose-600 font-bold">
                   {errors.contactEmail}
                 </p>
               )}
@@ -361,7 +361,7 @@ export function VendorModal({
 
           {/* Contact Phone */}
           <div>
-            <label htmlFor="vendor-contact-phone-input" className="block text-sm font-semibold text-slate-800 mb-1">
+            <label htmlFor="vendor-contact-phone-input" className="block text-sm font-bold text-[#2A0E1C] mb-1">
               Contact Phone
             </label>
             <input
@@ -370,13 +370,13 @@ export function VendorModal({
               value={contactPhone}
               onChange={(e) => setContactPhone(e.target.value)}
               placeholder="(555) 123-4567"
-              className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-900 hover:border-slate-400 focus:outline-hidden focus:ring-2 focus:ring-indigo-500 transition-colors"
+              className="w-full px-3.5 py-2.5 rounded-none border border-[#FEC7B4] text-sm text-[#2A0E1C] bg-white focus:outline-hidden focus:border-[#F7418F] focus:ring-1 focus:ring-[#F7418F] transition-colors"
             />
           </div>
 
           {/* Notes */}
           <div>
-            <label htmlFor="vendor-notes-input" className="block text-sm font-semibold text-slate-800 mb-1">
+            <label htmlFor="vendor-notes-input" className="block text-sm font-bold text-[#2A0E1C] mb-1">
               Notes & Requirements
             </label>
             <textarea
@@ -387,31 +387,31 @@ export function VendorModal({
               placeholder="Package deliverables, payment schedule, contract terms, or special requests..."
               aria-invalid={!!errors.notes}
               aria-describedby={errors.notes ? 'vendor-notes-error' : undefined}
-              className={`w-full px-3.5 py-2.5 rounded-xl border text-sm text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-indigo-500 transition-colors resize-none ${
-                errors.notes ? 'border-rose-400 bg-rose-50/30' : 'border-slate-300 hover:border-slate-400'
+              className={`w-full px-3.5 py-2.5 rounded-none border text-sm text-[#2A0E1C] bg-white focus:outline-hidden focus:border-[#F7418F] focus:ring-1 focus:ring-[#F7418F] transition-colors resize-none ${
+                errors.notes ? 'border-rose-400 bg-rose-50/30' : 'border-[#FEC7B4]'
               }`}
             />
             {errors.notes && (
-              <p id="vendor-notes-error" className="mt-1 text-xs text-rose-600 font-medium">
+              <p id="vendor-notes-error" className="mt-1 text-xs text-rose-600 font-bold">
                 {errors.notes}
               </p>
             )}
           </div>
 
           {/* Actions */}
-          <div className="pt-3 flex items-center justify-end space-x-3 border-t border-slate-100">
+          <div className="pt-3 flex items-center justify-end space-x-3 border-t border-[#FEC7B4]">
             <button
               type="button"
               onClick={onClose}
               disabled={isSubmitting}
-              className="px-4 py-2 text-sm font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors focus:outline-hidden focus:ring-2 focus:ring-slate-400"
+              className="px-4 py-2 text-sm font-bold text-[#2A0E1C] bg-[#FFF3C7] hover:bg-[#FEC7B4]/50 rounded-none border border-[#FEC7B4] transition-colors cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="px-5 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 rounded-xl shadow-xs transition-colors focus:outline-hidden focus:ring-2 focus:ring-indigo-500 disabled:opacity-50 flex items-center space-x-2"
+              className="px-5 py-2 text-sm font-bold text-white bg-[#F7418F] hover:bg-[#F7418F]/90 active:bg-[#F7418F] rounded-none shadow-xs transition-colors disabled:opacity-50 flex items-center space-x-2 cursor-pointer"
             >
               {isSubmitting && (
                 <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">

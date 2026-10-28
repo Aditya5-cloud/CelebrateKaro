@@ -241,7 +241,29 @@ export async function loginUser(
     return { success: false, error: 'Please enter your password.' };
   }
 
-  // Ensure demo accounts exist if user tries to use a demo email
+  // 1. Authenticate with backend MongoDB Atlas API when running in browser
+  if (typeof window !== 'undefined' && typeof fetch === 'function') {
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: trimmedEmail, password }),
+      });
+      const json = await res.json();
+      if (res.ok && json.success && json.data?.user) {
+        const cleanUser = json.data.user as User;
+        localStorage.setItem(STORAGE_KEY_CURRENT_USER, JSON.stringify(cleanUser));
+        broadcastAuthChange(cleanUser);
+        return { success: true, user: cleanUser };
+      } else if (!res.ok && json.error) {
+        return { success: false, error: json.error };
+      }
+    } catch {
+      // Network failure or test runner fallback to local storage
+    }
+  }
+
+  // 2. Fallback to local storage (for unit tests / offline development)
   await seedDemoAccountsIfEmpty();
 
   const storedUsers = getRawStoredUsers();
@@ -282,7 +304,9 @@ export async function loginUser(
     created_at: matched.created_at,
   };
 
-  localStorage.setItem(STORAGE_KEY_CURRENT_USER, JSON.stringify(cleanUser));
+  if (typeof localStorage !== 'undefined') {
+    localStorage.setItem(STORAGE_KEY_CURRENT_USER, JSON.stringify(cleanUser));
+  }
   broadcastAuthChange(cleanUser);
   return { success: true, user: cleanUser };
 }
@@ -312,6 +336,42 @@ export async function registerUser(
     return { success: false, error: 'Password must be at least 6 characters long.' };
   }
 
+  // 1. Create account in MongoDB Atlas when running in browser
+  if (typeof window !== 'undefined' && typeof fetch === 'function') {
+    try {
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: trimmedName,
+          email: trimmedEmail,
+          password,
+          role,
+        }),
+      });
+      const json = await res.json();
+      if (res.ok && json.success && json.data?.user) {
+        const cleanUser = json.data.user as User;
+        localStorage.setItem(STORAGE_KEY_CURRENT_USER, JSON.stringify(cleanUser));
+
+        // Mirror locally for offline resilience
+        const storedUsers = getRawStoredUsers();
+        if (!storedUsers.some((u) => u.email.toLowerCase() === trimmedEmail)) {
+          storedUsers.push({ ...cleanUser });
+          saveRawStoredUsers(storedUsers);
+        }
+
+        broadcastAuthChange(cleanUser);
+        return { success: true, user: cleanUser };
+      } else if (!res.ok && json.error) {
+        return { success: false, error: json.error };
+      }
+    } catch {
+      // Fallback for tests or offline
+    }
+  }
+
+  // 2. Fallback to local storage (for unit tests / offline development)
   const storedUsers = getRawStoredUsers();
   const duplicate = storedUsers.find((u) => u.email.toLowerCase() === trimmedEmail);
   if (duplicate) {
@@ -367,7 +427,9 @@ export async function registerUser(
     created_at: newStoredUser.created_at,
   };
 
-  localStorage.setItem(STORAGE_KEY_CURRENT_USER, JSON.stringify(cleanUser));
+  if (typeof localStorage !== 'undefined') {
+    localStorage.setItem(STORAGE_KEY_CURRENT_USER, JSON.stringify(cleanUser));
+  }
   broadcastAuthChange(cleanUser);
 
   return { success: true, user: cleanUser };

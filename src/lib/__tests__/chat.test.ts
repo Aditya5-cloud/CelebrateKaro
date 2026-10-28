@@ -8,6 +8,9 @@ import {
   saveChatMessage,
   clearChatHistory,
   buildEventContextSummary,
+  getUserQuestionCount,
+  incrementUserQuestionCount,
+  MAX_USER_QUESTIONS,
 } from '../chat';
 
 describe('Chat Service Layer & Grounding', () => {
@@ -81,8 +84,25 @@ describe('Chat Service Layer & Grounding', () => {
     // Verify context grounding
     expect(summary).toContain('Autumn Harvest Gala');
     expect(summary).toContain('250 attendees');
-    expect(summary).toContain('$18,000');
+    expect(summary).toContain('₹18,000');
     expect(summary).toContain('Finalize Sound Permits');
     expect(summary).toContain('City Tent Rentals');
+  });
+
+  it('enforces a limit of 5 questions per user', async () => {
+    expect(MAX_USER_QUESTIONS).toBe(5);
+
+    const userId = 'usr_test_limit';
+    expect(await getUserQuestionCount(eventId, userId)).toBe(0);
+
+    for (let i = 1; i <= 5; i++) {
+      await saveChatMessage(eventId, 'user', `Question number ${i}`, userId);
+      await incrementUserQuestionCount(eventId, userId);
+      expect(await getUserQuestionCount(eventId, userId)).toBe(i);
+    }
+
+    const currentCount = await getUserQuestionCount(eventId, userId);
+    expect(currentCount).toBe(5);
+    expect(currentCount >= MAX_USER_QUESTIONS).toBe(true);
   });
 });

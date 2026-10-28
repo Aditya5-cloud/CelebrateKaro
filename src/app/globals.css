@@ -6,15 +6,22 @@
   --font-serif: "Cormorant Garamond", Georgia, Cambria, "Times New Roman", Times, serif;
   --font-body: "Lato", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-sans: "Lato", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  --color-palette-cream: #FFF3C7;
+  --color-palette-peach: #FEC7B4;
+  --color-palette-rose: #FC819E;
+  --color-palette-fuchsia: #F7418F;
+  --color-palette-dark: #2A0E1C;
 }
 
 :root {
-  --background: #faf6ef;
-  --foreground: #1c1917;
-  --brand-saffron: #d97706;
-  --brand-marigold: #f59e0b;
-  --brand-crimson: #9e1b32;
-  --brand-indigo: #1e1b4b;
+  --background: #FFF3C7;
+  --foreground: #2A0E1C;
+  --palette-cream: #FFF3C7;
+  --palette-peach: #FEC7B4;
+  --palette-rose: #FC819E;
+  --palette-fuchsia: #F7418F;
+  --palette-dark: #2A0E1C;
   --font-headline: "Cormorant Garamond", Georgia, serif;
   --font-sans: "Lato", system-ui, -apple-system, sans-serif;
   --font-body: "Lato", system-ui, -apple-system, sans-serif;
@@ -28,6 +35,11 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* User requirement: All boxes, sections, cards, buttons, badges, inputs must be straight square corners */
+*, *::before, *::after {
+  border-radius: 0 !important;
 }
 
 /* Regal Indian Typography: Cormorant Garamond for Headlines, Lato for Body */
@@ -60,14 +72,13 @@ html {
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: #FFF3C7;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(160, 160, 160, 0.25);
-  border-radius: 9999px;
+  background: #FC819E;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(160, 160, 160, 0.45);
+  background: #F7418F;
 }
 
 /* Keyframe Animations */

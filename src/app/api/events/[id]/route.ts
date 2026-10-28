@@ -16,7 +16,7 @@ function parseId(rawId: string): number | null {
   return parsed;
 }
 
-export async function GET(_request: Request, context: RouteContext) {
+export async function GET(request: Request, context: RouteContext) {
   try {
     const { id: rawId } = await context.params;
     const id = parseId(rawId);
@@ -32,6 +32,14 @@ export async function GET(_request: Request, context: RouteContext) {
       return NextResponse.json(
         { success: false, error: 'Event not found.' },
         { status: 404 }
+      );
+    }
+
+    const headerUserId = request.headers.get('x-user-id');
+    if (event.user_id && headerUserId && event.user_id !== headerUserId) {
+      return NextResponse.json(
+        { success: false, error: 'Unauthorized celebration access.' },
+        { status: 403 }
       );
     }
 
@@ -56,6 +64,22 @@ export async function PATCH(request: Request, context: RouteContext) {
       return NextResponse.json(
         { success: false, error: 'Invalid event ID.' },
         { status: 400 }
+      );
+    }
+
+    const existing = await getEventById(id);
+    if (!existing) {
+      return NextResponse.json(
+        { success: false, error: 'Event not found.' },
+        { status: 404 }
+      );
+    }
+
+    const headerUserId = request.headers.get('x-user-id');
+    if (existing.user_id && headerUserId && existing.user_id !== headerUserId) {
+      return NextResponse.json(
+        { success: false, error: 'Unauthorized celebration access.' },
+        { status: 403 }
       );
     }
 
@@ -103,7 +127,7 @@ export async function PATCH(request: Request, context: RouteContext) {
   }
 }
 
-export async function DELETE(_request: Request, context: RouteContext) {
+export async function DELETE(request: Request, context: RouteContext) {
   try {
     const { id: rawId } = await context.params;
     const id = parseId(rawId);
@@ -111,6 +135,22 @@ export async function DELETE(_request: Request, context: RouteContext) {
       return NextResponse.json(
         { success: false, error: 'Invalid event ID.' },
         { status: 400 }
+      );
+    }
+
+    const existing = await getEventById(id);
+    if (!existing) {
+      return NextResponse.json(
+        { success: false, error: 'Event not found or already deleted.' },
+        { status: 404 }
+      );
+    }
+
+    const headerUserId = request.headers.get('x-user-id');
+    if (existing.user_id && headerUserId && existing.user_id !== headerUserId) {
+      return NextResponse.json(
+        { success: false, error: 'Unauthorized celebration access.' },
+        { status: 403 }
       );
     }
 

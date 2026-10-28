@@ -129,7 +129,7 @@ export function BudgetCategoryModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200"
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200 overflow-y-auto"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
@@ -138,14 +138,14 @@ export function BudgetCategoryModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby="category-modal-title"
-        className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800"
+        className="w-full max-w-md rounded-none bg-white p-4 sm:p-6 shadow-2xl border-2 border-[#2A0E1C] max-h-[92vh] overflow-y-auto"
       >
-        <div className="flex items-center justify-between pb-4 border-b border-zinc-100 dark:border-zinc-800">
+        <div className="flex items-center justify-between pb-4 border-b border-[#FEC7B4]">
           <div>
-            <h2 id="category-modal-title" className="text-xl font-bold text-zinc-900 dark:text-zinc-100">
+            <h2 id="category-modal-title" className="text-xl font-bold text-[#2A0E1C] font-headline">
               {isEdit ? 'Edit Budget Category' : 'Add Budget Category'}
             </h2>
-            <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
+            <p className="text-xs text-[#2A0E1C]/70 mt-0.5">
               Set target allocation and track actual invoices or receipts.
             </p>
           </div>
@@ -153,7 +153,7 @@ export function BudgetCategoryModal({
             type="button"
             onClick={onClose}
             aria-label="Close dialog"
-            className="rounded-lg p-2 text-zinc-400 hover:bg-zinc-100 hover:text-zinc-700 dark:hover:bg-zinc-800 dark:hover:text-zinc-200 focus:outline-hidden"
+            className="rounded-none p-2 text-[#2A0E1C]/60 hover:bg-[#FFF3C7] hover:text-[#2A0E1C] focus:outline-hidden cursor-pointer"
           >
             ✕
           </button>
@@ -162,7 +162,7 @@ export function BudgetCategoryModal({
         {serverError && (
           <div
             role="alert"
-            className="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-700 dark:bg-red-950/50 dark:text-red-300 border border-red-200"
+            className="mt-4 rounded-none bg-rose-50 p-3 text-sm text-rose-700 border border-rose-200"
           >
             {serverError}
           </div>
@@ -170,8 +170,8 @@ export function BudgetCategoryModal({
 
         <form onSubmit={handleSubmit} noValidate className="mt-4 space-y-4">
           <div>
-            <label htmlFor="cat-name" className="block text-sm font-semibold text-zinc-900 dark:text-zinc-200">
-              Category Name <span className="text-red-500">*</span>
+            <label htmlFor="cat-name" className="block text-sm font-bold text-[#2A0E1C]">
+              Category Name <span className="text-[#F7418F]">*</span>
             </label>
             <input
               ref={firstInputRef}
@@ -187,12 +187,12 @@ export function BudgetCategoryModal({
               }}
               aria-invalid={!!errors.name}
               aria-describedby={errors.name ? 'cat-name-error' : undefined}
-              className={`mt-1 block w-full rounded-lg border px-3.5 py-2 text-sm shadow-xs focus:outline-hidden focus:ring-2 focus:ring-blue-500 dark:bg-zinc-800 dark:text-zinc-100 ${
-                errors.name ? 'border-red-500' : 'border-zinc-300 dark:border-zinc-700'
+              className={`mt-1 block w-full rounded-none border px-3.5 py-2 text-sm shadow-xs focus:outline-hidden focus:border-[#F7418F] focus:ring-1 focus:ring-[#F7418F] bg-white text-[#2A0E1C] ${
+                errors.name ? 'border-rose-500' : 'border-[#FEC7B4]'
               }`}
             />
             {errors.name && (
-              <p id="cat-name-error" className="mt-1 text-xs text-red-600">
+              <p id="cat-name-error" className="mt-1 text-xs text-rose-600 font-bold">
                 {errors.name}
               </p>
             )}
@@ -208,7 +208,7 @@ export function BudgetCategoryModal({
                       setName(preset);
                       if (errors.name) setErrors((prev) => ({ ...prev, name: '' }));
                     }}
-                    className="rounded-md border border-zinc-200 bg-zinc-50 px-2 py-0.5 text-[11px] font-medium text-zinc-600 hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
+                    className="rounded-none border border-[#FEC7B4] bg-[#FFF3C7]/50 px-2 py-0.5 text-[11px] font-bold text-[#2A0E1C] hover:bg-[#FEC7B4]/50 cursor-pointer"
                   >
                     + {preset}
                   </button>
@@ -219,12 +219,12 @@ export function BudgetCategoryModal({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label htmlFor="cat-planned" className="block text-sm font-semibold text-zinc-900 dark:text-zinc-200">
-                Planned Amount ($) <span className="text-red-500">*</span>
+              <label htmlFor="cat-planned" className="block text-sm font-bold text-[#2A0E1C]">
+                Planned Amount (₹) <span className="text-[#F7418F]">*</span>
               </label>
               <div className="relative mt-1">
-                <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-zinc-500 text-sm font-medium">
-                  $
+                <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-[#2A0E1C]/60 text-sm font-bold">
+                  ₹
                 </span>
                 <input
                   id="cat-planned"
@@ -232,7 +232,7 @@ export function BudgetCategoryModal({
                   min="0"
                   step="1"
                   required
-                  placeholder="2500"
+                  placeholder="25000"
                   value={plannedAmount}
                   onChange={(e) => {
                     setPlannedAmount(e.target.value === '' ? '' : parseFloat(e.target.value));
@@ -240,25 +240,25 @@ export function BudgetCategoryModal({
                   }}
                   aria-invalid={!!errors.plannedAmount}
                   aria-describedby={errors.plannedAmount ? 'cat-planned-error' : undefined}
-                  className={`block w-full rounded-lg border pl-8 pr-3.5 py-2 text-sm shadow-xs focus:outline-hidden focus:ring-2 focus:ring-blue-500 dark:bg-zinc-800 dark:text-zinc-100 ${
-                    errors.plannedAmount ? 'border-red-500' : 'border-zinc-300 dark:border-zinc-700'
+                  className={`block w-full rounded-none border pl-8 pr-3.5 py-2 text-sm shadow-xs focus:outline-hidden focus:border-[#F7418F] focus:ring-1 focus:ring-[#F7418F] bg-white text-[#2A0E1C] ${
+                    errors.plannedAmount ? 'border-rose-500' : 'border-[#FEC7B4]'
                   }`}
                 />
               </div>
               {errors.plannedAmount && (
-                <p id="cat-planned-error" className="mt-1 text-xs text-red-600">
+                <p id="cat-planned-error" className="mt-1 text-xs text-rose-600 font-bold">
                   {errors.plannedAmount}
                 </p>
               )}
             </div>
 
             <div>
-              <label htmlFor="cat-actual" className="block text-sm font-semibold text-zinc-900 dark:text-zinc-200">
-                Actual Spent ($)
+              <label htmlFor="cat-actual" className="block text-sm font-bold text-[#2A0E1C]">
+                Actual Spent (₹)
               </label>
               <div className="relative mt-1">
-                <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-zinc-500 text-sm font-medium">
-                  $
+                <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-[#2A0E1C]/60 text-sm font-bold">
+                  ₹
                 </span>
                 <input
                   id="cat-actual"
@@ -273,13 +273,13 @@ export function BudgetCategoryModal({
                   }}
                   aria-invalid={!!errors.actualAmount}
                   aria-describedby={errors.actualAmount ? 'cat-actual-error' : undefined}
-                  className={`block w-full rounded-lg border pl-8 pr-3.5 py-2 text-sm shadow-xs focus:outline-hidden focus:ring-2 focus:ring-blue-500 dark:bg-zinc-800 dark:text-zinc-100 ${
-                    errors.actualAmount ? 'border-red-500' : 'border-zinc-300 dark:border-zinc-700'
+                  className={`block w-full rounded-none border pl-8 pr-3.5 py-2 text-sm shadow-xs focus:outline-hidden focus:border-[#F7418F] focus:ring-1 focus:ring-[#F7418F] bg-white text-[#2A0E1C] ${
+                    errors.actualAmount ? 'border-rose-500' : 'border-[#FEC7B4]'
                   }`}
                 />
               </div>
               {errors.actualAmount && (
-                <p id="cat-actual-error" className="mt-1 text-xs text-red-600">
+                <p id="cat-actual-error" className="mt-1 text-xs text-rose-600 font-bold">
                   {errors.actualAmount}
                 </p>
               )}
@@ -287,8 +287,8 @@ export function BudgetCategoryModal({
           </div>
 
           <div>
-            <label htmlFor="cat-notes" className="block text-sm font-semibold text-zinc-900 dark:text-zinc-200">
-              Notes or Vendor Vendor References (Optional)
+            <label htmlFor="cat-notes" className="block text-sm font-bold text-[#2A0E1C]">
+              Notes or Vendor References (Optional)
             </label>
             <textarea
               id="cat-notes"
@@ -297,23 +297,23 @@ export function BudgetCategoryModal({
               placeholder="e.g. 50% deposit paid on Jan 10; balance due 1 week before event"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              className="mt-1 block w-full rounded-lg border border-zinc-300 px-3.5 py-2 text-sm shadow-xs focus:outline-hidden focus:ring-2 focus:ring-blue-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
+              className="mt-1 block w-full rounded-none border border-[#FEC7B4] px-3.5 py-2 text-sm shadow-xs focus:outline-hidden focus:border-[#F7418F] focus:ring-1 focus:ring-[#F7418F] bg-white text-[#2A0E1C]"
             />
           </div>
 
-          <div className="flex items-center justify-end gap-3 pt-3 border-t border-zinc-100 dark:border-zinc-800">
+          <div className="flex items-center justify-end gap-3 pt-3 border-t border-[#FEC7B4]">
             <button
               type="button"
               onClick={onClose}
               disabled={isSubmitting}
-              className="rounded-lg border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800 transition-colors"
+              className="rounded-none border border-[#FEC7B4] px-4 py-2 text-sm font-bold text-[#2A0E1C] hover:bg-[#FFF3C7] transition-colors cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="rounded-lg bg-blue-600 px-5 py-2 text-sm font-medium text-white shadow-xs hover:bg-blue-700 focus:outline-hidden focus:ring-2 focus:ring-blue-500 disabled:opacity-50 transition-colors"
+              className="rounded-none bg-[#F7418F] px-5 py-2 text-sm font-bold text-white shadow-xs hover:bg-[#F7418F]/90 focus:outline-hidden disabled:opacity-50 transition-colors cursor-pointer"
             >
               {isSubmitting ? 'Saving...' : isEdit ? 'Update Category' : 'Save Category'}
             </button>

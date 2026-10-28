@@ -123,7 +123,7 @@ export function MilestoneModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200"
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200 overflow-y-auto"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
@@ -132,14 +132,14 @@ export function MilestoneModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby="milestone-modal-title"
-        className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800"
+        className="w-full max-w-md rounded-none bg-white p-4 sm:p-6 shadow-2xl border-2 border-[#2A0E1C] max-h-[92vh] overflow-y-auto"
       >
-        <div className="flex items-center justify-between pb-4 border-b border-zinc-100 dark:border-zinc-800">
+        <div className="flex items-center justify-between pb-4 border-b border-[#FEC7B4]">
           <div>
-            <h2 id="milestone-modal-title" className="text-xl font-bold text-zinc-900 dark:text-zinc-100">
+            <h2 id="milestone-modal-title" className="text-xl font-bold text-[#2A0E1C] font-headline">
               {isEdit ? 'Edit Milestone' : 'Add Timeline Milestone'}
             </h2>
-            <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
+            <p className="text-xs text-[#2A0E1C]/70 mt-0.5">
               Set deadlines to keep your event planning on schedule.
             </p>
           </div>
@@ -147,7 +147,7 @@ export function MilestoneModal({
             type="button"
             onClick={onClose}
             aria-label="Close dialog"
-            className="rounded-lg p-2 text-zinc-400 hover:bg-zinc-100 hover:text-zinc-700 dark:hover:bg-zinc-800 dark:hover:text-zinc-200 focus:outline-hidden"
+            className="rounded-none p-2 text-[#2A0E1C]/60 hover:bg-[#FFF3C7] hover:text-[#2A0E1C] focus:outline-hidden cursor-pointer"
           >
             ✕
           </button>
@@ -156,7 +156,7 @@ export function MilestoneModal({
         {serverError && (
           <div
             role="alert"
-            className="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-700 dark:bg-red-950/50 dark:text-red-300 border border-red-200"
+            className="mt-4 rounded-none bg-rose-50 p-3 text-sm text-rose-700 border border-rose-200"
           >
             {serverError}
           </div>
@@ -164,8 +164,8 @@ export function MilestoneModal({
 
         <form onSubmit={handleSubmit} noValidate className="mt-4 space-y-4">
           <div>
-            <label htmlFor="milestone-title" className="block text-sm font-semibold text-zinc-900 dark:text-zinc-200">
-              Milestone Title <span className="text-red-500">*</span>
+            <label htmlFor="milestone-title" className="block text-sm font-bold text-[#2A0E1C]">
+              Milestone Title <span className="text-[#F7418F]">*</span>
             </label>
             <input
               ref={firstInputRef}
@@ -181,25 +181,26 @@ export function MilestoneModal({
               }}
               aria-invalid={!!errors.title}
               aria-describedby={errors.title ? 'milestone-title-error' : undefined}
-              className={`mt-1 block w-full rounded-lg border px-3.5 py-2 text-sm shadow-xs focus:outline-hidden focus:ring-2 focus:ring-blue-500 dark:bg-zinc-800 dark:text-zinc-100 ${
-                errors.title ? 'border-red-500' : 'border-zinc-300 dark:border-zinc-700'
+              className={`mt-1 block w-full rounded-none border px-3.5 py-2 text-sm shadow-xs focus:outline-hidden focus:border-[#F7418F] focus:ring-1 focus:ring-[#F7418F] bg-white text-[#2A0E1C] ${
+                errors.title ? 'border-rose-500' : 'border-[#FEC7B4]'
               }`}
             />
             {errors.title && (
-              <p id="milestone-title-error" className="mt-1 text-xs text-red-600">
+              <p id="milestone-title-error" className="mt-1 text-xs text-rose-600 font-bold">
                 {errors.title}
               </p>
             )}
           </div>
 
           <div>
-            <label htmlFor="milestone-date" className="block text-sm font-semibold text-zinc-900 dark:text-zinc-200">
-              Target Due Date <span className="text-red-500">*</span>
+            <label htmlFor="milestone-date" className="block text-sm font-bold text-[#2A0E1C]">
+              Target Due Date <span className="text-[#F7418F]">*</span>
             </label>
             <input
               id="milestone-date"
               type="date"
               required
+              min={!isEdit ? new Date().toISOString().split('T')[0] : undefined}
               value={dueDate}
               onChange={(e) => {
                 setDueDate(e.target.value);
@@ -207,19 +208,19 @@ export function MilestoneModal({
               }}
               aria-invalid={!!errors.dueDate}
               aria-describedby={errors.dueDate ? 'milestone-date-error' : undefined}
-              className={`mt-1 block w-full rounded-lg border px-3.5 py-2 text-sm shadow-xs focus:outline-hidden focus:ring-2 focus:ring-blue-500 dark:bg-zinc-800 dark:text-zinc-100 ${
-                errors.dueDate ? 'border-red-500' : 'border-zinc-300 dark:border-zinc-700'
+              className={`mt-1 block w-full rounded-none border px-3.5 py-2 text-sm shadow-xs focus:outline-hidden focus:border-[#F7418F] focus:ring-1 focus:ring-[#F7418F] bg-white text-[#2A0E1C] ${
+                errors.dueDate ? 'border-rose-500' : 'border-[#FEC7B4]'
               }`}
             />
             {errors.dueDate && (
-              <p id="milestone-date-error" className="mt-1 text-xs text-red-600">
+              <p id="milestone-date-error" className="mt-1 text-xs text-rose-600 font-bold">
                 {errors.dueDate}
               </p>
             )}
           </div>
 
           <div>
-            <label htmlFor="milestone-desc" className="block text-sm font-semibold text-zinc-900 dark:text-zinc-200">
+            <label htmlFor="milestone-desc" className="block text-sm font-bold text-[#2A0E1C]">
               Action Notes or Checklist Items (Optional)
             </label>
             <textarea
@@ -229,7 +230,7 @@ export function MilestoneModal({
               placeholder="e.g. Inquire about capacity limits, noise ordinance, and deposit terms."
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="mt-1 block w-full rounded-lg border border-zinc-300 px-3.5 py-2 text-sm shadow-xs focus:outline-hidden focus:ring-2 focus:ring-blue-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
+              className="mt-1 block w-full rounded-none border border-[#FEC7B4] px-3.5 py-2 text-sm shadow-xs focus:outline-hidden focus:border-[#F7418F] focus:ring-1 focus:ring-[#F7418F] bg-white text-[#2A0E1C]"
             />
           </div>
 
@@ -240,27 +241,27 @@ export function MilestoneModal({
                 type="checkbox"
                 checked={completed}
                 onChange={(e) => setCompleted(e.target.checked)}
-                className="h-4 w-4 rounded border-zinc-300 text-blue-600 focus:ring-blue-500"
+                className="h-4 w-4 rounded-none border-[#FEC7B4] text-[#F7418F] focus:ring-[#F7418F]"
               />
-              <label htmlFor="milestone-completed" className="text-sm text-zinc-800 dark:text-zinc-200">
+              <label htmlFor="milestone-completed" className="text-sm font-bold text-[#2A0E1C]">
                 Mark this milestone as completed
               </label>
             </div>
           )}
 
-          <div className="flex items-center justify-end gap-3 pt-3 border-t border-zinc-100 dark:border-zinc-800">
+          <div className="flex items-center justify-end gap-3 pt-3 border-t border-[#FEC7B4]">
             <button
               type="button"
               onClick={onClose}
               disabled={isSubmitting}
-              className="rounded-lg border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800 transition-colors"
+              className="rounded-none border border-[#FEC7B4] px-4 py-2 text-sm font-bold text-[#2A0E1C] hover:bg-[#FFF3C7] transition-colors cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="rounded-lg bg-blue-600 px-5 py-2 text-sm font-medium text-white shadow-xs hover:bg-blue-700 focus:outline-hidden focus:ring-2 focus:ring-blue-500 disabled:opacity-50 transition-colors"
+              className="rounded-none bg-[#F7418F] px-5 py-2 text-sm font-bold text-white shadow-xs hover:bg-[#F7418F]/90 focus:outline-hidden disabled:opacity-50 transition-colors cursor-pointer"
             >
               {isSubmitting ? 'Saving...' : isEdit ? 'Update Milestone' : 'Save Milestone'}
             </button>

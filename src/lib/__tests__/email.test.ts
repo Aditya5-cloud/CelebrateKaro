@@ -82,7 +82,7 @@ describe('AI Vendor Email Drafter Service', () => {
     });
 
     expect(draft.subject).toContain('Budget Alignment');
-    expect(draft.body).toContain('$6,500');
+    expect(draft.body).toContain('₹6,500');
     expect(draft.body).toContain('reduce bar service hours');
   });
 });

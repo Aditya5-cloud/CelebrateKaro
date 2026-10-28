@@ -83,8 +83,8 @@ describe('VendorTracker Component', () => {
     });
 
     // Check quotes and stats
-    expect(screen.getByText('$8,500')).toBeInTheDocument();
-    expect(screen.getByText('$1,800')).toBeInTheDocument();
+    expect(screen.getByText('₹8,500')).toBeInTheDocument();
+    expect(screen.getByText('₹1,800')).toBeInTheDocument();
     expect(screen.getByText('50% secured')).toBeInTheDocument();
     expect(screen.getByText('David Miller')).toBeInTheDocument();
     expect(screen.getByText('david@ballroom.com')).toBeInTheDocument();

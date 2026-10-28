@@ -8,24 +8,24 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
 }
 
 const typeStyles: Record<string, string> = {
-  wedding: 'bg-rose-50 text-rose-800 border-rose-200 font-bold',
-  birthday: 'bg-amber-50 text-amber-800 border-amber-200 font-bold',
-  community: 'bg-orange-50 text-orange-800 border-orange-200 font-bold',
-  other: 'bg-purple-50 text-purple-800 border-purple-200 font-bold',
-  default: 'bg-stone-100 text-stone-700 border-stone-200 font-medium',
-  booked: 'bg-emerald-50 text-emerald-800 border-emerald-300 font-bold',
-  considering: 'bg-amber-50 text-amber-800 border-amber-300 font-medium',
-  contacted: 'bg-blue-50 text-blue-800 border-blue-300 font-medium',
-  paid: 'bg-teal-50 text-teal-800 border-teal-300 font-bold',
+  wedding: 'bg-[#FEC7B4] text-[#F7418F] border-[#FC819E] font-bold',
+  birthday: 'bg-[#FFF3C7] text-[#F7418F] border-[#FEC7B4] font-bold',
+  community: 'bg-[#FC819E]/20 text-[#2A0E1C] border-[#FC819E] font-bold',
+  other: 'bg-[#FFF3C7] text-[#2A0E1C] border-[#FEC7B4] font-medium',
+  default: 'bg-[#FFF3C7] text-[#2A0E1C] border-[#FEC7B4] font-medium',
+  booked: 'bg-[#F7418F] text-white border-[#F7418F] font-bold',
+  considering: 'bg-[#FFF3C7] text-[#2A0E1C] border-[#FEC7B4] font-medium',
+  contacted: 'bg-[#FEC7B4] text-[#2A0E1C] border-[#FC819E] font-medium',
+  paid: 'bg-[#FC819E] text-white border-[#FC819E] font-bold',
   cancelled: 'bg-stone-100 text-stone-500 border-stone-200 line-through',
 };
 
 const variantStyles: Record<string, string> = {
-  default: 'bg-zinc-900 text-white dark:bg-zinc-50 dark:text-zinc-900 border-transparent',
-  secondary: 'bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-100 border-transparent',
-  outline: 'text-zinc-800 dark:text-zinc-200 border-zinc-200 dark:border-zinc-800',
-  destructive: 'bg-red-50 text-red-700 dark:bg-red-950/50 dark:text-red-300 border-red-200 dark:border-red-900',
-  success: 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-300 border-emerald-200 dark:border-emerald-900',
+  default: 'bg-[#F7418F] text-white border-transparent',
+  secondary: 'bg-[#FEC7B4] text-[#2A0E1C] border-[#FC819E]',
+  outline: 'text-[#F7418F] border-[#F7418F] bg-transparent',
+  destructive: 'bg-red-50 text-red-700 border-red-300',
+  success: 'bg-[#FC819E]/20 text-[#2A0E1C] border-[#FC819E]',
 };
 
 export function Badge({ type, variant, children, className = '', ...props }: BadgeProps) {
@@ -41,7 +41,7 @@ export function Badge({ type, variant, children, className = '', ...props }: Bad
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold border tracking-tight transition-colors',
+        'inline-flex items-center gap-1 px-2.5 py-0.5 rounded-none text-[11px] font-semibold border tracking-tight transition-colors',
         style,
         className
       )}
@@ -56,30 +56,37 @@ export function EventTypeBadge({ type }: { type: EventType }) {
   const icons: Record<EventType, string> = {
     wedding: '💍',
     birthday: '🎂',
-    community: '🍲',
-    other: '🎉',
-  };
-
-  const subLabels: Record<EventType, string> = {
-    wedding: 'Shaadi',
-    birthday: 'Janamdin',
-    community: 'Bhandara',
-    other: 'Utsav',
+    community: '🥂',
+    other: '✨',
   };
 
   const labels: Record<EventType, string> = {
     wedding: 'Wedding',
     birthday: 'Birthday',
     community: 'Community',
-    other: 'Social',
+    other: 'Other',
   };
 
   return (
-    <Badge type={type} className="gap-1 font-bold">
+    <Badge type={type} className="gap-1.5 font-bold">
       <span aria-hidden="true">{icons[type] || '✨'}</span>
-      <span>{subLabels[type] || 'Parv'}</span>
-      <span className="text-[10px] opacity-60">•</span>
       <span>{labels[type] || type}</span>
+    </Badge>
+  );
+}
+
+export function VendorStatusBadge({ status }: { status: string }) {
+  const labels: Record<string, string> = {
+    booked: 'Booked',
+    considering: 'Considering',
+    contacted: 'Contacted',
+    paid: 'Paid',
+    cancelled: 'Cancelled',
+  };
+
+  return (
+    <Badge type={status as BadgeProps['type']}>
+      {labels[status] ?? status}
     </Badge>
   );
 }

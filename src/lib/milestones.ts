@@ -280,9 +280,35 @@ export async function seedTimelineTemplate(
   // Clear existing milestones if generating fresh template
   await db.collection('milestones').deleteMany({ event_id: eventId });
 
+  // Calculate real-time window between today and target celebration date
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const [eYear, eMonth, eDay] = eventDateStr.split('-').map(Number);
+  const targetDate = new Date(eYear, eMonth - 1, eDay);
+  targetDate.setHours(0, 0, 0, 0);
+  const daysUntilEvent = Math.round((targetDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+  const maxTemplateDays = Math.max(...list.map((i) => i.daysBefore), 1);
+
   const docs: Milestone[] = [];
   for (const item of list) {
-    const calculatedDate = offsetDate(eventDateStr, item.daysBefore);
+    let calculatedDate: string;
+    if (item.daysBefore === 0) {
+      calculatedDate = eventDateStr;
+    } else if (daysUntilEvent > 0) {
+      if (daysUntilEvent >= item.daysBefore) {
+        calculatedDate = offsetDate(eventDateStr, item.daysBefore);
+      } else {
+        // Intelligently scale milestone lead time so it remains in present/future (>= today)
+        const progressRatio = item.daysBefore / maxTemplateDays;
+        const daysFromToday = Math.max(0, Math.round((1 - progressRatio) * Math.max(1, daysUntilEvent - 1)));
+        const d = new Date(today);
+        d.setDate(d.getDate() + daysFromToday);
+        calculatedDate = d.toISOString().split('T')[0];
+      }
+    } else {
+      calculatedDate = eventDateStr;
+    }
+
     const id = await getNextSequence('milestones');
     docs.push({
       id,

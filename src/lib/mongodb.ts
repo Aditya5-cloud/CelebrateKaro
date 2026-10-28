@@ -21,12 +21,12 @@ export const DEFAULT_DB_NAME = process.env.MONGODB_DB_NAME || 'eventplanner';
 declare global {
   var _mongoClientPromise: Promise<MongoClient> | undefined;
   var _mongoMemoryDb: InMemoryDb | undefined;
+  var _mongoIndexesInitialized: boolean | undefined;
 }
 
 // ─── Production MongoDB Atlas Connection ──────────────────────────────────────
 
 let clientPromise: Promise<MongoClient> | null = null;
-let indexesInitialized = false;
 
 function getClientPromise(): Promise<MongoClient> | null {
   const uri = process.env.MONGODB_URI?.trim();
@@ -34,38 +34,28 @@ function getClientPromise(): Promise<MongoClient> | null {
     return null;
   }
 
-  if (process.env.NODE_ENV === 'development') {
-    if (!global._mongoClientPromise) {
-      const client = new MongoClient(uri, {
-        maxPoolSize: 10,
-        minPoolSize: 1,
-        serverSelectionTimeoutMS: 5000,
-        socketTimeoutMS: 45000,
-      });
-      global._mongoClientPromise = client.connect();
-    }
-    return global._mongoClientPromise;
-  }
-
-  if (!clientPromise) {
+  if (!global._mongoClientPromise) {
     const client = new MongoClient(uri, {
       maxPoolSize: 10,
       minPoolSize: 1,
       serverSelectionTimeoutMS: 5000,
       socketTimeoutMS: 45000,
     });
-    clientPromise = client.connect();
+    global._mongoClientPromise = client.connect();
   }
-  return clientPromise;
+  return global._mongoClientPromise;
 }
 
 /**
  * Initialize indexes for all collections in MongoDB Atlas.
  */
 async function initIndexes(db: Db): Promise<void> {
-  if (indexesInitialized) return;
+  if (global._mongoIndexesInitialized) return;
+  global._mongoIndexesInitialized = true;
   try {
     await Promise.all([
+      db.collection('users').createIndex({ id: 1 }, { unique: true }),
+      db.collection('users').createIndex({ email: 1 }, { unique: true }),
       db.collection('events').createIndex({ id: 1 }, { unique: true }),
       db.collection('events').createIndex({ user_id: 1, event_date: 1 }),
       db.collection('events').createIndex({ event_date: 1, created_at: -1 }),
@@ -79,9 +69,7 @@ async function initIndexes(db: Db): Promise<void> {
       db.collection('checklist_items').createIndex({ event_id: 1, sort_order: 1 }),
       db.collection('chat_messages').createIndex({ id: 1 }, { unique: true }),
       db.collection('chat_messages').createIndex({ event_id: 1, created_at: 1 }),
-      db.collection('counters').createIndex({ _id: 1 }, { unique: true }),
     ]);
-    indexesInitialized = true;
   } catch (err) {
     console.warn('[MongoDB] Index initialization notice:', err);
   }
@@ -153,6 +141,12 @@ export class InMemoryCollection {
       if (key === '$or' && Array.isArray(val)) {
         const orMatches = val.some((subFilter) => this.matches(doc, subFilter));
         if (!orMatches) return false;
+        continue;
+      }
+      if (val && typeof val === 'object' && '$in' in (val as Record<string, unknown>) && Array.isArray((val as { $in: unknown[] }).$in)) {
+        if (!(val as { $in: unknown[] }).$in.includes(doc[key])) {
+          return false;
+        }
         continue;
       }
       if (doc[key] !== val) {
@@ -308,7 +302,7 @@ export async function getDb(): Promise<any> {
   if (promise) {
     const client = await promise;
     const db = client.db(DEFAULT_DB_NAME);
-    if (!indexesInitialized) {
+    if (!global._mongoIndexesInitialized) {
       await initIndexes(db);
     }
     return db;
@@ -339,14 +333,13 @@ export async function closeDb(): Promise<void> {
     const client = await clientPromise;
     await client.close();
     clientPromise = null;
-    indexesInitialized = false;
   }
   if (global._mongoClientPromise) {
     const client = await global._mongoClientPromise;
     await client.close();
     global._mongoClientPromise = undefined;
-    indexesInitialized = false;
   }
+  global._mongoIndexesInitialized = false;
 }
 
 /**

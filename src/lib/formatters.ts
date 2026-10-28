@@ -5,15 +5,15 @@
 import { fromCents } from './currency';
 
 /**
- * Format cents into a clean dollar string (e.g. 1500000 -> "$15,000").
+ * Format cents into a clean Indian Rupee string (e.g. 1500000 -> "₹15,000").
  */
 export function formatCurrency(cents: number): string {
-  const dollars = fromCents(cents);
-  return new Intl.NumberFormat('en-US', {
+  const amount = fromCents(cents);
+  return new Intl.NumberFormat('en-IN', {
     style: 'currency',
-    currency: 'USD',
-    maximumFractionDigits: dollars % 1 === 0 ? 0 : 2,
-  }).format(dollars);
+    currency: 'INR',
+    maximumFractionDigits: amount % 1 === 0 ? 0 : 2,
+  }).format(amount);
 }
 
 /**
@@ -54,8 +54,8 @@ export function getRelativeDays(dateString: string): { label: string; isPast: bo
   } else if (diffDays > 1) {
     return { label: `In ${diffDays} days`, isPast: false, days: diffDays };
   } else if (diffDays === -1) {
-    return { label: 'Yesterday', isPast: true, days: -1 };
+    return { label: 'Celebrated yesterday', isPast: true, days: -1 };
   } else {
-    return { label: `${Math.abs(diffDays)} days ago`, isPast: true, days: diffDays };
+    return { label: `Celebrated (${Math.abs(diffDays)}d ago)`, isPast: true, days: diffDays };
   }
 }

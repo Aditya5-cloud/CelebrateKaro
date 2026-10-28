@@ -1,6 +1,14 @@
 import { NextResponse } from 'next/server';
 import { getEventById } from '@/lib/events';
-import { getChatMessages, saveChatMessage, clearChatHistory, buildEventContextSummary } from '@/lib/chat';
+import {
+  getChatMessages,
+  saveChatMessage,
+  clearChatHistory,
+  buildEventContextSummary,
+  getUserQuestionCount,
+  incrementUserQuestionCount,
+  MAX_USER_QUESTIONS,
+} from '@/lib/chat';
 import { generateChatResponse } from '@/lib/gemini';
 import { sendChatMessageSchema } from '@/lib/validations/chat';
 
@@ -10,7 +18,7 @@ interface RouteContext {
   params: Promise<{ id: string }>;
 }
 
-export async function GET(_request: Request, context: RouteContext) {
+export async function GET(request: Request, context: RouteContext) {
   try {
     const { id: rawId } = await context.params;
     const eventId = parseInt(rawId, 10);
@@ -23,14 +31,25 @@ export async function GET(_request: Request, context: RouteContext) {
       return NextResponse.json({ success: false, error: 'Event not found.' }, { status: 404 });
     }
 
+    const headerUserId = request.headers.get('x-user-id');
+    if (event.user_id && headerUserId && event.user_id !== headerUserId) {
+      return NextResponse.json({ success: false, error: 'Unauthorized celebration access.' }, { status: 403 });
+    }
+
     const messages = await getChatMessages(eventId, 100);
     const contextSummary = await buildEventContextSummary(eventId);
+    const effectiveUserId = headerUserId || event.user_id || null;
+    const questionCount = await getUserQuestionCount(eventId, effectiveUserId);
+    const questionsRemaining = Math.max(0, MAX_USER_QUESTIONS - questionCount);
 
     return NextResponse.json({
       success: true,
       data: {
         messages,
         eventContextSummary: contextSummary,
+        questionCount,
+        questionLimit: MAX_USER_QUESTIONS,
+        questionsRemaining,
       },
     });
   } catch (error) {
@@ -50,6 +69,11 @@ export async function POST(request: Request, context: RouteContext) {
     const event = await getEventById(eventId);
     if (!event) {
       return NextResponse.json({ success: false, error: 'Event not found.' }, { status: 404 });
+    }
+
+    const headerUserId = request.headers.get('x-user-id');
+    if (event.user_id && headerUserId && event.user_id !== headerUserId) {
+      return NextResponse.json({ success: false, error: 'Unauthorized celebration access.' }, { status: 403 });
     }
 
     let body: unknown;
@@ -73,9 +97,28 @@ export async function POST(request: Request, context: RouteContext) {
     }
 
     const userText = validationResult.data.message;
+    const userName = validationResult.data.userName;
+    const effectiveUserId = headerUserId || event.user_id || null;
 
-    // 1. Save user message to database
-    const userMessage = await saveChatMessage(eventId, 'user', userText);
+    // Check 5-question limit per user
+    const currentQuestionCount = await getUserQuestionCount(eventId, effectiveUserId);
+    if (currentQuestionCount >= MAX_USER_QUESTIONS) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: `You have reached the limit of ${MAX_USER_QUESTIONS} questions for the AI assistant.`,
+          questionCount: currentQuestionCount,
+          questionLimit: MAX_USER_QUESTIONS,
+          questionsRemaining: 0,
+        },
+        { status: 403 }
+      );
+    }
+
+    // 1. Save user message to database & increment counter
+    const userMessage = await saveChatMessage(eventId, 'user', userText, effectiveUserId);
+    await incrementUserQuestionCount(eventId, effectiveUserId);
+    const newQuestionCount = currentQuestionCount + 1;
 
     // 2. Fetch history and build live event context
     const history = await getChatMessages(eventId, 20);
@@ -86,11 +129,12 @@ export async function POST(request: Request, context: RouteContext) {
       event,
       userText,
       history,
-      eventContextSummary
+      eventContextSummary,
+      userName
     );
 
     // 4. Save assistant response to database
-    const assistantMessage = await saveChatMessage(eventId, 'assistant', aiResult.response);
+    const assistantMessage = await saveChatMessage(eventId, 'assistant', aiResult.response, effectiveUserId);
 
     return NextResponse.json(
       {
@@ -100,6 +144,9 @@ export async function POST(request: Request, context: RouteContext) {
           assistantMessage,
           isMock: aiResult.isMock,
           model: aiResult.model,
+          questionCount: newQuestionCount,
+          questionLimit: MAX_USER_QUESTIONS,
+          questionsRemaining: Math.max(0, MAX_USER_QUESTIONS - newQuestionCount),
         },
       },
       { status: 201 }
@@ -110,7 +157,7 @@ export async function POST(request: Request, context: RouteContext) {
   }
 }
 
-export async function DELETE(_request: Request, context: RouteContext) {
+export async function DELETE(request: Request, context: RouteContext) {
   try {
     const { id: rawId } = await context.params;
     const eventId = parseInt(rawId, 10);
@@ -121,6 +168,11 @@ export async function DELETE(_request: Request, context: RouteContext) {
     const event = await getEventById(eventId);
     if (!event) {
       return NextResponse.json({ success: false, error: 'Event not found.' }, { status: 404 });
+    }
+
+    const headerUserId = request.headers.get('x-user-id');
+    if (event.user_id && headerUserId && event.user_id !== headerUserId) {
+      return NextResponse.json({ success: false, error: 'Unauthorized celebration access.' }, { status: 403 });
     }
 
     await clearChatHistory(eventId);

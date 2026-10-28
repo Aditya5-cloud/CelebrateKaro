@@ -207,16 +207,18 @@ Instructions:
  */
 export function getGroundedMockChatResponse(
   event: Event,
-  userMessage: string
+  userMessage: string,
+  userName?: string
 ): string {
   const query = userMessage.toLowerCase();
+  const name = userName?.trim() || 'there';
 
   if (query.includes('budget') || query.includes('cost') || query.includes('money') || query.includes('spend') || query.includes('price')) {
-    return `### 💰 Budget Analysis for **${event.name}**
+    return `Hey ${name}, here is your budget breakdown for **${event.name}**:
 
-Here is your current financial status from your event records:
-- **Total Allocated Budget:** ${formatCurrency(event.total_budget)}
-- **Guest Scale:** ${event.guest_count} guests (approx. **${formatCurrency(event.guest_count > 0 ? Math.round(event.total_budget / event.guest_count) : 0)}** per guest)
+Ok ${name}, according to the requirements, here is the current financial status:
+• **Total Allocated Budget:** ${formatCurrency(event.total_budget)}
+• **Guest Scale:** ${event.guest_count} guests (approx. **${formatCurrency(event.guest_count > 0 ? Math.round(event.total_budget / event.guest_count) : 0)}** per guest)
 
 **Actionable Budget Tips for ${event.event_type}:**
 1. **Prioritize Anchor Items:** Venue and catering typically account for 45–55% of your total spend. Ensure contracts lock in service fees and taxes.
@@ -225,34 +227,28 @@ Here is your current financial status from your event records:
   }
 
   if (query.includes('vendor') || query.includes('hire') || query.includes('booked') || query.includes('cater') || query.includes('photograph') || query.includes('dj') || query.includes('music')) {
-    return `### 🤝 Vendor Strategy for **${event.name}**
+    return `Hey ${name}, here is your vendor planning strategy for **${event.name}**:
 
-Looking at your Vendor Directory records:
-- **Celebration Type:** ${event.event_type.toUpperCase()}
-- **Event Date:** ${event.event_date}
-
-**Strategic Vendor Checklist:**
+Ok ${name}, according to the requirements for your ${event.event_type.toUpperCase()} on ${event.event_date}:
 1. **Essential Priority:** Secure your primary venue and catering first, as they dictate guest capacity, layout rules, and curfew timing.
 2. **Next Tier:** Photography/videography and music entertainment book up 6–12 months in advance for peak weekend dates.
 3. **Contract Protection:** Always request itemized proposals, setup/breakdown hours, and backup plans in case of inclement weather or vendor illness.`;
   }
 
   if (query.includes('next') || query.includes('step') || query.includes('timeline') || query.includes('deadline') || query.includes('milestone') || query.includes('when')) {
-    return `### 📅 Immediate Planning Steps for **${event.name}**
+    return `Hey ${name}, here are the immediate planning steps for **${event.name}**:
 
-Target Date: **${event.event_date}** (${event.guest_count} guests)
-
-**What to tackle next:**
-1. **Review Pending Milestones:** Check the **Timeline & Milestones** tab to verify upcoming deadlines.
+Ok ${name}, according to the requirements for ${event.event_date} (${event.guest_count} guests):
+1. **Review Pending Milestones:** Check the Timeline & Milestones tab to verify upcoming deadlines.
 2. **Confirm Headcount Thresholds:** Send out RSVP reminders to lock in final table counts for catering.
-3. **Checklist Review:** Visit your **✨ AI Checklist** tab to mark off completed items and generate targeted subtasks.`;
+3. **Checklist Review:** Visit your Checklist tab to mark off completed items and generate targeted subtasks.`;
   }
 
   if (query.includes('idea') || query.includes('theme') || query.includes('decor') || query.includes('fun') || query.includes('recommend') || query.includes('unique')) {
     if (event.event_type === 'wedding') {
-      return `### ✨ Personalized Ideas for **${event.name}**
+      return `Hey ${name}, here are personalized celebration ideas for **${event.name}**:
 
-Tailored for **${event.guest_count} guests** with a budget of **${formatCurrency(event.total_budget)}**:
+Ok ${name}, according to the requirements for **${event.guest_count} guests** with a budget of **${formatCurrency(event.total_budget)}**:
 1. **Interactive Guestbook Station:** Replace the traditional book with an audio guestbook phone or a polaroid photo memory board.
 2. **Signature His & Hers Cocktails:** Name custom cocktails after meaningful shared memories or your favorite travel destinations.
 3. **Late-Night Snack Surprise:** Treat dancing guests to gourmet sliders, artisan pretzel bites, or a mini taco bar during the last hour.
@@ -260,33 +256,31 @@ Tailored for **${event.guest_count} guests** with a budget of **${formatCurrency
     }
 
     if (event.event_type === 'birthday') {
-      return `### 🎂 Creative Birthday Concepts for **${event.name}**
+      return `Hey ${name}, here are creative birthday concepts for **${event.name}**:
 
-Tailored for a **${event.guest_count}-guest** party:
+Ok ${name}, according to the requirements for a **${event.guest_count}-guest** party:
 1. **Custom Interactive Trivia:** Host a 15-minute trivia quiz about the guest of honor with fun mini prizes.
 2. **Themed Photo Backdrop:** Create an organic balloon garland with marquee LED numbers for Instagram moments.
 3. **Signature Dessert Bar:** Complement the main cake with mini dessert shooters, a donut wall, or gourmet popcorn station.
 4. **Curated Decades Playlist:** Feature songs from milestones across the celebrant's life.`;
     }
 
-    return `### 🌟 Community Celebration Ideas for **${event.name}**
+    return `Hey ${name}, here are community celebration ideas for **${event.name}**:
 
-Tailored for **${event.guest_count} community participants**:
+Ok ${name}, according to the requirements for **${event.guest_count} community participants**:
 1. **Local Makers & Artisans Showcase:** Invite neighborhood crafters and independent vendors to host pop-up stalls.
 2. **Interactive Community Mural:** Set up a large collaborative canvas where attendees paint handprints or community messages.
 3. **Main Stage Local Talent:** Feature youth bands, cultural dance troupes, and local acoustic musicians throughout the afternoon.
 4. **Family Activity Zone:** Lawn games (giant Jenga, cornhole), face painting, and a scavenger hunt.`;
   }
 
-  return `### 🤖 Antigravity Planning Assistant
+  return `Hey ${name}, I am ready to help plan **${event.name}** (${event.event_type}, ${event.guest_count} attendees, scheduled for ${event.event_date}).
 
-I am grounded in your live event profile for **${event.name}** (${event.event_type}, ${event.guest_count} attendees, scheduled for ${event.event_date}).
-
-**How I can assist you today:**
-- 💰 **Budget Guidance:** Ask *"How is my budget looking?"* or *"Where can I cut costs?"*
-- 🤝 **Vendor Recommendations:** Ask *"What vendors should I prioritize booking?"*
-- 📅 **Timeline Deadlines:** Ask *"What are my immediate next steps?"*
-- ✨ **Creative Themes:** Ask *"Suggest personalized ideas for my guests"*
+Ok ${name}, according to the requirements, here is how we can proceed:
+• **Budget Guidance:** Ask *"How is my budget looking?"* or *"Where can I cut costs?"*
+• **Vendor Recommendations:** Ask *"What vendors should I prioritize booking?"*
+• **Timeline Deadlines:** Ask *"What are my immediate next steps?"*
+• **Creative Themes:** Ask *"Suggest personalized ideas for my guests"*
 
 What would you like to explore first?`;
 }
@@ -298,13 +292,15 @@ export async function generateChatResponse(
   event: Event,
   userMessage: string,
   history: Array<{ role: 'user' | 'assistant'; content: string }>,
-  eventContextSummary: string
+  eventContextSummary: string,
+  userName?: string
 ): Promise<{ response: string; isMock: boolean; model: string }> {
   const apiKey = process.env.GEMINI_API_KEY;
+  const displayName = userName?.trim() || 'there';
 
   if (!apiKey || apiKey === 'your_gemini_api_key_here') {
     return {
-      response: getGroundedMockChatResponse(event, userMessage),
+      response: getGroundedMockChatResponse(event, userMessage, displayName),
       isMock: true,
       model: 'grounded-event-assistant',
     };
@@ -314,10 +310,13 @@ export async function generateChatResponse(
     const genAI = new GoogleGenerativeAI(apiKey);
     const model = genAI.getGenerativeModel({
       model: GEMINI_MODEL,
-      systemInstruction: `You are Antigravity Event Planner, an expert, thoughtful, and highly competent GenAI planning assistant.
-You help users organize weddings, birthdays, and community events with budgets, timelines, vendor checklists, and personalized ideas.
+      systemInstruction: `You are a professional, courteous, and concise celebration planning concierge assisting ${displayName}.
+Never introduce yourself as Antigravity AI or mention Antigravity.
+Always address the user directly by their name in a friendly, professional manner (e.g., "Hey ${displayName}," or "Ok ${displayName}, according to the requirements...").
+Do not use markdown heading hashtags like "##" or "###". Instead, structure your response with bold text, clean paragraphs, and bullet points.
+Keep responses concise, clear, and focused on actionable event planning advice.
 You are directly grounded in the user's real event data provided below. Use this actual data whenever answering questions about budget, timeline, vendors, or tasks.
-If asked for ideas, provide creative, actionable, and personalized suggestions fitting the budget and guest count. Keep responses clear, helpful, and formatted in clean GitHub markdown.
+If asked for ideas, provide creative, actionable, and personalized suggestions fitting the budget and guest count.
 
 ${eventContextSummary}`,
     });
@@ -342,7 +341,7 @@ ${eventContextSummary}`,
   } catch (error) {
     console.warn('Gemini chat failed or network unreachable. Falling back to grounded assistant:', error);
     return {
-      response: getGroundedMockChatResponse(event, userMessage),
+      response: getGroundedMockChatResponse(event, userMessage, displayName),
       isMock: true,
       model: 'grounded-event-assistant',
     };

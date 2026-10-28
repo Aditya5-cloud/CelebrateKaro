@@ -26,25 +26,64 @@ export async function getChatMessages(eventId: number, limit = 50): Promise<Chat
   }));
 }
 
+export const MAX_USER_QUESTIONS = 5;
+
+export async function getUserQuestionCount(eventId: number, userId?: string | null): Promise<number> {
+  const db = await getDb();
+  if (userId) {
+    const limitDoc = await db.collection('ai_user_limits').findOne({ user_id: userId });
+    const countInLimits = (limitDoc?.count as number) || 0;
+    const countInMessages = await db.collection('chat_messages').countDocuments({
+      role: 'user',
+      $or: [{ user_id: userId }, { event_id: eventId }],
+    });
+    return Math.max(countInLimits, countInMessages);
+  }
+
+  const limitDoc = await db.collection('ai_user_limits').findOne({ event_id: eventId });
+  const countInLimits = (limitDoc?.count as number) || 0;
+  const countInMessages = await db.collection('chat_messages').countDocuments({
+    event_id: eventId,
+    role: 'user',
+  });
+  return Math.max(countInLimits, countInMessages);
+}
+
+export async function incrementUserQuestionCount(eventId: number, userId?: string | null): Promise<number> {
+  const db = await getDb();
+  const query = userId ? { user_id: userId } : { event_id: eventId };
+  await db.collection('ai_user_limits').findOneAndUpdate(
+    query,
+    { $inc: { count: 1 }, $set: { updated_at: nowIso() } },
+    { upsert: true }
+  );
+  return getUserQuestionCount(eventId, userId);
+}
+
 export async function saveChatMessage(
   eventId: number,
   role: ChatRole,
-  content: string
+  content: string,
+  userId?: string | null
 ): Promise<ChatMessage> {
   const db = await getDb();
   const id = await getNextSequence('chat_messages');
   const now = nowIso();
 
-  const doc: ChatMessage = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const doc: any = {
     id,
     event_id: eventId,
     role,
     content: content.trim(),
     created_at: now,
   };
+  if (userId) {
+    doc.user_id = userId;
+  }
 
   await db.collection('chat_messages').insertOne(doc);
-  return doc;
+  return doc as ChatMessage;
 }
 
 export async function clearChatHistory(eventId: number): Promise<boolean> {
