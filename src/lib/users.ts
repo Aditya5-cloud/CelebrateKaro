@@ -88,39 +88,43 @@ export function sanitizeUser(doc: DbUserRecord): User {
  * Seed official demo user accounts into MongoDB if they do not exist.
  */
 export async function seedDemoUsersIfEmpty(): Promise<void> {
-  const db = await getDb();
-  const collection = db.collection('users');
-
-  for (const demo of DEMO_USERS) {
-    const existing = await collection.findOne({ email: demo.email.toLowerCase() });
-    if (!existing) {
-      const salt = generateSaltServer();
-      const password_hash = hashPasswordServer(demo.password, salt);
-      const now = nowIso();
-      const doc: DbUserRecord = {
-        id: demo.id,
-        name: demo.name,
-        email: demo.email.toLowerCase(),
-        password_hash,
-        salt,
-        role: demo.role,
-        role_label: demo.role_label,
-        avatar_color: demo.avatar_color,
-        created_at: now,
-        updated_at: now,
-      };
-      await collection.insertOne(doc);
-    }
-  }
-
-  // Also assign any existing legacy events without user_id to demo user 1
   try {
-    await db.collection('events').updateMany(
-      { $or: [{ user_id: { $exists: false } }, { user_id: null }, { user_id: '' }] },
-      { $set: { user_id: 'usr_demo_1' } }
-    );
+    const db = await getDb();
+    const collection = db.collection('users');
+
+    for (const demo of DEMO_USERS) {
+      const existing = await collection.findOne({ email: demo.email.toLowerCase() });
+      if (!existing) {
+        const salt = generateSaltServer();
+        const password_hash = hashPasswordServer(demo.password, salt);
+        const now = nowIso();
+        const doc: DbUserRecord = {
+          id: demo.id,
+          name: demo.name,
+          email: demo.email.toLowerCase(),
+          password_hash,
+          salt,
+          role: demo.role,
+          role_label: demo.role_label,
+          avatar_color: demo.avatar_color,
+          created_at: now,
+          updated_at: now,
+        };
+        await collection.insertOne(doc);
+      }
+    }
+
+    // Also assign any existing legacy events without user_id to demo user 1
+    try {
+      await db.collection('events').updateMany(
+        { $or: [{ user_id: { $exists: false } }, { user_id: null }, { user_id: '' }] },
+        { $set: { user_id: 'usr_demo_1' } }
+      );
+    } catch (err) {
+      console.warn('[Users] Legacy events migration notice:', err);
+    }
   } catch (err) {
-    console.warn('[Users] Legacy events migration notice:', err);
+    console.warn('[Users] seedDemoUsersIfEmpty notice:', err);
   }
 }
 
@@ -153,60 +157,68 @@ export async function createUser(input: {
   password: string;
   role?: UserRole;
 }): Promise<{ success: boolean; user?: User; error?: string }> {
-  const name = input.name.trim();
-  const email = input.email.trim().toLowerCase();
-  const role = input.role || 'host';
+  try {
+    const name = input.name.trim();
+    const email = input.email.trim().toLowerCase();
+    const role = input.role || 'host';
 
-  if (!name) {
-    return { success: false, error: 'Please enter your full name.' };
-  }
-  if (!email || !email.includes('@') || !email.includes('.')) {
-    return { success: false, error: 'Please enter a valid email address.' };
-  }
-  if (!input.password || input.password.length < 6) {
-    return { success: false, error: 'Password must be at least 6 characters long.' };
-  }
+    if (!name) {
+      return { success: false, error: 'Please enter your full name.' };
+    }
+    if (!email || !email.includes('@') || !email.includes('.')) {
+      return { success: false, error: 'Please enter a valid email address.' };
+    }
+    if (!input.password || input.password.length < 6) {
+      return { success: false, error: 'Password must be at least 6 characters long.' };
+    }
 
-  await seedDemoUsersIfEmpty();
-  const db = await getDb();
-  const collection = db.collection('users');
+    await seedDemoUsersIfEmpty();
+    const db = await getDb();
+    const collection = db.collection('users');
 
-  const existing = await collection.findOne({ email });
-  if (existing) {
+    const existing = await collection.findOne({ email });
+    if (existing) {
+      return {
+        success: false,
+        error: 'An account with this email already exists. Please sign in instead.',
+      };
+    }
+
+    const salt = generateSaltServer();
+    const password_hash = hashPasswordServer(input.password, salt);
+    const now = nowIso();
+
+    const totalUsers = await collection.countDocuments();
+    const avatar_color = AVATAR_COLORS[totalUsers % AVATAR_COLORS.length];
+    const role_label = ROLE_LABELS[role] || 'Celebration Host';
+    const id = `usr_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+
+    const userDoc: DbUserRecord = {
+      id,
+      name,
+      email,
+      password_hash,
+      salt,
+      role,
+      role_label,
+      avatar_color,
+      created_at: now,
+      updated_at: now,
+    };
+
+    await collection.insertOne(userDoc);
+
+    return {
+      success: true,
+      user: sanitizeUser(userDoc),
+    };
+  } catch (err) {
+    console.error('[Users] Error creating user:', err);
     return {
       success: false,
-      error: 'An account with this email already exists. Please sign in instead.',
+      error: 'Failed to create user account. Please try again.',
     };
   }
-
-  const salt = generateSaltServer();
-  const password_hash = hashPasswordServer(input.password, salt);
-  const now = nowIso();
-
-  const totalUsers = await collection.countDocuments();
-  const avatar_color = AVATAR_COLORS[totalUsers % AVATAR_COLORS.length];
-  const role_label = ROLE_LABELS[role] || 'Celebration Host';
-  const id = `usr_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
-
-  const userDoc: DbUserRecord = {
-    id,
-    name,
-    email,
-    password_hash,
-    salt,
-    role,
-    role_label,
-    avatar_color,
-    created_at: now,
-    updated_at: now,
-  };
-
-  await collection.insertOne(userDoc);
-
-  return {
-    success: true,
-    user: sanitizeUser(userDoc),
-  };
 }
 
 /**
@@ -216,33 +228,41 @@ export async function verifyUserCredentials(
   email: string,
   password: string
 ): Promise<{ success: boolean; user?: User; error?: string }> {
-  const normalizedEmail = email.trim().toLowerCase();
-  if (!normalizedEmail) {
-    return { success: false, error: 'Please enter your email address.' };
-  }
-  if (!password) {
-    return { success: false, error: 'Please enter your password.' };
-  }
+  try {
+    const normalizedEmail = email.trim().toLowerCase();
+    if (!normalizedEmail) {
+      return { success: false, error: 'Please enter your email address.' };
+    }
+    if (!password) {
+      return { success: false, error: 'Please enter your password.' };
+    }
 
-  await seedDemoUsersIfEmpty();
-  const userRecord = await findUserByEmail(normalizedEmail);
-  if (!userRecord) {
+    await seedDemoUsersIfEmpty();
+    const userRecord = await findUserByEmail(normalizedEmail);
+    if (!userRecord) {
+      return {
+        success: false,
+        error: 'No account found with this email. Please check your spelling or register a new account.',
+      };
+    }
+
+    const inputHash = hashPasswordServer(password, userRecord.salt);
+    if (inputHash !== userRecord.password_hash) {
+      return {
+        success: false,
+        error: 'Incorrect password. Only the password created during registration can be used.',
+      };
+    }
+
+    return {
+      success: true,
+      user: sanitizeUser(userRecord),
+    };
+  } catch (err) {
+    console.error('[Users] Error verifying credentials:', err);
     return {
       success: false,
-      error: 'No account found with this email. Please check your spelling or register a new account.',
+      error: 'Failed to verify credentials. Please try again.',
     };
   }
-
-  const inputHash = hashPasswordServer(password, userRecord.salt);
-  if (inputHash !== userRecord.password_hash) {
-    return {
-      success: false,
-      error: 'Incorrect password. Only the password created during registration can be used.',
-    };
-  }
-
-  return {
-    success: true,
-    user: sanitizeUser(userRecord),
-  };
 }

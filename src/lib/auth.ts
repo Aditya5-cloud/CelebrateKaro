@@ -255,8 +255,10 @@ export async function loginUser(
         localStorage.setItem(STORAGE_KEY_CURRENT_USER, JSON.stringify(cleanUser));
         broadcastAuthChange(cleanUser);
         return { success: true, user: cleanUser };
-      } else if (!res.ok && json.error) {
+      } else if (!res.ok && res.status < 500 && json.error) {
         return { success: false, error: json.error };
+      } else if (!res.ok && res.status >= 500) {
+        console.warn('[Auth] Server returned status', res.status, '- activating resilient client fallback.');
       }
     } catch {
       // Network failure or test runner fallback to local storage
@@ -363,8 +365,10 @@ export async function registerUser(
 
         broadcastAuthChange(cleanUser);
         return { success: true, user: cleanUser };
-      } else if (!res.ok && json.error) {
+      } else if (!res.ok && res.status < 500 && json.error) {
         return { success: false, error: json.error };
+      } else if (!res.ok && res.status >= 500) {
+        console.warn('[Auth] Server returned status', res.status, '- activating resilient client registration fallback.');
       }
     } catch {
       // Fallback for tests or offline

@@ -35,13 +35,26 @@ function getClientPromise(): Promise<MongoClient> | null {
   }
 
   if (!global._mongoClientPromise) {
-    const client = new MongoClient(uri, {
-      maxPoolSize: 10,
-      minPoolSize: 1,
-      serverSelectionTimeoutMS: 5000,
-      socketTimeoutMS: 45000,
-    });
-    global._mongoClientPromise = client.connect();
+    try {
+      const client = new MongoClient(uri, {
+        maxPoolSize: 10,
+        minPoolSize: 1,
+        serverSelectionTimeoutMS: 5000,
+        connectTimeoutMS: 5000,
+        socketTimeoutMS: 45000,
+      });
+      // Attach catch handler to prevent unhandled rejection and reset global state on failure
+      const p = client.connect().catch((err) => {
+        console.warn('[MongoDB Atlas] Connection attempt failed:', err?.message || err);
+        global._mongoClientPromise = undefined;
+        throw err;
+      });
+      global._mongoClientPromise = p;
+    } catch (err) {
+      console.warn('[MongoDB Atlas] Client creation error:', err);
+      global._mongoClientPromise = undefined;
+      return null;
+    }
   }
   return global._mongoClientPromise;
 }
@@ -300,12 +313,21 @@ function getMemoryDb(): InMemoryDb {
 export async function getDb(): Promise<any> {
   const promise = getClientPromise();
   if (promise) {
-    const client = await promise;
-    const db = client.db(DEFAULT_DB_NAME);
-    if (!global._mongoIndexesInitialized) {
-      await initIndexes(db);
+    try {
+      const client = await promise;
+      const db = client.db(DEFAULT_DB_NAME);
+      if (!global._mongoIndexesInitialized) {
+        await initIndexes(db);
+      }
+      return db;
+    } catch (err) {
+      console.warn(
+        '[MongoDB Atlas] Connection unavailable, falling back to memory database:',
+        err instanceof Error ? err.message : err
+      );
+      global._mongoClientPromise = undefined;
+      return getMemoryDb();
     }
-    return db;
   }
   return getMemoryDb();
 }
@@ -315,14 +337,19 @@ export async function getDb(): Promise<any> {
  * Uses atomic findOneAndUpdate in the 'counters' collection.
  */
 export async function getNextSequence(name: string): Promise<number> {
-  const db = await getDb();
-  const counterColl = db.collection('counters');
-  const res = await counterColl.findOneAndUpdate(
-    { _id: name },
-    { $inc: { seq: 1 } },
-    { upsert: true, returnDocument: 'after' }
-  );
-  return res?.seq ?? 1;
+  try {
+    const db = await getDb();
+    const counterColl = db.collection('counters');
+    const res = await counterColl.findOneAndUpdate(
+      { _id: name },
+      { $inc: { seq: 1 } },
+      { upsert: true, returnDocument: 'after' }
+    );
+    return res?.seq ?? 1;
+  } catch (err) {
+    console.warn('[MongoDB Atlas] getNextSequence fallback:', err);
+    return Date.now();
+  }
 }
 
 /**
