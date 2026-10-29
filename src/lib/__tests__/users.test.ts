@@ -1,4 +1,4 @@
-import { getDb, clearDatabase, closeDb } from '../db';
+import { clearDatabase, closeDb } from '../db';
 import {
   createUser,
   findUserByEmail,

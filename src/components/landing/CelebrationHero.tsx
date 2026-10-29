@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import { Sparkles, ArrowRight, Heart, Calendar, Users, Play } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -121,12 +122,13 @@ export function CelebrationHero({
           <div className="lg:col-span-5 relative flex justify-center">
             {/* Real High-Resolution Generated Hero Image Container */}
             <div className="relative w-full max-w-md sm:max-w-lg rounded-3xl overflow-hidden shadow-2xl border border-amber-200/80 dark:border-zinc-800 group aspect-4/5 sm:aspect-1/1">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
                 src="/images/hero-celebration.jpg"
                 alt="Luxury evening celebration with champagne and fairy lights"
+                fill
+                sizes="(max-width: 768px) 100vw, 500px"
+                priority
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-103"
-                loading="eager"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
 

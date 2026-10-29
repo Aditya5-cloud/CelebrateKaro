@@ -36,7 +36,7 @@ export async function getVendors(
     query.category = filter.category;
   }
 
-  const vendors: Vendor[] = await db.collection('vendors').find(query).toArray();
+  const vendors = (await db.collection('vendors').find(query).toArray()) as unknown as Vendor[];
 
   return vendors.sort((a, b) => {
     const orderA = STATUS_ORDER[a.status] || 6;
@@ -49,7 +49,7 @@ export async function getVendors(
 export async function getVendorById(id: number): Promise<Vendor | null> {
   const db = await getDb();
   const row = await db.collection('vendors').findOne({ id });
-  return (row as Vendor) ?? null;
+  return (row as unknown as Vendor) ?? null;
 }
 
 export async function createVendor(

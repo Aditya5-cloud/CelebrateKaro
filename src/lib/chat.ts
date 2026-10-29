@@ -7,17 +7,25 @@ import { getVendors, getVendorStats } from './vendors';
 import { getChecklistItems, getChecklistStats } from './checklist';
 import { formatCurrency, getRelativeDays } from './formatters';
 
+export interface ChatMessageDoc {
+  id: number;
+  event_id: number;
+  role: ChatRole;
+  content: string;
+  created_at: string;
+  user_id?: string;
+}
+
 export async function getChatMessages(eventId: number, limit = 50): Promise<ChatMessage[]> {
   const db = await getDb();
   const rows = await db
-    .collection('chat_messages')
+    .collection<ChatMessageDoc>('chat_messages')
     .find({ event_id: eventId })
     .sort({ id: 1 })
     .limit(limit)
     .toArray();
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return rows.map((r: any) => ({
+  return rows.map((r) => ({
     id: r.id,
     event_id: r.event_id,
     role: r.role,
@@ -70,20 +78,23 @@ export async function saveChatMessage(
   const id = await getNextSequence('chat_messages');
   const now = nowIso();
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const doc: any = {
+  const doc: ChatMessageDoc = {
     id,
     event_id: eventId,
     role,
     content: content.trim(),
     created_at: now,
+    ...(userId ? { user_id: userId } : {}),
   };
-  if (userId) {
-    doc.user_id = userId;
-  }
 
-  await db.collection('chat_messages').insertOne(doc);
-  return doc as ChatMessage;
+  await db.collection<ChatMessageDoc>('chat_messages').insertOne(doc);
+  return {
+    id: doc.id,
+    event_id: doc.event_id,
+    role: doc.role,
+    content: doc.content,
+    created_at: doc.created_at,
+  };
 }
 
 export async function clearChatHistory(eventId: number): Promise<boolean> {

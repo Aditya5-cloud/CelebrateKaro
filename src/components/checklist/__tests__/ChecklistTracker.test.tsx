@@ -144,13 +144,15 @@ describe('ChecklistTracker Component', () => {
 
     fireEvent.click(checkbox);
 
-    expect(global.fetch).toHaveBeenCalledWith(
-      '/api/events/1/checklist/402',
-      expect.objectContaining({
-        method: 'PATCH',
-        body: JSON.stringify({ completed: true }),
-      })
-    );
+    await waitFor(() => {
+      expect(global.fetch).toHaveBeenCalledWith(
+        '/api/events/1/checklist/402',
+        expect.objectContaining({
+          method: 'PATCH',
+          body: JSON.stringify({ completed: true }),
+        })
+      );
+    });
   });
 
   it('filters items by Active, Completed, and AI-only tabs', async () => {

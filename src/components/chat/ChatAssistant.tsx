@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import type { ChatMessage, Event } from '@/types';
+import type { ChatMessage, Event, User } from '@/types';
 import { getCurrentUser } from '@/lib/auth';
 import { getRelativeDays } from '@/lib/formatters';
 
@@ -37,7 +37,20 @@ export function ChatAssistant({ event }: ChatAssistantProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const currentUser = typeof window !== 'undefined' ? getCurrentUser() : null;
+  const [currentUser, setCurrentUser] = useState<User | null>(() => {
+    if (typeof window !== 'undefined') {
+      return getCurrentUser();
+    }
+    return null;
+  });
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setCurrentUser(getCurrentUser());
+    }
+  }, []);
+
+  const currentUserId = currentUser?.id;
   const userName = currentUser?.name;
   const relativeDate = getRelativeDays(event.event_date);
   const isPast = relativeDate.isPast;
@@ -59,8 +72,8 @@ export function ChatAssistant({ event }: ChatAssistantProps) {
     setError(null);
     try {
       const headers: Record<string, string> = {};
-      if (currentUser?.id) {
-        headers['x-user-id'] = currentUser.id;
+      if (currentUserId) {
+        headers['x-user-id'] = currentUserId;
       }
       const res = await fetch(`/api/events/${event.id}/chat`, { headers });
       const json = await res.json();
@@ -80,7 +93,7 @@ export function ChatAssistant({ event }: ChatAssistantProps) {
     } finally {
       setIsLoadingHistory(false);
     }
-  }, [event.id, currentUser?.id]);
+  }, [event.id, currentUserId]);
 
   useEffect(() => {
     fetchHistory();

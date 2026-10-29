@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import { Sparkles, CheckCircle2 } from 'lucide-react';
 
 interface CelebrationCard {
@@ -84,10 +85,11 @@ export function CelebrationsCarousel() {
             >
               {/* Photo Frame with Category & Target Budget Badges */}
               <div className="relative aspect-16/10 w-full overflow-hidden bg-[#2A0E1C]/5 shrink-0 border-b-2 border-[#FEC7B4]">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
+                <Image
                   src={item.image}
                   alt={item.title}
+                  fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   className="w-full h-full object-cover"
                 />
                 {/* Category Chip */}

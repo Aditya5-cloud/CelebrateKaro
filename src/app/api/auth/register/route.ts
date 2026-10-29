@@ -1,7 +1,10 @@
 import { NextResponse } from 'next/server';
 import { createUser } from '@/lib/users';
+import type { UserRole } from '@/types';
 
 export const dynamic = 'force-dynamic';
+
+const VALID_ROLES: readonly UserRole[] = ['host', 'coordinator', 'community', 'planner'];
 
 export async function POST(request: Request) {
   try {
@@ -23,11 +26,16 @@ export async function POST(request: Request) {
       );
     }
 
+    const parsedRole: UserRole | undefined =
+      role && (VALID_ROLES as readonly string[]).includes(role)
+        ? (role as UserRole)
+        : undefined;
+
     const result = await createUser({
       name,
       email,
       password,
-      role: role as any,
+      role: parsedRole,
     });
 
     if (!result.success || !result.user) {

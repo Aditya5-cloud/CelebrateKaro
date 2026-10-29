@@ -90,10 +90,7 @@ async function initIndexes(db: Db): Promise<void> {
 
 // ─── In-Memory Database Fallback (for tests and offline development) ─────────
 
-interface DocRecord {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [key: string]: any;
-}
+export type DocRecord = Record<string, unknown>;
 
 class InMemoryCursor {
   private docs: DocRecord[];
@@ -108,13 +105,13 @@ class InMemoryCursor {
     this.docs.sort((a, b) => {
       for (const [key, dir] of entries) {
         const isAsc = dir === 1 || dir === 'asc';
-        const valA = a[key];
-        const valB = b[key];
+        const valA = a[key] as string | number | boolean | null | undefined;
+        const valB = b[key] as string | number | boolean | null | undefined;
         if (valA === valB) continue;
         if (valA === undefined) return isAsc ? 1 : -1;
         if (valB === undefined) return isAsc ? -1 : 1;
-        if (valA < valB) return isAsc ? -1 : 1;
-        if (valA > valB) return isAsc ? 1 : -1;
+        if (valA !== null && valB !== null && valA < valB) return isAsc ? -1 : 1;
+        if (valA !== null && valB !== null && valA > valB) return isAsc ? 1 : -1;
       }
       return 0;
     });
@@ -207,7 +204,8 @@ export class InMemoryCollection {
     }
     if (update.$inc) {
       for (const [key, incVal] of Object.entries(update.$inc)) {
-        item[key] = (item[key] || 0) + incVal;
+        const currentVal = typeof item[key] === 'number' ? (item[key] as number) : 0;
+        item[key] = currentVal + incVal;
       }
     }
     return { matchedCount: 1, modifiedCount: 1, acknowledged: true };
@@ -223,7 +221,8 @@ export class InMemoryCollection {
         if (update.$set) Object.assign(item, update.$set);
         if (update.$inc) {
           for (const [key, incVal] of Object.entries(update.$inc)) {
-            item[key] = (item[key] || 0) + incVal;
+            const currentVal = typeof item[key] === 'number' ? (item[key] as number) : 0;
+            item[key] = currentVal + incVal;
           }
         }
         count++;
@@ -266,7 +265,8 @@ export class InMemoryCollection {
     }
     if (update.$inc) {
       for (const [key, incVal] of Object.entries(update.$inc)) {
-        item[key] = (item[key] || 0) + incVal;
+        const currentVal = typeof item[key] === 'number' ? (item[key] as number) : 0;
+        item[key] = currentVal + incVal;
       }
     }
     return { ...item };
@@ -309,8 +309,7 @@ function getMemoryDb(): InMemoryDb {
  * Obtain the database connection instance.
  * Connects to MongoDB Atlas if MONGODB_URI is configured; otherwise uses memory fallback.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function getDb(): Promise<any> {
+export async function getDb(): Promise<Db> {
   const promise = getClientPromise();
   if (promise) {
     try {
@@ -326,10 +325,10 @@ export async function getDb(): Promise<any> {
         err instanceof Error ? err.message : err
       );
       global._mongoClientPromise = undefined;
-      return getMemoryDb();
+      return getMemoryDb() as unknown as Db;
     }
   }
-  return getMemoryDb();
+  return getMemoryDb() as unknown as Db;
 }
 
 /**
@@ -339,7 +338,7 @@ export async function getDb(): Promise<any> {
 export async function getNextSequence(name: string): Promise<number> {
   try {
     const db = await getDb();
-    const counterColl = db.collection('counters');
+    const counterColl = db.collection<{ _id: string; seq: number }>('counters');
     const res = await counterColl.findOneAndUpdate(
       { _id: name },
       { $inc: { seq: 1 } },

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import type { EventType, User } from '@/types';
 import type { EventWithStats } from '@/lib/events';
 import { EventCard } from '@/components/events/EventCard';
@@ -52,7 +53,9 @@ export default function HomePage() {
     return null;
   });
   const currentUserRef = useRef<User | null>(currentUser);
-  currentUserRef.current = currentUser;
+  useEffect(() => {
+    currentUserRef.current = currentUser;
+  }, [currentUser]);
 
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authModalTab, setAuthModalTab] = useState<'signin' | 'register'>('signin');
@@ -314,10 +317,11 @@ export default function HomePage() {
               onClick={() => setViewMode('landing')}
               className="flex items-center gap-2 sm:gap-2.5 group focus:outline-hidden"
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
                 src="/icon.png"
                 alt="CelebrateKaro Logo"
+                width={32}
+                height={32}
                 className="h-7 w-7 sm:h-8 sm:w-8 rounded-none object-contain shadow-xs border border-[#F7418F] group-hover:scale-105 transition-transform shrink-0"
               />
               <div>

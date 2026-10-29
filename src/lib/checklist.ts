@@ -25,10 +25,9 @@ export async function getChecklistItems(
     query.completed = filter.completed;
   }
 
-  const items = await db.collection('checklist_items').find(query).toArray();
+  const items = await db.collection<ChecklistItem>('checklist_items').find(query).toArray();
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const mapped: ChecklistItem[] = items.map((row: any) => ({
+  const mapped: ChecklistItem[] = items.map((row) => ({
     id: row.id,
     event_id: row.event_id,
     category: row.category,
@@ -80,9 +79,8 @@ export async function createChecklistItem(
   if (input.sort_order !== undefined && !isNaN(Number(input.sort_order))) {
     sortOrder = Number(input.sort_order);
   } else {
-    const existing = await db.collection('checklist_items').find({ event_id: eventId }).toArray();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const maxOrder = existing.reduce((max: number, item: any) => Math.max(max, item.sort_order || 0), 0);
+    const existing = await db.collection<ChecklistItem>('checklist_items').find({ event_id: eventId }).toArray();
+    const maxOrder = existing.reduce((max: number, item: ChecklistItem) => Math.max(max, item.sort_order || 0), 0);
     sortOrder = maxOrder + 1;
   }
 
@@ -159,9 +157,8 @@ export async function saveGeneratedChecklist(
 
   let currentOrder = 1;
   if (!replaceExisting) {
-    const existing = await db.collection('checklist_items').find({ event_id: eventId }).toArray();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const maxOrder = existing.reduce((max: number, item: any) => Math.max(max, item.sort_order || 0), 0);
+    const existing = await db.collection<ChecklistItem>('checklist_items').find({ event_id: eventId }).toArray();
+    const maxOrder = existing.reduce((max: number, item: ChecklistItem) => Math.max(max, item.sort_order || 0), 0);
     currentOrder = maxOrder + 1;
   }
 

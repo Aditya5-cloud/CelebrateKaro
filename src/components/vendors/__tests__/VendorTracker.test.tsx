@@ -100,13 +100,15 @@ describe('VendorTracker Component', () => {
     const advanceBtn = screen.getByRole('button', { name: /mark contacted/i });
     fireEvent.click(advanceBtn);
 
-    expect(global.fetch).toHaveBeenCalledWith(
-      '/api/events/1/vendors/302',
-      expect.objectContaining({
-        method: 'PATCH',
-        body: JSON.stringify({ status: 'contacted' }),
-      })
-    );
+    await waitFor(() => {
+      expect(global.fetch).toHaveBeenCalledWith(
+        '/api/events/1/vendors/302',
+        expect.objectContaining({
+          method: 'PATCH',
+          body: JSON.stringify({ status: 'contacted' }),
+        })
+      );
+    });
   });
 
   it('filters vendors by status tabs and search query', async () => {

@@ -1,6 +1,7 @@
 import { getDb, getNextSequence, nowIso } from './db';
 import { toCents } from './currency';
-import type { Event, EventType } from '@/types';
+import type { Db } from 'mongodb';
+import type { Event, EventType, BudgetCategory, Milestone, ChecklistItem } from '@/types';
 import type { CreateEventSchemaInput, UpdateEventSchemaInput } from './validations/event';
 import { seedBudgetTemplate } from './budget';
 import { seedTimelineTemplate } from './milestones';
@@ -16,26 +17,21 @@ export interface EventWithStats extends Event {
   checklist_completed: number;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-async function enrichEventWithStats(db: any, event: Event): Promise<EventWithStats> {
+async function enrichEventWithStats(db: Db, event: Event): Promise<EventWithStats> {
   const [budgetDocs, milestoneDocs, vendorCount, checklistDocs] = await Promise.all([
-    db.collection('budget_categories').find({ event_id: event.id }).toArray(),
-    db.collection('milestones').find({ event_id: event.id }).toArray(),
+    db.collection<BudgetCategory>('budget_categories').find({ event_id: event.id }).toArray(),
+    db.collection<Milestone>('milestones').find({ event_id: event.id }).toArray(),
     db.collection('vendors').countDocuments({ event_id: event.id }),
-    db.collection('checklist_items').find({ event_id: event.id }).toArray(),
+    db.collection<ChecklistItem>('checklist_items').find({ event_id: event.id }).toArray(),
   ]);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const total_planned_budget = budgetDocs.reduce((acc: number, b: any) => acc + (b.planned_amount || 0), 0);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const total_spent_budget = budgetDocs.reduce((acc: number, b: any) => acc + (b.actual_amount || 0), 0);
+  const total_planned_budget = budgetDocs.reduce((acc: number, b: BudgetCategory) => acc + (b.planned_amount || 0), 0);
+  const total_spent_budget = budgetDocs.reduce((acc: number, b: BudgetCategory) => acc + (b.actual_amount || 0), 0);
   const milestones_count = milestoneDocs.length;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const milestones_completed = milestoneDocs.filter((m: any) => Boolean(m.completed)).length;
+  const milestones_completed = milestoneDocs.filter((m: Milestone) => Boolean(m.completed)).length;
   const vendors_count = vendorCount;
   const checklist_count = checklistDocs.length;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const checklist_completed = checklistDocs.filter((c: any) => Boolean(c.completed)).length;
+  const checklist_completed = checklistDocs.filter((c: ChecklistItem) => Boolean(c.completed)).length;
 
   return {
     ...event,
@@ -68,11 +64,11 @@ export async function getEvents(filter?: { type?: EventType; userId?: string }):
     query.user_id = filter.userId;
   }
 
-  const events: Event[] = await db
+  const events = (await db
     .collection('events')
     .find(query)
     .sort({ event_date: 1, created_at: -1 })
-    .toArray();
+    .toArray()) as unknown as Event[];
 
   if (events.length === 0) {
     return [];
@@ -232,7 +228,7 @@ export async function getEventById(id: number): Promise<EventWithStats | null> {
   const db = await getDb();
   const event = await db.collection('events').findOne({ id });
   if (!event) return null;
-  return enrichEventWithStats(db, event as Event);
+  return enrichEventWithStats(db, event as unknown as Event);
 }
 
 /**
@@ -295,14 +291,14 @@ export async function updateEvent(id: number, input: UpdateEventSchemaInput): Pr
   }
 
   if (Object.keys(updates).length === 0) {
-    return existing as Event;
+    return existing as unknown as Event;
   }
 
   updates.updated_at = nowIso();
 
   await db.collection('events').updateOne({ id }, { $set: updates });
   const updated = await db.collection('events').findOne({ id });
-  return updated as Event;
+  return updated as unknown as Event;
 }
 
 /**

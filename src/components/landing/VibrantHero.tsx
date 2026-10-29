@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import { Sparkles, ArrowRight, Heart, Users, Calendar, DollarSign } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -82,12 +83,13 @@ export function VibrantHero({
             <div className="relative w-full max-w-md sm:max-w-lg rounded-3xl overflow-hidden shadow-2xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 group">
               {/* High-Resolution Celebration Image */}
               <div className="relative aspect-4/3 w-full overflow-hidden">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
+                <Image
                   src="/images/hero-celebration.jpg"
                   alt="Evening celebration under warm glowing lights"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 500px"
+                  priority
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  loading="eager"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent" />
 

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import {
   Sparkles,
   DollarSign,
@@ -231,12 +232,12 @@ export function VibePlayground({ onSelectVibe }: VibePlaygroundProps) {
         <div className="lg:col-span-5 space-y-4">
           <div className="relative rounded-3xl overflow-hidden shadow-lg border border-zinc-200/80 dark:border-zinc-800 group aspect-4/3 sm:aspect-16/10 lg:aspect-4/3">
             {/* Background Curated Image */}
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <Image
               src={activeVibe.imageUrl}
               alt={activeVibe.name}
+              fill
+              sizes="(max-width: 768px) 100vw, 500px"
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-              loading="lazy"
             />
             {/* Gradient Overlay */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent" />

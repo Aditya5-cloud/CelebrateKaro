@@ -19,18 +19,18 @@ export interface BudgetSummary {
 
 export async function getBudgetCategories(eventId: number): Promise<BudgetCategory[]> {
   const db = await getDb();
-  const rows: BudgetCategory[] = await db
+  const rows = (await db
     .collection('budget_categories')
     .find({ event_id: eventId })
     .sort({ planned_amount: -1, name: 1 })
-    .toArray();
+    .toArray()) as unknown as BudgetCategory[];
   return rows;
 }
 
 export async function getBudgetCategoryById(id: number): Promise<BudgetCategory | null> {
   const db = await getDb();
   const row = await db.collection('budget_categories').findOne({ id });
-  return (row as BudgetCategory) ?? null;
+  return (row as unknown as BudgetCategory) ?? null;
 }
 
 export async function createBudgetCategory(
@@ -100,10 +100,10 @@ export async function getBudgetSummary(eventId: number): Promise<BudgetSummary> 
   const event = await db.collection('events').findOne({ id: eventId });
   const totalTargetBudget = event ? event.total_budget : 0;
 
-  const categories: BudgetCategory[] = await db
+  const categories = (await db
     .collection('budget_categories')
     .find({ event_id: eventId })
-    .toArray();
+    .toArray()) as unknown as BudgetCategory[];
 
   let totalPlanned = 0;
   let totalSpent = 0;

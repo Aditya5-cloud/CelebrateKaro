@@ -101,9 +101,8 @@ export async function hashPassword(password: string, salt: string): Promise<stri
 
   // 3. Node.js built-in crypto (for Jest / server test runs)
   try {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const nodeCrypto = require('crypto');
-    return nodeCrypto.createHash('sha256').update(combined).digest('hex');
+    const { createHash } = await import('crypto');
+    return createHash('sha256').update(combined).digest('hex');
   } catch {
     // 4. Reliable deterministic math hash fallback
     let h1 = 0xdeadbeef;

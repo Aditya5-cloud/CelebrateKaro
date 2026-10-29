@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import { ArrowRight, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -94,10 +95,12 @@ export function InspoHero({
               {/* Crisp Square Frame with shadow border */}
               <div className="relative rounded-none p-1.5 sm:p-2 bg-white border-2 border-[#F7418F] shadow-[4px_4px_0px_0px_#FC819E] sm:shadow-[8px_8px_0px_0px_#FC819E]">
                 <div className="relative rounded-none overflow-hidden bg-[#FEC7B4]/20 border border-[#FEC7B4]">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
+                  <Image
                     src="/images/hero image.jpg"
                     alt="Celebration Planning Hub"
+                    width={800}
+                    height={500}
+                    priority
                     className="w-full h-auto aspect-16/10 object-cover block"
                   />
                 </div>

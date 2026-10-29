@@ -13,13 +13,12 @@ export interface MilestoneStats {
 export async function getMilestones(eventId: number): Promise<Milestone[]> {
   const db = await getDb();
   const rows = await db
-    .collection('milestones')
+    .collection<Milestone>('milestones')
     .find({ event_id: eventId })
     .sort({ due_date: 1, created_at: 1 })
     .toArray();
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return rows.map((row: any) => ({
+  return rows.map((row) => ({
     id: row.id,
     event_id: row.event_id,
     title: row.title,

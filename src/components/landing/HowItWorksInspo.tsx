@@ -1,22 +1,23 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import { Sparkles, Calendar, IndianRupee, CheckCircle2 } from 'lucide-react';
 
 interface HowItWorksInspoProps {
   onStartPlanning?: () => void;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function HowItWorksInspo({ onStartPlanning }: HowItWorksInspoProps = {}) {
   return (
     <section className="relative pt-16 pb-20 sm:pt-20 sm:pb-24 overflow-hidden bg-[#161233] text-white border-b border-amber-900/20">
       {/* Background Indian Celebration Studio Image with subtle dark gradient overlay */}
       <div className="absolute inset-0 z-0 pointer-events-none">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
+        <Image
           src="/images/image (1).jpg"
           alt="CelebrateKaro Planning Studio with Mandap blueprints and timelines"
+          fill
+          sizes="100vw"
           className="w-full h-full object-cover opacity-15"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-[#161233] via-[#1E1B4B]/95 to-[#161233]" />
@@ -102,6 +103,19 @@ export function HowItWorksInspo({ onStartPlanning }: HowItWorksInspoProps = {}) 
             </div>
           </div>
         </div>
+
+        {onStartPlanning && (
+          <div className="mt-12 text-center">
+            <button
+              type="button"
+              onClick={onStartPlanning}
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-amber-400 hover:bg-amber-300 text-[#1E1B4B] font-bold text-sm shadow-lg transition-transform hover:scale-105 cursor-pointer"
+            >
+              <Sparkles className="w-4 h-4 text-[#1E1B4B]" />
+              Start Planning Now
+            </button>
+          </div>
+        )}
       </div>
     </section>
   );

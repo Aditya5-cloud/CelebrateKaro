@@ -2,6 +2,7 @@
 
 import React, { use, useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import {
   ArrowLeft,
@@ -236,10 +237,11 @@ export default function EventDetailPage({
 
           <div className="flex items-center gap-2 sm:gap-3">
             <Link href="/" className="flex items-center gap-1.5 sm:gap-2 group">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
                 src="/icon.png"
                 alt="CelebrateKaro Logo"
+                width={28}
+                height={28}
                 className="h-6 w-6 sm:h-7 sm:w-7 rounded-none object-contain shadow-xs border border-[#F7418F] group-hover:scale-105 transition-transform"
               />
               <span className="text-xs sm:text-sm font-bold text-[#2A0E1C] font-headline">

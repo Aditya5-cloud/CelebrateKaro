@@ -89,13 +89,15 @@ describe('TimelineTracker Component', () => {
 
     fireEvent.click(checkbox);
 
-    expect(global.fetch).toHaveBeenCalledWith(
-      '/api/events/1/milestones/202',
-      expect.objectContaining({
-        method: 'PATCH',
-        body: JSON.stringify({ completed: true }),
-      })
-    );
+    await waitFor(() => {
+      expect(global.fetch).toHaveBeenCalledWith(
+        '/api/events/1/milestones/202',
+        expect.objectContaining({
+          method: 'PATCH',
+          body: JSON.stringify({ completed: true }),
+        })
+      );
+    });
   });
 
   it('filters milestones by status', async () => {
