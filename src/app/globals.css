@@ -1,11 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --font-headline: "Cormorant Garamond", Georgia, Cambria, "Times New Roman", Times, serif;
-  --font-serif: "Cormorant Garamond", Georgia, Cambria, "Times New Roman", Times, serif;
-  --font-body: "Lato", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-sans: "Lato", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-headline: Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-serif: Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-body: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+  --font-sans: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
 
   --color-palette-cream: #FFF3C7;
   --color-palette-peach: #FEC7B4;
@@ -22,9 +21,9 @@
   --palette-rose: #FC819E;
   --palette-fuchsia: #F7418F;
   --palette-dark: #2A0E1C;
-  --font-headline: "Cormorant Garamond", Georgia, serif;
-  --font-sans: "Lato", system-ui, -apple-system, sans-serif;
-  --font-body: "Lato", system-ui, -apple-system, sans-serif;
+  --font-headline: Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-sans: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+  --font-body: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
@@ -42,7 +41,7 @@ body {
   border-radius: 0 !important;
 }
 
-/* Regal Indian Typography: Cormorant Garamond for Headlines, Lato for Body */
+/* Regal Indian Typography: Georgia for Headlines, Segoe UI / System Sans for Body */
 h1, h2, h3, h4, h5, h6, .font-headline, .font-serif {
   font-family: var(--font-headline);
   letter-spacing: -0.015em;
