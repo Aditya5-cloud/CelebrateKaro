@@ -919,32 +919,34 @@ export default function HomePage() {
       {/*  FOOTER                                                       */}
       {/* ───────────────────────────────────────────────────────────── */}
       {/* ─── MOBILE-ONLY FLOATING AI CONCIERGE BUBBLE (Bottom-Right Corner) ─── */}
-      <div className="fixed bottom-6 right-5 z-40 md:hidden pointer-events-auto">
-        {events.length > 0 ? (
-          <Link
-            href={`/events/${events[0].id}?tab=assistant`}
-            aria-label="Open AI Planning Concierge"
-            className="h-14 w-14 rounded-full bg-[#F7418F] hover:bg-[#e02b78] active:scale-95 text-white shadow-[0_4px_20px_rgba(247,65,143,0.5)] border-2 border-white flex items-center justify-center transition-all duration-200 cursor-pointer"
-          >
-            <div className="relative flex items-center justify-center">
-              <Bot className="w-7 h-7 text-white" />
-              <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-[#FFF3C7] border-2 border-[#F7418F]" />
-            </div>
-          </Link>
-        ) : (
-          <button
-            type="button"
-            onClick={() => setIsCreateModalOpen(true)}
-            aria-label="Open AI Celebration Planning"
-            className="h-14 w-14 rounded-full bg-[#F7418F] hover:bg-[#e02b78] active:scale-95 text-white shadow-[0_4px_20px_rgba(247,65,143,0.5)] border-2 border-white flex items-center justify-center transition-all duration-200 cursor-pointer"
-          >
-            <div className="relative flex items-center justify-center">
-              <Bot className="w-7 h-7 text-white" />
-              <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-[#FFF3C7] border-2 border-[#F7418F]" />
-            </div>
-          </button>
-        )}
-      </div>
+      {currentUser && (
+        <div className="fixed bottom-6 right-5 z-40 md:hidden pointer-events-auto">
+          {events.length > 0 ? (
+            <Link
+              href={`/events/${events[0].id}?tab=assistant`}
+              aria-label="Open AI Planning Concierge"
+              className="h-14 w-14 rounded-full bg-[#F7418F] hover:bg-[#e02b78] active:scale-95 text-white shadow-[0_4px_20px_rgba(247,65,143,0.5)] border-2 border-white flex items-center justify-center transition-all duration-200 cursor-pointer"
+            >
+              <div className="relative flex items-center justify-center">
+                <Bot className="w-7 h-7 text-white" />
+                <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-[#FFF3C7] border-2 border-[#F7418F]" />
+              </div>
+            </Link>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setIsCreateModalOpen(true)}
+              aria-label="Open AI Celebration Planning"
+              className="h-14 w-14 rounded-full bg-[#F7418F] hover:bg-[#e02b78] active:scale-95 text-white shadow-[0_4px_20px_rgba(247,65,143,0.5)] border-2 border-white flex items-center justify-center transition-all duration-200 cursor-pointer"
+            >
+              <div className="relative flex items-center justify-center">
+                <Bot className="w-7 h-7 text-white" />
+                <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-[#FFF3C7] border-2 border-[#F7418F]" />
+              </div>
+            </button>
+          )}
+        </div>
+      )}
 
       <InspoFooter />
 

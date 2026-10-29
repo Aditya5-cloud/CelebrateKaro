@@ -31,7 +31,8 @@ import { VendorTracker } from '@/components/vendors/VendorTracker';
 import { ChecklistTracker } from '@/components/checklist/ChecklistTracker';
 import { ChatAssistant } from '@/components/chat/ChatAssistant';
 import { InspoFooter } from '@/components/landing/InspoFooter';
-import { getCurrentUser } from '@/lib/auth';
+import { getCurrentUser, subscribeToAuthChanges } from '@/lib/auth';
+import type { User } from '@/types';
 
 export default function EventDetailPage({
   params,
@@ -50,6 +51,21 @@ export default function EventDetailPage({
   const [isDeleting, setIsDeleting] = useState(false);
   const [activeTab, setActiveTab] = useState<'overview' | 'checklist' | 'budget' | 'timeline' | 'vendors' | 'assistant'>('overview');
   const [previousTab, setPreviousTab] = useState<'overview' | 'checklist' | 'budget' | 'timeline' | 'vendors'>('overview');
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
+
+  // Sync logged-in user state
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const u = getCurrentUser();
+      setCurrentUser(u);
+    }
+    const unsubscribe = subscribeToAuthChanges((newUser) => {
+      setCurrentUser(newUser);
+    });
+    return () => {
+      unsubscribe();
+    };
+  }, []);
 
   // Check URL query parameters for direct tab navigation (e.g. ?tab=assistant)
   useEffect(() => {
@@ -754,34 +770,36 @@ export default function EventDetailPage({
       />
 
       {/* ─── MOBILE-ONLY FLOATING AI CONCIERGE BUBBLE (Bottom-Right Corner) ─── */}
-      <div className="fixed bottom-6 right-5 z-40 md:hidden pointer-events-auto">
-        <button
-          type="button"
-          onClick={() => {
-            if (activeTab === 'assistant') {
-              setActiveTab(previousTab);
-            } else {
-              setPreviousTab(activeTab);
-              setActiveTab('assistant');
-            }
-          }}
-          aria-label={activeTab === 'assistant' ? 'Close AI Assistant Concierge' : 'Open AI Planning Concierge'}
-          className={`h-14 w-14 rounded-full flex items-center justify-center shadow-[0_4px_20px_rgba(247,65,143,0.5)] border-2 border-white transition-all duration-200 cursor-pointer active:scale-95 ${
-            activeTab === 'assistant'
-              ? 'bg-[#2A0E1C] text-white hover:bg-[#3d1428]'
-              : 'bg-[#F7418F] hover:bg-[#e02b78] text-white'
-          }`}
-        >
-          {activeTab === 'assistant' ? (
-            <X className="w-6 h-6 text-white" />
-          ) : (
-            <div className="relative flex items-center justify-center">
-              <Bot className="w-7 h-7 text-white" />
-              <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-[#FFF3C7] border-2 border-[#F7418F]" />
-            </div>
-          )}
-        </button>
-      </div>
+      {currentUser && (
+        <div className="fixed bottom-6 right-5 z-40 md:hidden pointer-events-auto">
+          <button
+            type="button"
+            onClick={() => {
+              if (activeTab === 'assistant') {
+                setActiveTab(previousTab);
+              } else {
+                setPreviousTab(activeTab);
+                setActiveTab('assistant');
+              }
+            }}
+            aria-label={activeTab === 'assistant' ? 'Close AI Assistant Concierge' : 'Open AI Planning Concierge'}
+            className={`h-14 w-14 rounded-full flex items-center justify-center shadow-[0_4px_20px_rgba(247,65,143,0.5)] border-2 border-white transition-all duration-200 cursor-pointer active:scale-95 ${
+              activeTab === 'assistant'
+                ? 'bg-[#2A0E1C] text-white hover:bg-[#3d1428]'
+                : 'bg-[#F7418F] hover:bg-[#e02b78] text-white'
+            }`}
+          >
+            {activeTab === 'assistant' ? (
+              <X className="w-6 h-6 text-white" />
+            ) : (
+              <div className="relative flex items-center justify-center">
+                <Bot className="w-7 h-7 text-white" />
+                <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-[#FFF3C7] border-2 border-[#F7418F]" />
+              </div>
+            )}
+          </button>
+        </div>
+      )}
 
       <InspoFooter />
     </div>
