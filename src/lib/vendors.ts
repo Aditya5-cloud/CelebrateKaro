@@ -22,6 +22,7 @@ const STATUS_ORDER: Record<VendorStatus, number> = {
   cancelled: 5,
 };
 
+/** Retrieve vendors for an event, optionally filtered by status or category. */
 export async function getVendors(
   eventId: number,
   filter?: { status?: VendorStatus; category?: string }
@@ -36,7 +37,7 @@ export async function getVendors(
     query.category = filter.category;
   }
 
-  const vendors = (await db.collection('vendors').find(query).toArray()) as unknown as Vendor[];
+  const vendors = await db.collection<Vendor>('vendors').find(query).toArray();
 
   return vendors.sort((a, b) => {
     const orderA = STATUS_ORDER[a.status] || 6;
@@ -46,12 +47,14 @@ export async function getVendors(
   });
 }
 
+/** Retrieve a single vendor by ID, or null if not found. */
 export async function getVendorById(id: number): Promise<Vendor | null> {
   const db = await getDb();
-  const row = await db.collection('vendors').findOne({ id });
-  return (row as unknown as Vendor) ?? null;
+  const row = await db.collection<Vendor>('vendors').findOne({ id });
+  return row ?? null;
 }
 
+/** Create a new vendor for an event. Price quote input is in dollars; stored as cents. */
 export async function createVendor(
   eventId: number,
   input: CreateVendorSchemaInput
@@ -80,6 +83,7 @@ export async function createVendor(
   return doc;
 }
 
+/** Update a vendor by ID. Returns the updated record, or null if not found. */
 export async function updateVendor(
   id: number,
   input: UpdateVendorSchemaInput
@@ -123,45 +127,44 @@ export async function updateVendor(
   return getVendorById(id);
 }
 
+/** Delete a vendor by ID. Returns true if deleted, false if not found. */
 export async function deleteVendor(id: number): Promise<boolean> {
   const db = await getDb();
   const result = await db.collection('vendors').deleteOne({ id });
   return Boolean(result && result.deletedCount > 0);
 }
 
+/** Calculate aggregate vendor stats (counts by status, total quotes) for an event. */
 export async function getVendorStats(eventId: number): Promise<VendorStats> {
   const vendors = await getVendors(eventId);
 
-  let considering = 0;
-  let contacted = 0;
-  let booked = 0;
-  let paid = 0;
-  let cancelled = 0;
+  const counts: Record<VendorStatus, number> = {
+    considering: 0,
+    contacted: 0,
+    booked: 0,
+    paid: 0,
+    cancelled: 0,
+  };
   let totalQuotes = 0;
 
   for (const v of vendors) {
-    if (v.status === 'considering') considering++;
-    else if (v.status === 'contacted') contacted++;
-    else if (v.status === 'booked') booked++;
-    else if (v.status === 'paid') paid++;
-    else if (v.status === 'cancelled') cancelled++;
-
+    counts[v.status] = (counts[v.status] ?? 0) + 1;
     if (v.status !== 'cancelled') {
       totalQuotes += v.price_quote || 0;
     }
   }
 
   const total = vendors.length;
-  const bookedOrPaid = booked + paid;
+  const bookedOrPaid = counts.booked + counts.paid;
   const percentBookedOrPaid = total > 0 ? Math.round((bookedOrPaid / total) * 100) : 0;
 
   return {
     total,
-    considering,
-    contacted,
-    booked,
-    paid,
-    cancelled,
+    considering: counts.considering,
+    contacted: counts.contacted,
+    booked: counts.booked,
+    paid: counts.paid,
+    cancelled: counts.cancelled,
     totalQuotes,
     percentBookedOrPaid,
   };

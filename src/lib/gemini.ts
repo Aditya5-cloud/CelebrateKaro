@@ -29,6 +29,17 @@ function sanitizeText(str: string, maxLen = 300): string {
 }
 
 /**
+ * Strip markdown code fences from an AI JSON response so it can be safely parsed.
+ */
+function stripMarkdownFences(raw: string): string {
+  return raw
+    .replace(/^```json\s*/i, '')
+    .replace(/^```\s*/i, '')
+    .replace(/\s*```$/i, '')
+    .trim();
+}
+
+/**
  * Return rich domain-specific fallback checklist recommendations
  * when GEMINI_API_KEY is not configured or network call fails.
  */
@@ -169,11 +180,7 @@ Instructions:
     const rawText = response.response.text();
 
     // Clean JSON response (strip markdown fences if present)
-    const cleanedText = rawText
-      .replace(/^```json\s*/i, '')
-      .replace(/^```\s*/i, '')
-      .replace(/\s*```$/i, '')
-      .trim();
+    const cleanedText = stripMarkdownFences(rawText);
 
     const parsed = JSON.parse(cleanedText);
 
@@ -511,11 +518,7 @@ Do not include markdown fences outside the JSON object.
     const response = await model.generateContent(prompt);
     const rawText = response.response.text();
 
-    const cleanedText = rawText
-      .replace(/^```json\s*/i, '')
-      .replace(/^```\s*/i, '')
-      .replace(/\s*```$/i, '')
-      .trim();
+    const cleanedText = stripMarkdownFences(rawText);
 
     const parsed = JSON.parse(cleanedText);
 

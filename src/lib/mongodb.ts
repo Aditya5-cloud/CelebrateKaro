@@ -26,8 +26,6 @@ declare global {
 
 // ─── Production MongoDB Atlas Connection ──────────────────────────────────────
 
-let clientPromise: Promise<MongoClient> | null = null;
-
 function getClientPromise(): Promise<MongoClient> | null {
   const uri = process.env.MONGODB_URI?.trim();
   if (!uri || (!uri.startsWith('mongodb://') && !uri.startsWith('mongodb+srv://'))) {
@@ -355,11 +353,6 @@ export async function getNextSequence(name: string): Promise<number> {
  * Close database connection (for tests or graceful shutdown).
  */
 export async function closeDb(): Promise<void> {
-  if (clientPromise) {
-    const client = await clientPromise;
-    await client.close();
-    clientPromise = null;
-  }
   if (global._mongoClientPromise) {
     const client = await global._mongoClientPromise;
     await client.close();

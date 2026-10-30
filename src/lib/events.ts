@@ -1,7 +1,7 @@
 import { getDb, getNextSequence, nowIso } from './db';
 import { toCents } from './currency';
 import type { Db } from 'mongodb';
-import type { Event, EventType, BudgetCategory, Milestone, ChecklistItem } from '@/types';
+import type { Event, EventType, BudgetCategory, Milestone, ChecklistItem, Vendor } from '@/types';
 import type { CreateEventSchemaInput, UpdateEventSchemaInput } from './validations/event';
 import { seedBudgetTemplate } from './budget';
 import { seedTimelineTemplate } from './milestones';
@@ -64,11 +64,11 @@ export async function getEvents(filter?: { type?: EventType; userId?: string }):
     query.user_id = filter.userId;
   }
 
-  const events = (await db
-    .collection('events')
+  const events = await db
+    .collection<Event>('events')
     .find(query)
     .sort({ event_date: 1, created_at: -1 })
-    .toArray()) as unknown as Event[];
+    .toArray();
 
   if (events.length === 0) {
     return [];
@@ -78,10 +78,10 @@ export async function getEvents(filter?: { type?: EventType; userId?: string }):
 
   // Parallel batch queries for all matched events to avoid N+1 WAN round trips
   const [allBudgets, allMilestones, allVendors, allChecklists] = await Promise.all([
-    db.collection('budget_categories').find({ event_id: { $in: eventIds } }).toArray(),
-    db.collection('milestones').find({ event_id: { $in: eventIds } }).toArray(),
-    db.collection('vendors').find({ event_id: { $in: eventIds } }).toArray(),
-    db.collection('checklist_items').find({ event_id: { $in: eventIds } }).toArray(),
+    db.collection<BudgetCategory>('budget_categories').find({ event_id: { $in: eventIds } }).toArray(),
+    db.collection<Milestone>('milestones').find({ event_id: { $in: eventIds } }).toArray(),
+    db.collection<Vendor>('vendors').find({ event_id: { $in: eventIds } }).toArray(),
+    db.collection<ChecklistItem>('checklist_items').find({ event_id: { $in: eventIds } }).toArray(),
   ]);
 
   const budgetStats = new Map<number, { planned: number; spent: number }>();
@@ -226,9 +226,9 @@ export async function ensureDemoEvents(userId: string): Promise<void> {
  */
 export async function getEventById(id: number): Promise<EventWithStats | null> {
   const db = await getDb();
-  const event = await db.collection('events').findOne({ id });
+  const event = await db.collection<Event>('events').findOne({ id });
   if (!event) return null;
-  return enrichEventWithStats(db, event as unknown as Event);
+  return enrichEventWithStats(db, event);
 }
 
 /**
@@ -264,7 +264,7 @@ export async function createEvent(input: CreateEventSchemaInput, userId?: string
  */
 export async function updateEvent(id: number, input: UpdateEventSchemaInput): Promise<Event | null> {
   const db = await getDb();
-  const existing = await db.collection('events').findOne({ id });
+  const existing = await db.collection<Event>('events').findOne({ id });
   if (!existing) {
     return null;
   }
@@ -291,14 +291,14 @@ export async function updateEvent(id: number, input: UpdateEventSchemaInput): Pr
   }
 
   if (Object.keys(updates).length === 0) {
-    return existing as unknown as Event;
+    return existing;
   }
 
   updates.updated_at = nowIso();
 
   await db.collection('events').updateOne({ id }, { $set: updates });
-  const updated = await db.collection('events').findOne({ id });
-  return updated as unknown as Event;
+  const updated = await db.collection<Event>('events').findOne({ id });
+  return updated;
 }
 
 /**

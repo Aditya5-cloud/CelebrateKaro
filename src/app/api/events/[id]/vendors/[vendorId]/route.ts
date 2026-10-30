@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { updateVendor, deleteVendor, getVendorById, getVendorStats } from '@/lib/vendors';
 import { updateVendorSchema } from '@/lib/validations/vendor';
+import { parseNestedNumericIds } from '@/lib/api-utils';
 
 export const dynamic = 'force-dynamic';
 
@@ -8,25 +9,17 @@ interface RouteContext {
   params: Promise<{ id: string; vendorId: string }>;
 }
 
-function parseIds(rawEventId: string, rawVendorId: string) {
-  const eventId = parseInt(rawEventId, 10);
-  const vendorId = parseInt(rawVendorId, 10);
-  if (isNaN(eventId) || eventId <= 0 || isNaN(vendorId) || vendorId <= 0) {
-    return null;
-  }
-  return { eventId, vendorId };
-}
-
 export async function PATCH(request: Request, context: RouteContext) {
   try {
     const { id: rawEventId, vendorId: rawVendorId } = await context.params;
-    const parsed = parseIds(rawEventId, rawVendorId);
-    if (!parsed) {
+    const ids = parseNestedNumericIds(rawEventId, rawVendorId);
+    if (!ids) {
       return NextResponse.json({ success: false, error: 'Invalid ID parameters.' }, { status: 400 });
     }
+    const [eventId, vendorId] = ids;
 
-    const existing = await getVendorById(parsed.vendorId);
-    if (!existing || existing.event_id !== parsed.eventId) {
+    const existing = await getVendorById(vendorId);
+    if (!existing || existing.event_id !== eventId) {
       return NextResponse.json({ success: false, error: 'Vendor not found for this event.' }, { status: 404 });
     }
 
@@ -50,8 +43,8 @@ export async function PATCH(request: Request, context: RouteContext) {
       );
     }
 
-    const updated = await updateVendor(parsed.vendorId, validationResult.data);
-    const stats = await getVendorStats(parsed.eventId);
+    const updated = await updateVendor(vendorId, validationResult.data);
+    const stats = await getVendorStats(eventId);
 
     return NextResponse.json({
       success: true,
@@ -69,27 +62,28 @@ export async function PATCH(request: Request, context: RouteContext) {
 export async function DELETE(_request: Request, context: RouteContext) {
   try {
     const { id: rawEventId, vendorId: rawVendorId } = await context.params;
-    const parsed = parseIds(rawEventId, rawVendorId);
-    if (!parsed) {
+    const ids = parseNestedNumericIds(rawEventId, rawVendorId);
+    if (!ids) {
       return NextResponse.json({ success: false, error: 'Invalid ID parameters.' }, { status: 400 });
     }
+    const [eventId, vendorId] = ids;
 
-    const existing = await getVendorById(parsed.vendorId);
-    if (!existing || existing.event_id !== parsed.eventId) {
+    const existing = await getVendorById(vendorId);
+    if (!existing || existing.event_id !== eventId) {
       return NextResponse.json({ success: false, error: 'Vendor not found for this event.' }, { status: 404 });
     }
 
-    const deleted = await deleteVendor(parsed.vendorId);
+    const deleted = await deleteVendor(vendorId);
     if (!deleted) {
       return NextResponse.json({ success: false, error: 'Failed to delete vendor.' }, { status: 500 });
     }
 
-    const stats = await getVendorStats(parsed.eventId);
+    const stats = await getVendorStats(eventId);
 
     return NextResponse.json({
       success: true,
       data: {
-        id: parsed.vendorId,
+        id: vendorId,
         stats,
         message: 'Vendor removed.',
       },

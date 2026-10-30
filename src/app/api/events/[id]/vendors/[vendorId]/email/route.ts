@@ -3,6 +3,7 @@ import { getEventById } from '@/lib/events';
 import { getVendorById } from '@/lib/vendors';
 import { generateVendorEmail } from '@/lib/gemini';
 import { draftVendorEmailSchema } from '@/lib/validations/vendor';
+import { parseNestedNumericIds } from '@/lib/api-utils';
 
 export const dynamic = 'force-dynamic';
 
@@ -13,12 +14,11 @@ interface RouteContext {
 export async function POST(request: Request, context: RouteContext) {
   try {
     const { id: rawEventId, vendorId: rawVendorId } = await context.params;
-    const eventId = parseInt(rawEventId, 10);
-    const vendorId = parseInt(rawVendorId, 10);
-
-    if (isNaN(eventId) || eventId <= 0 || isNaN(vendorId) || vendorId <= 0) {
+    const ids = parseNestedNumericIds(rawEventId, rawVendorId);
+    if (!ids) {
       return NextResponse.json({ success: false, error: 'Invalid ID parameters.' }, { status: 400 });
     }
+    const [eventId, vendorId] = ids;
 
     const event = await getEventById(eventId);
     if (!event) {

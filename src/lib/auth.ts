@@ -46,24 +46,33 @@ export const DEMO_ACCOUNTS = [
 ];
 
 /**
- * Generate a random salt for password hashing.
+ * Generate a cryptographically random 16-byte hex salt for password hashing.
+ * Uses the Web Crypto API in browser and Node.js environments, with a
+ * Math.random fallback for environments where it is unavailable.
  */
 export function generateSalt(): string {
-  if (typeof window !== 'undefined' && window.crypto?.getRandomValues) {
+  const cryptoImpl =
+    (typeof window !== 'undefined' && window.crypto) ||
+    (typeof crypto !== 'undefined' && crypto) ||
+    null;
+
+  if (cryptoImpl?.getRandomValues) {
     const bytes = new Uint8Array(16);
-    window.crypto.getRandomValues(bytes);
+    cryptoImpl.getRandomValues(bytes);
     return Array.from(bytes)
       .map((b) => b.toString(16).padStart(2, '0'))
       .join('');
   }
-  if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
-    const bytes = new Uint8Array(16);
-    crypto.getRandomValues(bytes);
-    return Array.from(bytes)
-      .map((b) => b.toString(16).padStart(2, '0'))
-      .join('');
-  }
+
+  // Last-resort fallback (non-cryptographic)
   return Math.random().toString(36).slice(2) + Date.now().toString(36);
+}
+
+/** Convert an ArrayBuffer to a lowercase hex string. */
+function bufferToHex(buffer: ArrayBuffer): string {
+  return Array.from(new Uint8Array(buffer))
+    .map((b) => b.toString(16).padStart(2, '0'))
+    .join('');
 }
 
 /**
@@ -77,10 +86,7 @@ export async function hashPassword(password: string, salt: string): Promise<stri
   if (typeof window !== 'undefined' && window.crypto?.subtle) {
     try {
       const data = new TextEncoder().encode(combined);
-      const hashBuffer = await window.crypto.subtle.digest('SHA-256', data);
-      return Array.from(new Uint8Array(hashBuffer))
-        .map((b) => b.toString(16).padStart(2, '0'))
-        .join('');
+      return bufferToHex(await window.crypto.subtle.digest('SHA-256', data));
     } catch {
       // Fall through to fallback
     }
@@ -90,10 +96,7 @@ export async function hashPassword(password: string, salt: string): Promise<stri
   if (typeof crypto !== 'undefined' && crypto.subtle) {
     try {
       const data = new TextEncoder().encode(combined);
-      const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-      return Array.from(new Uint8Array(hashBuffer))
-        .map((b) => b.toString(16).padStart(2, '0'))
-        .join('');
+      return bufferToHex(await crypto.subtle.digest('SHA-256', data));
     } catch {
       // Fall through to Node crypto
     }

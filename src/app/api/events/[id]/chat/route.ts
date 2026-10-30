@@ -11,6 +11,7 @@ import {
 } from '@/lib/chat';
 import { generateChatResponse } from '@/lib/gemini';
 import { sendChatMessageSchema } from '@/lib/validations/chat';
+import { parseNumericId } from '@/lib/api-utils';
 
 export const dynamic = 'force-dynamic';
 
@@ -21,8 +22,8 @@ interface RouteContext {
 export async function GET(request: Request, context: RouteContext) {
   try {
     const { id: rawId } = await context.params;
-    const eventId = parseInt(rawId, 10);
-    if (isNaN(eventId) || eventId <= 0) {
+    const eventId = parseNumericId(rawId);
+    if (!eventId) {
       return NextResponse.json({ success: false, error: 'Invalid event ID.' }, { status: 400 });
     }
 
@@ -61,8 +62,8 @@ export async function GET(request: Request, context: RouteContext) {
 export async function POST(request: Request, context: RouteContext) {
   try {
     const { id: rawId } = await context.params;
-    const eventId = parseInt(rawId, 10);
-    if (isNaN(eventId) || eventId <= 0) {
+    const eventId = parseNumericId(rawId);
+    if (!eventId) {
       return NextResponse.json({ success: false, error: 'Invalid event ID.' }, { status: 400 });
     }
 
@@ -160,8 +161,8 @@ export async function POST(request: Request, context: RouteContext) {
 export async function DELETE(request: Request, context: RouteContext) {
   try {
     const { id: rawId } = await context.params;
-    const eventId = parseInt(rawId, 10);
-    if (isNaN(eventId) || eventId <= 0) {
+    const eventId = parseNumericId(rawId);
+    if (!eventId) {
       return NextResponse.json({ success: false, error: 'Invalid event ID.' }, { status: 400 });
     }
 

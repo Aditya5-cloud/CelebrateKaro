@@ -135,8 +135,8 @@ export async function findUserByEmail(email: string): Promise<DbUserRecord | nul
   await seedDemoUsersIfEmpty();
   const db = await getDb();
   const normalized = email.trim().toLowerCase();
-  const doc = await db.collection('users').findOne({ email: normalized });
-  return doc ? (doc as unknown as DbUserRecord) : null;
+  const doc = await db.collection<DbUserRecord>('users').findOne({ email: normalized });
+  return doc ?? null;
 }
 
 /**
@@ -145,8 +145,8 @@ export async function findUserByEmail(email: string): Promise<DbUserRecord | nul
 export async function findUserById(id: string): Promise<User | null> {
   await seedDemoUsersIfEmpty();
   const db = await getDb();
-  const doc = await db.collection('users').findOne({ id });
-  return doc ? sanitizeUser(doc as unknown as DbUserRecord) : null;
+  const doc = await db.collection<DbUserRecord>('users').findOne({ id });
+  return doc ? sanitizeUser(doc) : null;
 }
 
 /**

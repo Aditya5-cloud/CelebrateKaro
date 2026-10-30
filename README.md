@@ -26,7 +26,7 @@
 | **A. Code Quality** | Modular layered architecture: Zod validation layer $\rightarrow$ MongoDB service layer $\rightarrow$ Next.js REST API route handlers $\rightarrow$ React 19 UI components. Strict TypeScript mode, 0 explicit `any`, zero linter errors. Pure currency arithmetic in integer cents. | `npm run lint`: **0 errors, 0 warnings**<br>`npm run type-check`: **0 errors** |
 | **B. Security** | API keys (`GEMINI_API_KEY`) and database credentials (`MONGODB_URI`) isolated strictly to server-side route handlers—never exposed in client bundles. `.env.local` strictly gitignored. All database operations execute through MongoDB collection queries eliminating injection vulnerabilities. All user input validated with Zod and sanitized against prompt injection. | Zero secrets in client code; Zod schema enforcement across all endpoints. |
 | **C. Efficiency** | Connection pooling and Next.js development HMR caching with official native `mongodb` driver. In-memory database fallback for offline tests and sandboxed builds. Fast, token-optimized Gemini 3.5 Flash-Lite calls with low temperature (`0.3`–`0.4`) and strict JSON schema output. Optimistic UI updates for immediate user feedback. | `npm run build`: **Turbopack static & dynamic compilation in <4s**. |
-| **D. Testing** | Comprehensive automated testing strategy with Jest, `@testing-library/react`, and `jest-axe`. Unit tests for services, validations, AI fallbacks, and UI component workflows. | `npm test`: **27 test suites, 151 tests passing (100% pass rate)**<br>>90% coverage on core services; 100% on validations. |
+| **D. Testing** | Comprehensive automated testing strategy with Jest, `@testing-library/react`, and `jest-axe`. Unit tests for services, validations, AI fallbacks, and UI component workflows. | `npm test`: **28 test suites, 158 tests passing (100% pass rate)**<br>>90% coverage on core services; 100% on validations. |
 | **E. Accessibility** | Built from the ground up with semantic HTML (`section`, `header`, `dialog`, `nav`), keyboard focus trapping, `Escape` key listeners, `aria-modal`, `aria-live` announcements for dynamic updates, and custom accessible checkboxes (`role="checkbox"`). | `jest-axe` automated audit on all interactive components: **0 violations**. |
 | **F. Problem Statement Alignment** | Directly serves weddings, birthdays, and community events with tailored templates, budget categories, milestone roadmaps, vendor RFQs, and personalized AI recommendations. | Fulfills 100% of the challenge requirements with no speculative bloat. |
 
@@ -125,7 +125,7 @@ Open **[http://localhost:3000](http://localhost:3000)** in your browser.
 Every development chunk was verified with automated testing:
 
 ```bash
-# Run all 27 unit and component test suites (151 tests)
+# Run all 28 unit and component test suites (158 tests)
 npm test
 
 # Run tests with code coverage report

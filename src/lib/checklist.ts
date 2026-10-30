@@ -11,6 +11,7 @@ export interface ChecklistStats {
   percentCompleted: number;
 }
 
+/** Retrieve checklist items for an event, with optional category and completion filters. */
 export async function getChecklistItems(
   eventId: number,
   filter?: { category?: string; completed?: boolean }
@@ -50,6 +51,7 @@ export async function getChecklistItems(
   });
 }
 
+/** Retrieve a single checklist item by ID, or null if not found. */
 export async function getChecklistItemById(id: number): Promise<ChecklistItem | null> {
   const db = await getDb();
   const row = await db.collection('checklist_items').findOne({ id });
@@ -67,6 +69,7 @@ export async function getChecklistItemById(id: number): Promise<ChecklistItem | 
   };
 }
 
+/** Create a new checklist item for an event, auto-assigning sort order if not provided. */
 export async function createChecklistItem(
   eventId: number,
   input: CreateChecklistItemSchemaInput
@@ -100,6 +103,7 @@ export async function createChecklistItem(
   return doc;
 }
 
+/** Update a checklist item by ID. Returns the updated record, or null if not found. */
 export async function updateChecklistItem(
   id: number,
   input: UpdateChecklistItemSchemaInput
@@ -134,6 +138,7 @@ export async function updateChecklistItem(
   return getChecklistItemById(id);
 }
 
+/** Delete a checklist item by ID. Returns true if deleted, false if not found. */
 export async function deleteChecklistItem(id: number): Promise<boolean> {
   const db = await getDb();
   const result = await db.collection('checklist_items').deleteOne({ id });
@@ -185,6 +190,7 @@ export async function saveGeneratedChecklist(
   return getChecklistItems(eventId);
 }
 
+/** Calculate aggregate checklist stats including AI-generated count and completion percentage. */
 export async function getChecklistStats(eventId: number): Promise<ChecklistStats> {
   const items = await getChecklistItems(eventId);
 

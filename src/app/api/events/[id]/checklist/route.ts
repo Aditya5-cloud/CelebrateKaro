@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getChecklistItems, getChecklistStats, createChecklistItem } from '@/lib/checklist';
 import { getEventById } from '@/lib/events';
 import { createChecklistItemSchema } from '@/lib/validations/checklist';
+import { parseNumericId } from '@/lib/api-utils';
 
 export const dynamic = 'force-dynamic';
 
@@ -12,8 +13,8 @@ interface RouteContext {
 export async function GET(request: Request, context: RouteContext) {
   try {
     const { id: rawId } = await context.params;
-    const eventId = parseInt(rawId, 10);
-    if (isNaN(eventId) || eventId <= 0) {
+    const eventId = parseNumericId(rawId);
+    if (!eventId) {
       return NextResponse.json({ success: false, error: 'Invalid event ID.' }, { status: 400 });
     }
 
@@ -49,8 +50,8 @@ export async function GET(request: Request, context: RouteContext) {
 export async function POST(request: Request, context: RouteContext) {
   try {
     const { id: rawId } = await context.params;
-    const eventId = parseInt(rawId, 10);
-    if (isNaN(eventId) || eventId <= 0) {
+    const eventId = parseNumericId(rawId);
+    if (!eventId) {
       return NextResponse.json({ success: false, error: 'Invalid event ID.' }, { status: 400 });
     }
 

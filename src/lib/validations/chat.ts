@@ -1,3 +1,6 @@
+/**
+ * Zod validation schemas for the AI chat assistant endpoint.
+ */
 import { z } from 'zod';
 
 export const sendChatMessageSchema = z.object({

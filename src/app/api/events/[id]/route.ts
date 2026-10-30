@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getEventById, updateEvent, deleteEvent } from '@/lib/events';
 import { updateEventSchema } from '@/lib/validations/event';
+import { parseNumericId } from '@/lib/api-utils';
 
 export const dynamic = 'force-dynamic';
 
@@ -8,18 +9,10 @@ interface RouteContext {
   params: Promise<{ id: string }>;
 }
 
-function parseId(rawId: string): number | null {
-  const parsed = parseInt(rawId, 10);
-  if (isNaN(parsed) || parsed <= 0) {
-    return null;
-  }
-  return parsed;
-}
-
 export async function GET(request: Request, context: RouteContext) {
   try {
     const { id: rawId } = await context.params;
-    const id = parseId(rawId);
+    const id = parseNumericId(rawId);
     if (!id) {
       return NextResponse.json(
         { success: false, error: 'Invalid event ID.' },
@@ -59,7 +52,7 @@ export async function GET(request: Request, context: RouteContext) {
 export async function PATCH(request: Request, context: RouteContext) {
   try {
     const { id: rawId } = await context.params;
-    const id = parseId(rawId);
+    const id = parseNumericId(rawId);
     if (!id) {
       return NextResponse.json(
         { success: false, error: 'Invalid event ID.' },
@@ -130,7 +123,7 @@ export async function PATCH(request: Request, context: RouteContext) {
 export async function DELETE(request: Request, context: RouteContext) {
   try {
     const { id: rawId } = await context.params;
-    const id = parseId(rawId);
+    const id = parseNumericId(rawId);
     if (!id) {
       return NextResponse.json(
         { success: false, error: 'Invalid event ID.' },

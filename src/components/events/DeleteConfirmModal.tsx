@@ -15,6 +15,8 @@ interface DeleteConfirmModalProps {
   onClose: () => void;
   onConfirm: (event: EventBasicInfo) => Promise<void>;
   isDeleting: boolean;
+  /** Optional error message displayed inline when deletion fails. */
+  error?: string | null;
 }
 
 export function DeleteConfirmModal({
@@ -23,6 +25,7 @@ export function DeleteConfirmModal({
   onClose,
   onConfirm,
   isDeleting,
+  error,
 }: DeleteConfirmModalProps) {
   const cancelBtnRef = useRef<HTMLButtonElement>(null);
 
@@ -70,6 +73,11 @@ export function DeleteConfirmModal({
         </p>
 
         <div className="mt-6 flex justify-end gap-3">
+          {error && (
+            <p role="alert" className="flex-1 text-sm text-rose-600 font-medium self-center">
+              {error}
+            </p>
+          )}
           <Button
             ref={cancelBtnRef}
             type="button"

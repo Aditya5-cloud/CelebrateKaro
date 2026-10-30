@@ -50,6 +50,7 @@ export default function EventDetailPage({
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'overview' | 'checklist' | 'budget' | 'timeline' | 'vendors' | 'assistant'>('overview');
   const [previousTab, setPreviousTab] = useState<'overview' | 'checklist' | 'budget' | 'timeline' | 'vendors'>('overview');
   const [currentUser, setCurrentUser] = useState<User | null>(null);
@@ -120,10 +121,11 @@ export default function EventDetailPage({
       if (!res.ok || !json.success) {
         throw new Error(json.error || 'Failed to delete event.');
       }
+      setDeleteError(null);
       router.push('/?view=dashboard');
     } catch (err: unknown) {
       console.error(err);
-      alert('Failed to delete event. Please try again.');
+      setDeleteError('Failed to delete event. Please try again.');
     } finally {
       setIsDeleting(false);
     }
@@ -766,9 +768,13 @@ export default function EventDetailPage({
       <DeleteConfirmModal
         isOpen={isDeleteModalOpen}
         event={event}
-        onClose={() => setIsDeleteModalOpen(false)}
+        onClose={() => {
+          setIsDeleteModalOpen(false);
+          setDeleteError(null);
+        }}
         onConfirm={handleDeleteConfirm}
         isDeleting={isDeleting}
+        error={deleteError}
       />
 
       {/* ─── MOBILE-ONLY FLOATING AI CONCIERGE BUBBLE (Bottom-Right Corner) ─── */}

@@ -167,17 +167,14 @@ export default function HomePage() {
 
   // Subscribe to real-time auth changes across tabs and fetch events for active user
   useEffect(() => {
-    const user = getCurrentUser();
-    if (user?.id !== currentUserRef.current?.id) {
-      setCurrentUser(user);
-    }
-    if (user && typeof window !== 'undefined') {
-      const params = new URLSearchParams(window.location.search);
-      if (params.get('view') !== 'landing') {
-        setViewMode('dashboard');
-      }
+    /**
+     * Restore a previously cached event list for `userId` from localStorage
+     * so the dashboard renders immediately on mount without a network round-trip.
+     */
+    function restoreCachedEvents(userId: string) {
+      if (typeof window === 'undefined') return;
       try {
-        const cached = localStorage.getItem(`celebrations_cache_${user.id}`);
+        const cached = localStorage.getItem(`celebrations_cache_${userId}`);
         if (cached) {
           const parsed = JSON.parse(cached);
           if (Array.isArray(parsed) && parsed.length > 0) {
@@ -188,6 +185,18 @@ export default function HomePage() {
       } catch {
         // Fall back to network load
       }
+    }
+
+    const user = getCurrentUser();
+    if (user?.id !== currentUserRef.current?.id) {
+      setCurrentUser(user);
+    }
+    if (user && typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('view') !== 'landing') {
+        setViewMode('dashboard');
+      }
+      restoreCachedEvents(user.id);
     }
     fetchEvents(user ? user.id : null);
 
@@ -200,18 +209,7 @@ export default function HomePage() {
         if (params.get('view') !== 'landing') {
           setViewMode('dashboard');
         }
-        try {
-          const cached = localStorage.getItem(`celebrations_cache_${newUser.id}`);
-          if (cached) {
-            const parsed = JSON.parse(cached);
-            if (Array.isArray(parsed) && parsed.length > 0) {
-              setEvents(parsed);
-              setIsLoading(false);
-            }
-          }
-        } catch {
-          // Fall back to network load
-        }
+        restoreCachedEvents(newUser.id);
       }
       fetchEvents(newUser ? newUser.id : null);
     });
@@ -251,8 +249,11 @@ export default function HomePage() {
     fetchEvents();
   };
 
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+
   const handleDeleteConfirm = async (event: { id: number }) => {
     setIsDeleting(true);
+    setDeleteError(null);
     try {
       const activeUserId = currentUserRef.current?.id;
       const headers: Record<string, string> = {};
@@ -268,7 +269,7 @@ export default function HomePage() {
       fetchEvents(activeUserId);
     } catch (err: unknown) {
       console.error(err);
-      alert('Failed to delete event. Please try again.');
+      setDeleteError('Failed to delete event. Please try again.');
     } finally {
       setIsDeleting(false);
     }
@@ -969,9 +970,10 @@ export default function HomePage() {
       <DeleteConfirmModal
         isOpen={!!eventToDelete}
         event={eventToDelete}
-        onClose={() => setEventToDelete(null)}
+        onClose={() => { setEventToDelete(null); setDeleteError(null); }}
         onConfirm={handleDeleteConfirm}
         isDeleting={isDeleting}
+        error={deleteError}
       />
 
       {/* Clean Production Authentication Modal */}

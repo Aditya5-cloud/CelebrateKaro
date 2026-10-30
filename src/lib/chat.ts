@@ -16,6 +16,7 @@ export interface ChatMessageDoc {
   user_id?: string;
 }
 
+/** Retrieve the most recent chat messages for an event (default limit: 50). */
 export async function getChatMessages(eventId: number, limit = 50): Promise<ChatMessage[]> {
   const db = await getDb();
   const rows = await db
@@ -36,6 +37,7 @@ export async function getChatMessages(eventId: number, limit = 50): Promise<Chat
 
 export const MAX_USER_QUESTIONS = 5;
 
+/** Return how many AI questions the given user (or anonymous session) has asked. */
 export async function getUserQuestionCount(eventId: number, userId?: string | null): Promise<number> {
   const db = await getDb();
   if (userId) {
@@ -57,6 +59,7 @@ export async function getUserQuestionCount(eventId: number, userId?: string | nu
   return Math.max(countInLimits, countInMessages);
 }
 
+/** Atomically increment the AI question counter for a user and return the new count. */
 export async function incrementUserQuestionCount(eventId: number, userId?: string | null): Promise<number> {
   const db = await getDb();
   const query = userId ? { user_id: userId } : { event_id: eventId };
@@ -68,6 +71,7 @@ export async function incrementUserQuestionCount(eventId: number, userId?: strin
   return getUserQuestionCount(eventId, userId);
 }
 
+/** Persist a single chat message (user or assistant) to the database. */
 export async function saveChatMessage(
   eventId: number,
   role: ChatRole,
@@ -97,6 +101,7 @@ export async function saveChatMessage(
   };
 }
 
+/** Delete all chat messages for an event. Returns true on success. */
 export async function clearChatHistory(eventId: number): Promise<boolean> {
   const db = await getDb();
   await db.collection('chat_messages').deleteMany({ event_id: eventId });

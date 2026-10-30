@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getVendors, getVendorStats, createVendor, seedVendorTemplate } from '@/lib/vendors';
 import { getEventById } from '@/lib/events';
 import { createVendorSchema, vendorStatusEnum } from '@/lib/validations/vendor';
+import { parseNumericId } from '@/lib/api-utils';
 import type { VendorStatus } from '@/types';
 
 export const dynamic = 'force-dynamic';
@@ -13,8 +14,8 @@ interface RouteContext {
 export async function GET(request: Request, context: RouteContext) {
   try {
     const { id: rawId } = await context.params;
-    const eventId = parseInt(rawId, 10);
-    if (isNaN(eventId) || eventId <= 0) {
+    const eventId = parseNumericId(rawId);
+    if (!eventId) {
       return NextResponse.json({ success: false, error: 'Invalid event ID.' }, { status: 400 });
     }
 
@@ -54,8 +55,8 @@ export async function GET(request: Request, context: RouteContext) {
 export async function POST(request: Request, context: RouteContext) {
   try {
     const { id: rawId } = await context.params;
-    const eventId = parseInt(rawId, 10);
-    if (isNaN(eventId) || eventId <= 0) {
+    const eventId = parseNumericId(rawId);
+    if (!eventId) {
       return NextResponse.json({ success: false, error: 'Invalid event ID.' }, { status: 400 });
     }
 

@@ -1,6 +1,6 @@
 import { getDb, getNextSequence, nowIso } from './db';
 import { toCents } from './currency';
-import type { BudgetCategory, EventType } from '@/types';
+import type { BudgetCategory, EventType, Event } from '@/types';
 import type { CreateBudgetCategorySchemaInput, UpdateBudgetCategorySchemaInput } from './validations/budget';
 
 export interface BudgetSummary {
@@ -17,22 +17,25 @@ export interface BudgetSummary {
   categoryCount: number;
 }
 
+/** Retrieve all budget categories for an event, ordered by planned amount descending. */
 export async function getBudgetCategories(eventId: number): Promise<BudgetCategory[]> {
   const db = await getDb();
-  const rows = (await db
-    .collection('budget_categories')
+  const rows = await db
+    .collection<BudgetCategory>('budget_categories')
     .find({ event_id: eventId })
     .sort({ planned_amount: -1, name: 1 })
-    .toArray()) as unknown as BudgetCategory[];
+    .toArray();
   return rows;
 }
 
+/** Retrieve a single budget category by its ID, or null if not found. */
 export async function getBudgetCategoryById(id: number): Promise<BudgetCategory | null> {
   const db = await getDb();
-  const row = await db.collection('budget_categories').findOne({ id });
-  return (row as unknown as BudgetCategory) ?? null;
+  const row = await db.collection<BudgetCategory>('budget_categories').findOne({ id });
+  return row ?? null;
 }
 
+/** Create a new budget category for an event. Input amounts are in dollars; stored as cents. */
 export async function createBudgetCategory(
   eventId: number,
   input: CreateBudgetCategorySchemaInput
@@ -58,6 +61,7 @@ export async function createBudgetCategory(
   return doc;
 }
 
+/** Update a budget category by ID. Returns the updated record, or null if not found. */
 export async function updateBudgetCategory(
   id: number,
   input: UpdateBudgetCategorySchemaInput
@@ -89,21 +93,23 @@ export async function updateBudgetCategory(
   return getBudgetCategoryById(id);
 }
 
+/** Delete a budget category by ID. Returns true if deleted, false if not found. */
 export async function deleteBudgetCategory(id: number): Promise<boolean> {
   const db = await getDb();
   const result = await db.collection('budget_categories').deleteOne({ id });
   return Boolean(result && result.deletedCount > 0);
 }
 
+/** Calculate a comprehensive financial summary for a given event's budget. */
 export async function getBudgetSummary(eventId: number): Promise<BudgetSummary> {
   const db = await getDb();
-  const event = await db.collection('events').findOne({ id: eventId });
+  const event = await db.collection<Event>('events').findOne({ id: eventId });
   const totalTargetBudget = event ? event.total_budget : 0;
 
-  const categories = (await db
-    .collection('budget_categories')
+  const categories = await db
+    .collection<BudgetCategory>('budget_categories')
     .find({ event_id: eventId })
-    .toArray()) as unknown as BudgetCategory[];
+    .toArray();
 
   let totalPlanned = 0;
   let totalSpent = 0;

@@ -10,6 +10,7 @@ export interface MilestoneStats {
   percentCompleted: number;
 }
 
+/** Retrieve all milestones for an event, ordered chronologically by due date. */
 export async function getMilestones(eventId: number): Promise<Milestone[]> {
   const db = await getDb();
   const rows = await db
@@ -30,6 +31,7 @@ export async function getMilestones(eventId: number): Promise<Milestone[]> {
   }));
 }
 
+/** Retrieve a single milestone by ID, or null if not found. */
 export async function getMilestoneById(id: number): Promise<Milestone | null> {
   const db = await getDb();
   const row = await db.collection('milestones').findOne({ id });
@@ -46,6 +48,7 @@ export async function getMilestoneById(id: number): Promise<Milestone | null> {
   };
 }
 
+/** Create a new milestone for an event. */
 export async function createMilestone(
   eventId: number,
   input: CreateMilestoneSchemaInput
@@ -69,6 +72,7 @@ export async function createMilestone(
   return doc;
 }
 
+/** Update a milestone by ID. Returns the updated record, or null if not found. */
 export async function updateMilestone(
   id: number,
   input: UpdateMilestoneSchemaInput
@@ -100,12 +104,14 @@ export async function updateMilestone(
   return getMilestoneById(id);
 }
 
+/** Delete a milestone by ID. Returns true if deleted, false if not found. */
 export async function deleteMilestone(id: number): Promise<boolean> {
   const db = await getDb();
   const result = await db.collection('milestones').deleteOne({ id });
   return Boolean(result && result.deletedCount > 0);
 }
 
+/** Calculate aggregate milestone stats including overdue count and percent completed. */
 export async function getMilestoneStats(eventId: number): Promise<MilestoneStats> {
   const milestones = await getMilestones(eventId);
   const todayStr = new Date().toISOString().split('T')[0];

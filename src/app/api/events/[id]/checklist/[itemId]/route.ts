@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { updateChecklistItem, deleteChecklistItem, getChecklistItemById, getChecklistStats } from '@/lib/checklist';
 import { updateChecklistItemSchema } from '@/lib/validations/checklist';
+import { parseNestedNumericIds } from '@/lib/api-utils';
 
 export const dynamic = 'force-dynamic';
 
@@ -8,25 +9,17 @@ interface RouteContext {
   params: Promise<{ id: string; itemId: string }>;
 }
 
-function parseIds(rawEventId: string, rawItemId: string) {
-  const eventId = parseInt(rawEventId, 10);
-  const itemId = parseInt(rawItemId, 10);
-  if (isNaN(eventId) || eventId <= 0 || isNaN(itemId) || itemId <= 0) {
-    return null;
-  }
-  return { eventId, itemId };
-}
-
 export async function PATCH(request: Request, context: RouteContext) {
   try {
     const { id: rawEventId, itemId: rawItemId } = await context.params;
-    const parsed = parseIds(rawEventId, rawItemId);
-    if (!parsed) {
+    const ids = parseNestedNumericIds(rawEventId, rawItemId);
+    if (!ids) {
       return NextResponse.json({ success: false, error: 'Invalid ID parameters.' }, { status: 400 });
     }
+    const [eventId, itemId] = ids;
 
-    const existing = await getChecklistItemById(parsed.itemId);
-    if (!existing || existing.event_id !== parsed.eventId) {
+    const existing = await getChecklistItemById(itemId);
+    if (!existing || existing.event_id !== eventId) {
       return NextResponse.json({ success: false, error: 'Checklist item not found for this event.' }, { status: 404 });
     }
 
@@ -50,8 +43,8 @@ export async function PATCH(request: Request, context: RouteContext) {
       );
     }
 
-    const updated = await updateChecklistItem(parsed.itemId, validationResult.data);
-    const stats = await getChecklistStats(parsed.eventId);
+    const updated = await updateChecklistItem(itemId, validationResult.data);
+    const stats = await getChecklistStats(eventId);
 
     return NextResponse.json({
       success: true,
@@ -69,27 +62,28 @@ export async function PATCH(request: Request, context: RouteContext) {
 export async function DELETE(_request: Request, context: RouteContext) {
   try {
     const { id: rawEventId, itemId: rawItemId } = await context.params;
-    const parsed = parseIds(rawEventId, rawItemId);
-    if (!parsed) {
+    const ids = parseNestedNumericIds(rawEventId, rawItemId);
+    if (!ids) {
       return NextResponse.json({ success: false, error: 'Invalid ID parameters.' }, { status: 400 });
     }
+    const [eventId, itemId] = ids;
 
-    const existing = await getChecklistItemById(parsed.itemId);
-    if (!existing || existing.event_id !== parsed.eventId) {
+    const existing = await getChecklistItemById(itemId);
+    if (!existing || existing.event_id !== eventId) {
       return NextResponse.json({ success: false, error: 'Checklist item not found for this event.' }, { status: 404 });
     }
 
-    const deleted = await deleteChecklistItem(parsed.itemId);
+    const deleted = await deleteChecklistItem(itemId);
     if (!deleted) {
       return NextResponse.json({ success: false, error: 'Failed to delete checklist item.' }, { status: 500 });
     }
 
-    const stats = await getChecklistStats(parsed.eventId);
+    const stats = await getChecklistStats(eventId);
 
     return NextResponse.json({
       success: true,
       data: {
-        id: parsed.itemId,
+        id: itemId,
         stats,
         message: 'Checklist item removed.',
       },

@@ -1,3 +1,6 @@
+/**
+ * Zod validation schemas for the AI checklist endpoints.
+ */
 import { z } from 'zod';
 
 export const createChecklistItemSchema = z.object({

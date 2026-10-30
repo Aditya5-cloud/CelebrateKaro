@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getMilestones, getMilestoneStats, createMilestone, seedTimelineTemplate } from '@/lib/milestones';
 import { getEventById } from '@/lib/events';
 import { createMilestoneSchema } from '@/lib/validations/milestone';
+import { parseNumericId } from '@/lib/api-utils';
 
 export const dynamic = 'force-dynamic';
 
@@ -12,8 +13,8 @@ interface RouteContext {
 export async function GET(_request: Request, context: RouteContext) {
   try {
     const { id: rawId } = await context.params;
-    const eventId = parseInt(rawId, 10);
-    if (isNaN(eventId) || eventId <= 0) {
+    const eventId = parseNumericId(rawId);
+    if (!eventId) {
       return NextResponse.json({ success: false, error: 'Invalid event ID.' }, { status: 400 });
     }
 
@@ -41,8 +42,8 @@ export async function GET(_request: Request, context: RouteContext) {
 export async function POST(request: Request, context: RouteContext) {
   try {
     const { id: rawId } = await context.params;
-    const eventId = parseInt(rawId, 10);
-    if (isNaN(eventId) || eventId <= 0) {
+    const eventId = parseNumericId(rawId);
+    if (!eventId) {
       return NextResponse.json({ success: false, error: 'Invalid event ID.' }, { status: 400 });
     }
 
